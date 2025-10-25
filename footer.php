@@ -175,3 +175,42 @@ if (!function_exists('gi_get_sns_urls')) {
                 backToTopBtn.classList.remove('opacity-100', 'visible');
             }
         }
+        
+        // Initial check
+        updateBackToTop();
+        
+        // Update on scroll (passive for better performance)
+        window.addEventListener('scroll', updateBackToTop, { passive: true });
+        
+        // Smooth scroll to top on click
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+    </script>
+
+    <!-- Tailwind CDN with defer for non-blocking load -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script defer>
+        // Tailwind config (if needed)
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#059669',
+                            secondary: '#000000',
+                            accent: '#ffeb3b'
+                        }
+                    }
+                }
+            };
+        }
+    </script>
+
+    <?php wp_footer(); ?>
+</body>
+</html>
