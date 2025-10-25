@@ -23,61 +23,7 @@ if (!function_exists('gi_get_sns_urls')) {
 
     </main>
 
-    <!-- Modern Black & White Design - Tailwind CSS + Font Awesome + Google Fonts -->
-    <?php if (!wp_script_is('tailwind-cdn', 'enqueued')): ?>
-    <!-- Tailwind CDN with defer for non-blocking load -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
-    <script defer>
-        // Configure Tailwind CSS with proper error handling
-        (function() {
-            function configureTailwind() {
-                if (typeof tailwind !== 'undefined' && tailwind.config) {
-                    tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
-                        'space': ['Space Grotesk', 'sans-serif'],
-                        'noto': ['Noto Sans JP', 'sans-serif']
-                    },
-                    boxShadow: {
-                        'elegant': '0 4px 20px rgba(0, 0, 0, 0.08)',
-                        'elegant-lg': '0 8px 32px rgba(0, 0, 0, 0.12)',
-                        'elegant-xl': '0 12px 48px rgba(0, 0, 0, 0.15)'
-                    },
-                    borderRadius: {
-                        '4xl': '2rem',
-                        '5xl': '2.5rem'
-                    },
-                    colors: {
-                        'yellow': {
-                            'primary': '#FFD700',
-                            'light': '#FFEB3B',
-                            'dark': '#FFC107'
-                        }
-                    }
-                }
-            }
-        };
-                }
-            }
-            
-            // Try to configure immediately, or wait for DOM ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', configureTailwind);
-            } else {
-                configureTailwind();
-            }
-            
-            // Fallback: try after a short delay
-            setTimeout(configureTailwind, 100);
-        })();
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <?php endif; ?>
+    <!-- スタイルとスクリプトはfunctions.phpでエンキューされます -->
 
     <!-- Ultra Stylish Minimalist Footer -->
     <footer class="site-footer bg-white border-t border-gray-100">
@@ -190,25 +136,6 @@ if (!function_exists('gi_get_sns_urls')) {
             });
         });
     });
-    </script>
-
-    <!-- Tailwind CDN with defer for non-blocking load -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
-    <script defer>
-        // Tailwind config (if needed)
-        if (typeof tailwind !== 'undefined') {
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            primary: '#059669',
-                            secondary: '#000000',
-                            accent: '#ffeb3b'
-                        }
-                    }
-                }
-            };
-        }
     </script>
 
     <?php wp_footer(); ?>

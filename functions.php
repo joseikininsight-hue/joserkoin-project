@@ -86,6 +86,61 @@ foreach ($required_files as $file) {
     }
 }
 
+/**
+ * スタイルとスクリプトのエンキュー（PageSpeed最適化版）
+ */
+function gi_enqueue_scripts() {
+    // メインスタイルシート（非同期読み込みはstyle_loader_tagフィルターで処理）
+    wp_enqueue_style('gi-style', get_stylesheet_uri(), array(), GI_THEME_VERSION);
+    
+    // Font Awesome（header.phpで既に非同期読み込み設定済み）
+    // wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0');
+    
+    // Google Fonts（preconnectはheader.phpで設定済み）
+    wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap', array(), null);
+}
+add_action('wp_enqueue_scripts', 'gi_enqueue_scripts');
+
+/**
+ * WebP画像サポートを有効化（PageSpeed最適化）
+ */
+function gi_enable_webp_support() {
+    // WordPress 5.8+ はデフォルトでWebPをサポート
+    // MIMEタイプを確実に登録
+    add_filter('upload_mimes', function($mimes) {
+        $mimes['webp'] = 'image/webp';
+        return $mimes;
+    });
+    
+    // WebP画像のサムネイル生成を有効化
+    add_filter('image_editor_output_format', function($formats) {
+        $formats['image/jpeg'] = 'image/webp';
+        $formats['image/png'] = 'image/webp';
+        return $formats;
+    });
+}
+add_action('after_setup_theme', 'gi_enable_webp_support');
+
+/**
+ * 画像にsrcset/sizes属性を自動追加（レスポンシブ画像）
+ */
+function gi_add_responsive_image_attributes($attr, $attachment, $size) {
+    // srcset が未設定の場合のみ追加
+    if (empty($attr['srcset'])) {
+        $image_meta = wp_get_attachment_metadata($attachment->ID);
+        if ($image_meta) {
+            $attr['srcset'] = wp_calculate_image_srcset(
+                wp_get_attachment_image_src($attachment->ID, $size),
+                $image_meta,
+                $attachment->ID
+            );
+            $attr['sizes'] = wp_calculate_image_sizes($size, null, null, $attachment->ID);
+        }
+    }
+    return $attr;
+}
+add_filter('wp_get_attachment_image_attributes', 'gi_add_responsive_image_attributes', 10, 3);
+
 // グローバルで使えるヘルパー関数
 if (!function_exists('gi_render_card')) {
     function gi_render_card($post_id, $view = 'grid') {
@@ -2402,7 +2457,7 @@ function gi_add_dns_prefetch() {
     echo '<link rel="dns-prefetch" href="//fonts.googleapis.com">';
     echo '<link rel="dns-prefetch" href="//fonts.gstatic.com">';
     echo '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
-    echo '<link rel="dns-prefetch" href="//cdn.tailwindcss.com">';
+    // Tailwind CDN削除 - style.cssを使用
 }
 add_action( 'wp_head', 'gi_add_dns_prefetch', 1 );
 
