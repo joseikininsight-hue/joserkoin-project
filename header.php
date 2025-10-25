@@ -330,6 +330,8 @@
         .stylish-logo-image {
             height: 2.25rem;
             width: auto;
+            aspect-ratio: 200 / 60;
+            object-fit: contain;
             transition: transform var(--transition-fast);
         }
         
@@ -1033,7 +1035,9 @@
                      class="stylish-logo-image"
                      width="200"
                      height="60"
-                     loading="eager">
+                     loading="eager"
+                     fetchpriority="high"
+                     decoding="async">
                 
                 <div class="stylish-logo-text">
                     <?php if (is_front_page() || is_home()) : ?>

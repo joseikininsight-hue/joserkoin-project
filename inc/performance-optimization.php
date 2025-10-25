@@ -41,7 +41,18 @@ class GI_Performance_Optimizer {
         add_action('wp_head', [$this, 'inline_critical_css'], 1);
         add_action('wp_head', [$this, 'optimize_google_fonts'], 3);
         add_action('wp_head', [$this, 'async_styles'], 5);
+        add_action('wp_head', [$this, 'add_font_display_swap'], 2);
         add_filter('script_loader_tag', [$this, 'defer_scripts'], 10, 3);
+        
+        // 不要なWordPress機能削除
+        add_action('wp_enqueue_scripts', [$this, 'remove_unused_wp_scripts'], 100);
+        add_action('init', [$this, 'disable_emojis']);
+        add_action('wp_head', [$this, 'remove_wp_version'], 1);
+        
+        // HTML圧縮
+        if (!is_admin()) {
+            add_action('template_redirect', [$this, 'start_html_minification'], 0);
+        }
         
         // サードパーティスクリプト最適化
         add_action('wp_footer', [$this, 'lazy_load_third_party_scripts'], 1);
@@ -599,6 +610,126 @@ class GI_Performance_Optimizer {
         })();
         </script>
         <?php
+    }
+    
+    /**
+     * ========================================
+     * 不要なWordPress機能削除
+     * ========================================
+     */
+    
+    /**
+     * 不要なWordPressデフォルトスクリプトを削除
+     */
+    public function remove_unused_wp_scripts() {
+        // 使用していない場合は削除
+        if (!is_admin()) {
+            // Gutenbergブロックライブラリ（クラシックテーマの場合）
+            wp_dequeue_style('wp-block-library');
+            wp_dequeue_style('wp-block-library-theme');
+            wp_dequeue_style('classic-theme-styles');
+            wp_dequeue_style('global-styles');
+            
+            // WordPress埋め込み機能を削除
+            wp_dequeue_script('wp-embed');
+        }
+    }
+    
+    /**
+     * 絵文字機能を無効化
+     */
+    public function disable_emojis() {
+        remove_action('wp_head', 'print_emoji_detection_script', 7);
+        remove_action('admin_print_scripts', 'print_emoji_detection_script');
+        remove_action('wp_print_styles', 'print_emoji_styles');
+        remove_action('admin_print_styles', 'print_emoji_styles');
+        remove_filter('the_content_feed', 'wp_staticize_emoji');
+        remove_filter('comment_text_rss', 'wp_staticize_emoji');
+        remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+        
+        // TinyMCE用の絵文字プラグインを削除
+        add_filter('tiny_mce_plugins', function($plugins) {
+            if (is_array($plugins)) {
+                return array_diff($plugins, array('wpemoji'));
+            }
+            return $plugins;
+        });
+        
+        // DNS Prefetchから絵文字を削除
+        add_filter('wp_resource_hints', function($urls, $relation_type) {
+            if ('dns-prefetch' === $relation_type) {
+                $emoji_svg_url = apply_filters('emoji_svg_url', 'https://s.w.org/images/core/emoji/');
+                $urls = array_diff($urls, array($emoji_svg_url));
+            }
+            return $urls;
+        }, 10, 2);
+    }
+    
+    /**
+     * WordPressバージョン情報を削除
+     */
+    public function remove_wp_version() {
+        remove_action('wp_head', 'wp_generator');
+    }
+    
+    /**
+     * font-display: swap を追加
+     */
+    public function add_font_display_swap() {
+        ?>
+        <style>
+            @font-face {
+                font-display: swap;
+            }
+        </style>
+        <?php
+    }
+    
+    /**
+     * ========================================
+     * HTML圧縮
+     * ========================================
+     */
+    
+    /**
+     * HTML圧縮を開始
+     */
+    public function start_html_minification() {
+        ob_start([$this, 'minify_html']);
+    }
+    
+    /**
+     * HTMLを圧縮
+     */
+    public function minify_html($html) {
+        // pre, textarea, script タグの内容を保護
+        $protected = [];
+        $html = preg_replace_callback(
+            '/<(pre|textarea|script)[^>]*?>.*?<\/\1>/is',
+            function($matches) use (&$protected) {
+                $placeholder = '###PROTECTED' . count($protected) . '###';
+                $protected[$placeholder] = $matches[0];
+                return $placeholder;
+            },
+            $html
+        );
+        
+        // HTML圧縮
+        $search = [
+            '/\>[^\S ]+/s',           // タグ後の空白を削除
+            '/[^\S ]+\</s',           // タグ前の空白を削除
+            '/(\s)+/s',               // 複数の空白を1つに
+            '/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/s' // コメント削除（条件付きコメントは保持）
+        ];
+        $replace = ['>', '<', '\\1', ''];
+        $html = preg_replace($search, $replace, $html);
+        
+        // 保護したコンテンツを復元
+        foreach ($protected as $placeholder => $content) {
+            $html = str_replace($placeholder, $content, $html);
+        }
+        
+        return $html;
     }
     
     /**
