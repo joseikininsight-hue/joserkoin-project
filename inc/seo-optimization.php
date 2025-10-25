@@ -859,7 +859,7 @@ class GI_SEO_Optimizer {
         }
         
         // Nonce検証
-        if (!wp_verify_nonce($_POST['_wpnonce'] ?? '', 'gi_bulk_update_seo_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'gi_bulk_update_seo')) {
             wp_send_json_error(['message' => 'セキュリティチェックに失敗しました']);
             return;
         }
@@ -879,12 +879,26 @@ class GI_SEO_Optimizer {
         ]);
         
         $processed = 0;
+        $success = 0;
+        $skipped = 0;
         $errors = 0;
         
         foreach ($grants as $grant) {
             try {
-                // SEO生成実行
-                $this->auto_generate_seo_on_save($grant->ID, $grant, true);
+                // SEO タイトルと説明文を生成
+                $seo_title = $this->generate_optimized_title($grant->ID);
+                $seo_description = $this->generate_optimized_description($grant->ID);
+                
+                if ($seo_title && $seo_description) {
+                    // カスタムフィールドに保存
+                    update_post_meta($grant->ID, '_gi_seo_title', $seo_title);
+                    update_post_meta($grant->ID, '_gi_seo_description', $seo_description);
+                    update_post_meta($grant->ID, '_gi_seo_generated_at', current_time('mysql'));
+                    $success++;
+                } else {
+                    $skipped++;
+                }
+                
                 $processed++;
             } catch (Exception $e) {
                 $errors++;
@@ -896,6 +910,8 @@ class GI_SEO_Optimizer {
         
         wp_send_json_success([
             'processed' => $processed,
+            'success' => $success,
+            'skipped' => $skipped,
             'errors' => $errors,
             'offset' => $offset + $batch_size
         ]);
@@ -1202,24 +1218,38 @@ class GI_SEO_Optimizer {
                     success: function(response) {
                         if (response.success) {
                             processedCount += response.data.processed;
-                            successCount += response.data.success;
-                            skippedCount += response.data.skipped;
-                            errorCount += response.data.errors;
+                            successCount += (response.data.success || 0);
+                            skippedCount += (response.data.skipped || 0);
+                            errorCount += (response.data.errors || 0);
                             
                             updateProgress();
                             
-                            addLog('✅ バッチ ' + currentBatch + ' 完了: ' + response.data.processed + ' 件処理 (' + response.data.success + ' 成功, ' + response.data.skipped + ' スキップ, ' + response.data.errors + ' エラー)');
+                            addLog('✅ バッチ ' + currentBatch + ' 完了: ' + response.data.processed + ' 件処理');
                             
                             // 次のバッチを処理
                             setTimeout(processBatch, 100);
                         } else {
-                            addLog('❌ エラー: ' + (response.data || '不明なエラー'));
+                            // エラーメッセージを適切に表示
+                            let errorMsg = '不明なエラー';
+                            if (response.data && response.data.message) {
+                                errorMsg = response.data.message;
+                            } else if (typeof response.data === 'string') {
+                                errorMsg = response.data;
+                            }
+                            addLog('❌ エラー: ' + errorMsg);
                             errorCount++;
                             setTimeout(processBatch, 1000);
                         }
                     },
                     error: function(xhr, status, error) {
-                        addLog('❌ AJAX エラー: ' + error);
+                        // XHR レスポンスからエラー詳細を取得
+                        let errorMsg = error;
+                        if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                            errorMsg = xhr.responseJSON.data.message;
+                        } else if (xhr.responseText) {
+                            errorMsg = xhr.responseText.substring(0, 100);
+                        }
+                        addLog('❌ AJAX エラー: ' + errorMsg);
                         errorCount++;
                         setTimeout(processBatch, 1000);
                     }
