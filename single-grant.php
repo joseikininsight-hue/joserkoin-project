@@ -21,24 +21,11 @@ the_post();
 
 $post_id = get_the_ID();
 
-// SEO用メタデータ
+// ページ表示用タイトル（パンくずリストなどで使用）
 $seo_title = get_the_title();
-$seo_description = '';
-$canonical_url = get_permalink($post_id);
 
-if (function_exists('get_field')) {
-    $ai_summary = get_field('ai_summary', $post_id);
-    if ($ai_summary) {
-        $seo_description = wp_trim_words(strip_tags($ai_summary), 25, '...');
-    }
-}
-
-if (empty($seo_description)) {
-    $content = get_the_content();
-    if ($content) {
-        $seo_description = wp_trim_words(strip_tags($content), 25, '...');
-    }
-}
+// 注意: SEO メタタグ（title, description, OGP など）は
+// inc/seo-optimization.php から wp_head() 経由で自動出力されます
 
 // ACFデータ取得
 $grant_data = array(
@@ -181,233 +168,18 @@ $modified_time = get_the_modified_date('c', $post_id);
 // SEO: サイト情報
 $site_name = get_bloginfo('name');
 $site_url = home_url('/');
+
+// ============================================
+// ✅ SEO タグは wp_head() フックから自動出力されます
+// inc/seo-optimization.php の GI_SEO_Optimizer クラスが処理
+// - Title タグ（自動生成された SEO タイトル）
+// - Meta Description（自動生成された説明文）
+// - OGP タグ（Facebook, LINE 対応）
+// - Twitter Card タグ
+// - JSON-LD 構造化データ（Article, MonetaryGrant, GovernmentService, Breadcrumb, FAQ）
+// - Canonical URL
+// ============================================
 ?>
-
-<!-- ============================================
-     完璧なSEOメタタグ実装
-     ============================================ -->
-
-<!-- 基本メタタグ -->
-<title><?php echo esc_html($seo_title); ?> | <?php echo esc_html($site_name); ?></title>
-<meta name="description" content="<?php echo esc_attr($seo_description); ?>">
-<meta name="keywords" content="<?php echo esc_attr($keywords_string); ?>">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<meta name="author" content="<?php echo esc_attr($site_name); ?>">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="canonical" href="<?php echo esc_url($canonical_url); ?>">
-
-<!-- Open Graph Protocol (Facebook, LINE等) -->
-<meta property="og:type" content="article">
-<meta property="og:title" content="<?php echo esc_attr($seo_title); ?>">
-<meta property="og:description" content="<?php echo esc_attr($seo_description); ?>">
-<meta property="og:url" content="<?php echo esc_url($canonical_url); ?>">
-<meta property="og:image" content="<?php echo esc_url($og_image); ?>">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:site_name" content="<?php echo esc_attr($site_name); ?>">
-<meta property="og:locale" content="ja_JP">
-<meta property="article:published_time" content="<?php echo esc_attr($published_time); ?>">
-<meta property="article:modified_time" content="<?php echo esc_attr($modified_time); ?>">
-<meta property="article:author" content="<?php echo esc_attr($site_name); ?>">
-<?php if (!empty($taxonomies['categories'])): ?>
-<meta property="article:section" content="<?php echo esc_attr($taxonomies['categories'][0]->name); ?>">
-<?php endif; ?>
-<?php if (!empty($taxonomies['tags'])): foreach ($taxonomies['tags'] as $tag): ?>
-<meta property="article:tag" content="<?php echo esc_attr($tag->name); ?>">
-<?php endforeach; endif; ?>
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo esc_attr($seo_title); ?>">
-<meta name="twitter:description" content="<?php echo esc_attr($seo_description); ?>">
-<meta name="twitter:image" content="<?php echo esc_url($og_image); ?>">
-<meta name="twitter:url" content="<?php echo esc_url($canonical_url); ?>">
-
-<!-- パフォーマンス最適化 -->
-<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-<link rel="dns-prefetch" href="//fonts.googleapis.com">
-<link rel="dns-prefetch" href="//fonts.gstatic.com">
-
-<!-- ============================================
-     構造化データ（JSON-LD）- 完全実装
-     ============================================ -->
-
-<!-- Article スキーマ（記事として） -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "<?php echo esc_js($seo_title); ?>",
-  "description": "<?php echo esc_js($seo_description); ?>",
-  "image": "<?php echo esc_js($og_image); ?>",
-  "datePublished": "<?php echo esc_js($published_time); ?>",
-  "dateModified": "<?php echo esc_js($modified_time); ?>",
-  "author": {
-    "@type": "Organization",
-    "name": "<?php echo esc_js($site_name); ?>",
-    "url": "<?php echo esc_js($site_url); ?>"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "<?php echo esc_js($site_name); ?>",
-    "url": "<?php echo esc_js($site_url); ?>",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "<?php echo esc_js(get_site_icon_url(512) ?: $og_image); ?>"
-    }
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "<?php echo esc_js($canonical_url); ?>"
-  }<?php if (!empty($keywords_string)): ?>,
-  "keywords": "<?php echo esc_js($keywords_string); ?>"
-  <?php endif; ?>
-}
-</script>
-
-<!-- MonetaryGrant スキーマ（助成金として） -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "MonetaryGrant",
-  "name": "<?php echo esc_js($seo_title); ?>",
-  "description": "<?php echo esc_js($seo_description); ?>",
-  "url": "<?php echo esc_js($canonical_url); ?>"<?php if ($grant_data['organization']): ?>,
-  "funder": {
-    "@type": "Organization",
-    "name": "<?php echo esc_js($grant_data['organization']); ?>"
-  }<?php endif; ?><?php if ($max_amount_yen > 0): ?>,
-  "maximumAmount": {
-    "@type": "MonetaryAmount",
-    "currency": "JPY",
-    "value": <?php echo intval($max_amount_yen); ?>
-  }<?php endif; ?><?php if (!empty($grant_data['deadline_date'])): ?>,
-  "applicationDeadline": "<?php echo esc_js(date('c', strtotime($grant_data['deadline_date']))); ?>"<?php endif; ?><?php if (!empty($grant_data['grant_target'])): ?>,
-  "eligibilityCriteria": "<?php echo esc_js(wp_trim_words(strip_tags($grant_data['grant_target']), 30, '...')); ?>"<?php endif; ?>
-}
-</script>
-
-<!-- GovernmentService スキーマ（政府サービスとして） -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "GovernmentService",
-  "name": "<?php echo esc_js($seo_title); ?>",
-  "description": "<?php echo esc_js($seo_description); ?>",
-  "url": "<?php echo esc_js($canonical_url); ?>"<?php if ($grant_data['organization']): ?>,
-  "provider": {
-    "@type": "GovernmentOrganization",
-    "name": "<?php echo esc_js($grant_data['organization']); ?>"
-  }<?php endif; ?><?php if ($grant_data['official_url']): ?>,
-  "serviceUrl": "<?php echo esc_js($grant_data['official_url']); ?>"<?php endif; ?>,
-  "areaServed": {
-    "@type": "Country",
-    "name": "日本"<?php if (!empty($taxonomies['prefectures'])): foreach ($taxonomies['prefectures'] as $pref): ?>,
-    "containsPlace": {
-      "@type": "AdministrativeArea",
-      "name": "<?php echo esc_js($pref->name); ?>"
-    }<?php break; endforeach; endif; ?>
-  }<?php if (!empty($grant_data['contact_info'])): ?>,
-  "availableChannel": {
-    "@type": "ServiceChannel",
-    "servicePhone": {
-      "@type": "ContactPoint",
-      "contactType": "Customer Service"
-    }
-  }<?php endif; ?>
-}
-</script>
-
-<!-- BreadcrumbList スキーマ（パンくずリスト） -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "ホーム",
-      "item": "<?php echo esc_js($site_url); ?>"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "助成金一覧",
-      "item": "<?php echo esc_js($site_url); ?>grant/"
-    }<?php if (!empty($taxonomies['categories'])): ?>,
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "<?php echo esc_js($taxonomies['categories'][0]->name); ?>",
-      "item": "<?php echo esc_js(get_term_link($taxonomies['categories'][0])); ?>"
-    },
-    {
-      "@type": "ListItem",
-      "position": 4,
-      "name": "<?php echo esc_js($seo_title); ?>",
-      "item": "<?php echo esc_js($canonical_url); ?>"
-    }<?php else: ?>,
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "<?php echo esc_js($seo_title); ?>",
-      "item": "<?php echo esc_js($canonical_url); ?>"
-    }<?php endif; ?>
-  ]
-}
-</script>
-
-<!-- FAQPage スキーマ（よくある質問） -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    <?php if (!empty($grant_data['deadline_date']) || !empty($grant_data['deadline'])): ?>
-    {
-      "@type": "Question",
-      "name": "この助成金の申請締切はいつですか？",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "申請締切は<?php echo esc_js($deadline_info ?: '未定'); ?>です。締切日を過ぎると応募できませんので、お早めにご準備ください。"
-      }
-    }<?php if ($formatted_amount || $grant_data['organization'] || $grant_data['adoption_rate'] > 0): ?>,<?php endif; ?>
-    <?php endif; ?>
-    <?php if ($formatted_amount): ?>
-    {
-      "@type": "Question",
-      "name": "最大助成額はいくらですか？",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "この助成金の最大助成額は<?php echo esc_js($formatted_amount); ?>です<?php if ($grant_data['subsidy_rate']): ?>。補助率は<?php echo esc_js($grant_data['subsidy_rate']); ?>となっています<?php endif; ?>。"
-      }
-    }<?php if ($grant_data['organization'] || $grant_data['adoption_rate'] > 0): ?>,<?php endif; ?>
-    <?php endif; ?>
-    <?php if ($grant_data['organization']): ?>
-    {
-      "@type": "Question",
-      "name": "この助成金はどこが実施していますか？",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "<?php echo esc_js($grant_data['organization']); ?>が実施している助成金です。"
-      }
-    }<?php if ($grant_data['adoption_rate'] > 0): ?>,<?php endif; ?>
-    <?php endif; ?>
-    <?php if ($grant_data['adoption_rate'] > 0): ?>
-    {
-      "@type": "Question",
-      "name": "採択率はどのくらいですか？",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "この助成金の採択率は約<?php echo number_format($grant_data['adoption_rate'], 1); ?>%です。難易度は<?php echo esc_js($difficulty_data['label']); ?>レベルとなっています。"
-      }
-    }
-    <?php endif; ?>
-  ]
-}
-</script>
 
 <style>
 /* ===============================================
