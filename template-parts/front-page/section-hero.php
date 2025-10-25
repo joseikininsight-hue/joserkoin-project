@@ -435,9 +435,9 @@ $organization_schema = array(
 
 /* 説明文 */
 .gih-description {
-    font-size: 17px;
-    line-height: 1.7;
-    color: #666666;
+    font-size: 16px; /* 統一: 17px → 16px */
+    line-height: 1.5; /* 縮小感重視: 1.7 → 1.5 */
+    color: var(--color-text-secondary, #666666);
     font-weight: 400;
     margin: 0;
 }
@@ -482,15 +482,15 @@ $organization_schema = array(
     align-items: center;
     gap: 12px;
     padding: 18px 32px;
-    background: #ffeb3b;
-    color: #000000;
+    background: var(--color-accent, #ffeb3b);
+    color: var(--color-secondary, #000000);
     border-radius: 12px;
-    font-size: 17px;
+    font-size: 16px; /* 統一: 17px → 16px */
     font-weight: 700;
     text-decoration: none;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 2px solid #ffeb3b;
+    border: 2px solid var(--color-accent, #ffeb3b);
 }
 
 .gih-btn-primary:hover {

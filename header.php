@@ -256,7 +256,8 @@
             }
         }
         
-        .stylish-logo-text h1 {
+        .stylish-logo-text h1,
+        .stylish-logo-text .site-name {
             margin: 0;
             font-size: 1.375rem;
             font-weight: var(--font-weight-bold);
@@ -942,7 +943,11 @@
                      loading="eager">
                 
                 <div class="stylish-logo-text">
-                    <h1><?php bloginfo('name'); ?></h1>
+                    <?php if (is_front_page() || is_home()) : ?>
+                        <h1><?php bloginfo('name'); ?></h1>
+                    <?php else : ?>
+                        <p class="site-name"><?php bloginfo('name'); ?></p>
+                    <?php endif; ?>
                     <?php if ($tagline = get_bloginfo('description')): ?>
                         <p><?php echo esc_html($tagline); ?></p>
                     <?php endif; ?>

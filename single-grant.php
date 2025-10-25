@@ -429,14 +429,18 @@ $site_url = home_url('/');
     --gus-gray-900: #212121;
     --gus-yellow: #ffeb3b;
     
-    /* タイポグラフィ - モバイル最適化 */
+    /* タイポグラフィ - 縮小感重視かつ可読性確保 */
     --gus-text-xs: 0.75rem;      /* 12px */
     --gus-text-sm: 0.875rem;     /* 14px */
-    --gus-text-base: 0.875rem;   /* 14px */
+    --gus-text-base: 1rem;       /* 16px - 可読性確保のため変更 */
     --gus-text-md: 0.9375rem;    /* 15px */
     --gus-text-lg: 1rem;         /* 16px */
     --gus-text-xl: 1.125rem;     /* 18px */
     --gus-text-2xl: 1.5rem;      /* 24px */
+    
+    /* 行間 - 縮小感重視 */
+    --gus-line-height-base: 1.5; /* 通常1.6から縮小 */
+    --gus-line-height-heading: 1.3; /* 見出し用 */
     
     /* スペーシング - モバイル最適化 */
     --gus-space-xs: 4px;

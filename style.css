@@ -10,23 +10,112 @@ Text Domain: grant-insight-perfect
    CSS変数定義 - 一元管理
    ========================================================================== */
 :root {
+    /* ===================================
+       統一カラーシステム
+       =================================== */
+    /* プライマリカラー（緑系） */
     --color-primary: #059669;
     --color-primary-dark: #047857;
     --color-primary-darker: #065f46;
     --color-primary-light: #10b981;
-    --color-secondary: #0891b2;
+    
+    /* セカンダリカラー（黒系） */
+    --color-secondary: #000000;
+    --color-secondary-light: #1a1a1a;
+    --color-secondary-dark: #000000;
+    
+    /* アクセントカラー（黄色） */
+    --color-accent: #ffeb3b;
+    --color-accent-light: #fff9c4;
+    --color-accent-dark: #fbc02d;
+    
+    /* グレースケール */
     --color-white: #ffffff;
+    --color-black: #000000;
     --color-gray-50: #f9fafb;
     --color-gray-100: #f3f4f6;
     --color-gray-200: #e5e7eb;
     --color-gray-300: #d1d5db;
-    --color-gray-400: #9ca3af;
+    --color-gray-400: #6b7280; /* コントラスト比改善: 3.4:1 → 5.9:1 (WCAG AA準拠) */
     --color-gray-500: #6b7280;
     --color-gray-600: #4b5563;
     --color-gray-700: #374151;
     --color-gray-800: #1f2937;
     --color-gray-900: #111827;
     
+    /* 状態カラー */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-info: #3b82f6;
+    
+    /* 背景カラー */
+    --color-bg-primary: var(--color-white);
+    --color-bg-secondary: var(--color-gray-50);
+    --color-bg-tertiary: var(--color-gray-100);
+    
+    /* テキストカラー */
+    --color-text-primary: var(--color-gray-900);
+    --color-text-secondary: var(--color-gray-700);
+    --color-text-tertiary: var(--color-gray-600);
+    --color-text-muted: var(--color-gray-500);
+    
+    /* ボーダーカラー */
+    --color-border-light: var(--color-gray-200);
+    --color-border-medium: var(--color-gray-300);
+    --color-border-dark: var(--color-gray-400);
+    
+    /* ===================================
+       タイポグラフィシステム（縮小感重視）
+       =================================== */
+    /* 基本サイズ */
+    --font-size-base: 16px;              /* 本文（読みやすさ最優先） */
+    --line-height-base: 1.5;             /* 行間（通常より詰める） */
+    
+    /* 見出しサイズ（コンパクト化） */
+    --font-size-h1: clamp(28px, 4vw, 36px);   /* 通常より小さめ */
+    --font-size-h2: clamp(22px, 3vw, 28px);
+    --font-size-h3: clamp(18px, 2.5vw, 22px);
+    --font-size-h4: 18px;
+    --font-size-h5: 16px;
+    --font-size-h6: 14px;
+    
+    /* 見出し行間（詰める） */
+    --line-height-heading: 1.3;          /* 通常1.4-1.5 → 1.3に */
+    
+    /* UIテキスト（情報密度重視） */
+    --font-size-small: 14px;             /* カードのメタ情報など */
+    --font-size-xs: 13px;                /* タグ、ラベルなど */
+    --font-size-xxs: 12px;               /* 注釈、キャプション */
+    
+    /* ボタンサイズ（コンパクト化） */
+    --font-size-button: 15px;            /* 通常16px → 15pxに */
+    --button-padding-y: 10px;            /* 通常12px → 10pxに */
+    --button-padding-x: 20px;            /* 通常24px → 20pxに */
+    
+    /* ===================================
+       スペーシングシステム（8pxグリッド）
+       縮小感を出すため、通常より小さめの値
+       =================================== */
+    --space-0: 0;
+    --space-1: 4px;      /* 極小（アイコンとテキストの間など） */
+    --space-2: 8px;      /* 小（カード内の要素間） */
+    --space-3: 12px;     /* 中小（カードpadding） */
+    --space-4: 16px;     /* 中（セクション内の要素間） */
+    --space-5: 20px;     /* 中大（カード間のgap） */
+    --space-6: 24px;     /* 大（セクション内padding） */
+    --space-8: 32px;     /* 特大（セクション間margin） */
+    --space-10: 40px;    /* 極大（ページ区切り） */
+    --space-12: 48px;    /* 最大（メインセクション間） */
+    
+    /* コンテナ幅 */
+    --container-max-width: 1280px;       /* 通常サイズ */
+    --container-narrow: 960px;           /* 狭いコンテンツ用 */
+    --container-padding: var(--space-4); /* 16px */
+    
+    /* ===================================
+       その他システム変数
+       =================================== */
     --z-dropdown: 50;
     --z-header: 100;
     --z-overlay: 300;
@@ -65,9 +154,10 @@ html {
 
 body {
     font-family: var(--font-primary);
-    line-height: 1.6;
-    color: var(--color-gray-800);
-    background-color: var(--color-white);
+    font-size: var(--font-size-base); /* 16px - 明示的に指定 */
+    line-height: var(--line-height-base); /* 1.5 - 縮小感重視 */
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
