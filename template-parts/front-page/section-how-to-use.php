@@ -153,17 +153,25 @@ foreach ($steps as $index => $step) {
             
             <!-- 左側：動画カード -->
             <article class="gi-video-card" itemscope itemtype="https://schema.org/VideoObject">
-                <div class="gi-video-container">
-                    <iframe 
-                        class="gi-youtube-iframe"
-                        src="https://www.youtube.com/embed/<?php echo esc_attr($video_config['video_id']); ?>?rel=0&modestbranding=1&playsinline=1" 
-                        title="<?php echo esc_attr($video_config['video_title']); ?>"
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen
-                        loading="lazy"
-                        itemprop="embedUrl">
-                    </iframe>
+                <!-- YouTube軽量プレースホルダー（PageSpeed最適化） -->
+                <div class="gi-video-container gi-lite-youtube" data-video-id="<?php echo esc_attr($video_config['video_id']); ?>" data-video-title="<?php echo esc_attr($video_config['video_title']); ?>">
+                    <!-- サムネイル画像 -->
+                    <img src="https://i.ytimg.com/vi/<?php echo esc_attr($video_config['video_id']); ?>/hqdefault.jpg" 
+                         alt="<?php echo esc_attr($video_config['video_title']); ?>" 
+                         class="gi-youtube-thumbnail"
+                         loading="lazy"
+                         width="480"
+                         height="360">
+                    
+                    <!-- 再生ボタン -->
+                    <button class="gi-youtube-play-button" aria-label="動画を再生" type="button">
+                        <svg width="68" height="48" viewBox="0 0 68 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/>
+                            <path d="M45 24L27 14v20" fill="white"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- 実際のiframeはクリック後に挿入される -->
                 </div>
                 
                 <div class="gi-video-info">
@@ -379,6 +387,57 @@ foreach ($steps as $index => $step) {
     background: #000000;
 }
 
+/* 軽量YouTubeプレースホルダー（PageSpeed最適化） */
+.gi-lite-youtube {
+    cursor: pointer;
+}
+
+.gi-youtube-thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.gi-lite-youtube:hover .gi-youtube-thumbnail {
+    opacity: 0.85;
+}
+
+.gi-youtube-play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.gi-youtube-play-button:hover {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.gi-youtube-play-button:focus {
+    outline: 3px solid #ffeb3b;
+    outline-offset: 4px;
+}
+
+.gi-youtube-play-button svg {
+    display: block;
+    width: 68px;
+    height: 48px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* iframe挿入後 */
 .gi-youtube-iframe {
     position: absolute;
     top: 0;
@@ -902,21 +961,67 @@ foreach ($steps as $index => $step) {
         }
     }
     
+    // 【PageSpeed最適化】軽量YouTubeプレースホルダー
+    function initLiteYouTube() {
+        const liteYouTubes = document.querySelectorAll('.gi-lite-youtube');
+        
+        liteYouTubes.forEach(element => {
+            const videoId = element.dataset.videoId;
+            const videoTitle = element.dataset.videoTitle;
+            
+            // クリックイベント
+            element.addEventListener('click', function() {
+                // iframe作成
+                const iframe = document.createElement('iframe');
+                iframe.className = 'gi-youtube-iframe';
+                iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1&autoplay=1`;
+                iframe.title = videoTitle;
+                iframe.frameBorder = '0';
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                iframe.allowFullscreen = true;
+                iframe.setAttribute('itemprop', 'embedUrl');
+                
+                // プレースホルダーをiframeに置き換え
+                element.innerHTML = '';
+                element.appendChild(iframe);
+                element.classList.add('gi-youtube-active');
+                
+                // トラッキング
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'video_play', {
+                        event_category: 'engagement',
+                        event_label: 'How To Video',
+                        value: 1
+                    });
+                }
+                
+                console.log('[PageSpeed] YouTube iframe loaded on demand');
+            }, { once: true });
+        });
+    }
+    
     // パフォーマンス最適化
     function optimizePerformance() {
+        // 軽量YouTube初期化
+        initLiteYouTube();
+        
         // Passive event listeners
         document.querySelectorAll('.gi-step-card').forEach(card => {
             card.addEventListener('touchstart', function() {}, { passive: true });
         });
         
-        // Resource hints
-        if ('performance' in window) {
-            // YouTube domain preconnect
-            const link = document.createElement('link');
-            link.rel = 'preconnect';
-            link.href = 'https://www.youtube.com';
-            document.head.appendChild(link);
-        }
+        // Resource hints - YouTube preconnect（クリックされたときのみ）
+        const liteYouTubes = document.querySelectorAll('.gi-lite-youtube');
+        liteYouTubes.forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                if ('performance' in window && !element.classList.contains('gi-youtube-active')) {
+                    const link = document.createElement('link');
+                    link.rel = 'preconnect';
+                    link.href = 'https://www.youtube.com';
+                    document.head.appendChild(link);
+                }
+            }, { once: true });
+        });
         
         // Intersection Observer for viewport optimization
         if ('IntersectionObserver' in window) {

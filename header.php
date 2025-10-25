@@ -22,11 +22,104 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
-    <!-- Optimized Font Loading -->
+    <?php if (is_front_page() || is_home()) : ?>
+    <!-- Preload LCP Hero Image for Homepage -->
+    <link rel="preload" as="image" href="https://joseikin-insight.com/wp-content/uploads/2025/10/1.png" fetchpriority="high">
+    <?php endif; ?>
+    
+    <!-- Optimized Font Loading with font-display: swap -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=Outfit:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=Outfit:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     </noscript>
+    
+    <!-- Critical CSS - Above-the-fold optimization for PageSpeed -->
+    <style>
+        /* ===============================================
+           CRITICAL CSS - Above-the-fold Only
+           =============================================== */
+        
+        /* System font stack for instant text rendering */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #0a0a0a;
+            background: #ffffff;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Header Critical Styles */
+        .stylish-header-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        
+        .stylish-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px 20px;
+        }
+        
+        .stylish-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .stylish-logo-text h1,
+        .stylish-logo-text p {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .stylish-logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000000;
+            line-height: 1.2;
+        }
+        
+        /* Hero Section Critical Styles */
+        .gih-hero-section {
+            min-height: 100vh;
+            padding: 120px 20px 80px;
+            background: #ffffff;
+        }
+        
+        .gih-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .gih-hero-image,
+        .gih-mobile-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Prevent layout shift for images */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Web fonts applied after load with font-display: swap already in URL */
+    </style>
     
     <!-- Font Awesome - Async Load -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">

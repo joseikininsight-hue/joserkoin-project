@@ -25,8 +25,9 @@ if (!function_exists('gi_get_sns_urls')) {
 
     <!-- Modern Black & White Design - Tailwind CSS + Font Awesome + Google Fonts -->
     <?php if (!wp_script_is('tailwind-cdn', 'enqueued')): ?>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
+    <!-- Tailwind CDN with defer for non-blocking load -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script defer>
         // Configure Tailwind CSS with proper error handling
         (function() {
             function configureTailwind() {

@@ -2291,3 +2291,206 @@ function gi_generate_pagination_html($max_pages, $current_page) {
 
 // Theme editor functionality completely removed to resolve critical memory issues
 // Site stability is priority - editor will be restored with safer approach later
+
+/* ============================================================================
+   PageSpeed Insights 最適化 (2025-10-25)
+   ============================================================================ */
+
+/**
+ * 1. Google Fonts の preconnect 追加（レンダリングブロック解消）
+ */
+function gi_add_resource_hints( $urls, $relation_type ) {
+    if ( 'preconnect' === $relation_type ) {
+        $urls[] = array(
+            'href' => 'https://fonts.googleapis.com',
+            'crossorigin',
+        );
+        $urls[] = array(
+            'href' => 'https://fonts.gstatic.com',
+            'crossorigin',
+        );
+    }
+    return $urls;
+}
+add_filter( 'wp_resource_hints', 'gi_add_resource_hints', 10, 2 );
+
+/**
+ * 2. WebP 画像サポート追加
+ */
+function gi_add_webp_support( $mime_types ) {
+    $mime_types['webp'] = 'image/webp';
+    return $mime_types;
+}
+add_filter( 'upload_mimes', 'gi_add_webp_support' );
+
+/**
+ * 3. 画像のレスポンシブ対応強化（srcset自動生成）
+ */
+function gi_add_responsive_image_sizes() {
+    // 既存のサムネイルサイズに加えて、追加のレスポンシブサイズを定義
+    add_image_size( 'mobile-small', 380, 0, false );  // モバイル用
+    add_image_size( 'tablet', 768, 0, false );        // タブレット用
+    add_image_size( 'desktop', 1200, 0, false );      // デスクトップ用
+}
+add_action( 'after_setup_theme', 'gi_add_responsive_image_sizes' );
+
+/**
+ * 4. 画像の遅延読み込み強制（loading="lazy"）
+ */
+function gi_add_lazy_loading_to_images( $content ) {
+    if ( is_admin() ) {
+        return $content;
+    }
+    
+    // fetchpriority="high"の画像以外に loading="lazy" を追加
+    $content = preg_replace_callback(
+        '/<img([^>]+?)>/i',
+        function( $matches ) {
+            $img_tag = $matches[0];
+            
+            // すでにloadingまたはfetchpriorityがある場合はスキップ
+            if ( strpos( $img_tag, 'loading=' ) !== false || 
+                 strpos( $img_tag, 'fetchpriority=' ) !== false ) {
+                return $img_tag;
+            }
+            
+            // loading="lazy"を追加
+            return str_replace( '<img', '<img loading="lazy"', $img_tag );
+        },
+        $content
+    );
+    
+    return $content;
+}
+add_filter( 'the_content', 'gi_add_lazy_loading_to_images', 20 );
+add_filter( 'post_thumbnail_html', 'gi_add_lazy_loading_to_images', 20 );
+
+/**
+ * 5. 未使用のWordPressデフォルトCSSを削除
+ */
+function gi_remove_unused_wp_css() {
+    // Block Library CSS (使用していない場合)
+    // wp_dequeue_style( 'wp-block-library' );
+    // wp_dequeue_style( 'wp-block-library-theme' );
+    
+    // Jetpack CSS の選択的読み込み
+    if ( class_exists( 'Jetpack' ) ) {
+        // 使用していないJetpack機能のCSSを削除
+        wp_dequeue_style( 'jetpack-carousel' );
+        wp_dequeue_style( 'tiled-gallery' );
+    }
+}
+add_action( 'wp_enqueue_scripts', 'gi_remove_unused_wp_css', 100 );
+
+/**
+ * 6. JavaScriptの非同期/遅延読み込み
+ */
+function gi_defer_scripts( $tag, $handle, $src ) {
+    // 管理画面では通常通り
+    if ( is_admin() ) {
+        return $tag;
+    }
+    
+    // jQueryは除外（多くのスクリプトが依存している可能性があるため）
+    if ( 'jquery' === $handle || 'jquery-core' === $handle || 'jquery-migrate' === $handle ) {
+        return $tag;
+    }
+    
+    // Google Analyticsなどのサードパーティスクリプトは async
+    if ( strpos( $src, 'googletagmanager.com' ) !== false ||
+         strpos( $src, 'google-analytics.com' ) !== false ) {
+        return str_replace( ' src=', ' async src=', $tag );
+    }
+    
+    // その他のスクリプトは defer
+    return str_replace( ' src=', ' defer src=', $tag );
+}
+add_filter( 'script_loader_tag', 'gi_defer_scripts', 10, 3 );
+
+/**
+ * 7. 静的リソースのキャッシュ期間延長（.htaccess via PHP header）
+ */
+function gi_set_browser_cache_headers() {
+    if ( ! is_admin() ) {
+        // 画像、CSS、JSファイルのキャッシュヘッダーを1年に設定
+        header( 'Cache-Control: public, max-age=31536000, immutable', false );
+    }
+}
+// Note: .htaccessで設定する方が効率的なため、このフックはコメントアウト
+// add_action( 'send_headers', 'gi_set_browser_cache_headers' );
+
+/**
+ * 8. DNS Prefetch 追加（サードパーティドメイン）
+ */
+function gi_add_dns_prefetch() {
+    echo '<link rel="dns-prefetch" href="//fonts.googleapis.com">';
+    echo '<link rel="dns-prefetch" href="//fonts.gstatic.com">';
+    echo '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
+    echo '<link rel="dns-prefetch" href="//cdn.tailwindcss.com">';
+}
+add_action( 'wp_head', 'gi_add_dns_prefetch', 1 );
+
+/**
+ * 9. Critical CSS のインライン化（上位のfoldコンテンツ用）
+ * ※ Note: header.phpに移動済み。このフックは冗長なため無効化。
+ */
+function gi_inline_critical_css() {
+    // Critical CSS now in header.php for better PageSpeed optimization
+    // This function kept for backward compatibility but does nothing
+}
+// add_action( 'wp_head', 'gi_inline_critical_css', 2 ); // Disabled - now in header.php
+
+/**
+ * 10. style.css の非同期読み込み（PageSpeed最適化）
+ */
+function gi_async_load_stylesheet( $html, $handle ) {
+    // style.cssをpreload + 非同期読み込みに変更
+    if ( $handle === 'grant-insight-perfect-style' || strpos( $handle, 'style' ) !== false ) {
+        // preload as style with onload trick
+        $html = str_replace( 
+            "rel='stylesheet'", 
+            "rel='preload' as='style' onload=\"this.onload=null;this.rel='stylesheet'\"", 
+            $html 
+        );
+        // noscript fallback
+        $html .= '<noscript>' . str_replace( 
+            "rel='preload' as='style' onload=\"this.onload=null;this.rel='stylesheet'\"", 
+            "rel='stylesheet'", 
+            $html 
+        ) . '</noscript>';
+    }
+    return $html;
+}
+add_filter( 'style_loader_tag', 'gi_async_load_stylesheet', 10, 2 );
+
+/**
+ * 11. 全画像にloading="lazy"を自動追加（PageSpeed最適化）
+ * Hero画像以外の全画像を遅延読み込みに設定
+ */
+function gi_add_lazy_loading_to_images( $content ) {
+    // imgタグを検索
+    if ( strpos( $content, '<img' ) !== false ) {
+        // loading="eager"が設定されている画像（Hero画像など）は除外
+        $content = preg_replace_callback( 
+            '/<img([^>]*?)(?:\sloading=["\']eager["\'])?([^>]*?)>/i',
+            function( $matches ) {
+                // 既にloading属性がある場合はスキップ
+                if ( strpos( $matches[0], 'loading=' ) !== false && strpos( $matches[0], 'loading="eager"' ) !== false ) {
+                    return $matches[0]; // eager指定があればそのまま返す
+                }
+                
+                // loading属性がない場合はlazyを追加
+                if ( strpos( $matches[0], 'loading=' ) === false ) {
+                    return '<img' . $matches[1] . ' loading="lazy"' . $matches[2] . '>';
+                }
+                
+                return $matches[0];
+            },
+            $content
+        );
+    }
+    return $content;
+}
+add_filter( 'the_content', 'gi_add_lazy_loading_to_images' );
+add_filter( 'post_thumbnail_html', 'gi_add_lazy_loading_to_images' );
+add_filter( 'widget_text', 'gi_add_lazy_loading_to_images' );
