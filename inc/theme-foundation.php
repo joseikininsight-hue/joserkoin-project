@@ -105,28 +105,43 @@ function gi_content_width() {
 add_action('after_setup_theme', 'gi_content_width', 0);
 
 /**
- * スクリプト・スタイルの読み込み - 統合・最適化版
+ * スクリプト・スタイルの読み込み - Tailwind CSS Build Edition
  */
 function gi_enqueue_scripts() {
-    // WordPressテーマメインスタイルシート
-    wp_enqueue_style('gi-style', get_stylesheet_uri(), array(), GI_THEME_VERSION);
+    // Tailwind CSS Build Edition（本番用：最小化版、開発用：通常版）
+    $tailwind_file = (defined('WP_DEBUG') && WP_DEBUG) 
+        ? 'tailwind-build.css' 
+        : 'tailwind-build.min.css';
     
-    // 統合フロントエンドCSS（全CSSを統合・最適化）
-    wp_enqueue_style('gi-unified-frontend', get_template_directory_uri() . '/assets/css/unified-frontend.css', array(), GI_THEME_VERSION);
+    wp_enqueue_style(
+        'gi-tailwind', 
+        get_template_directory_uri() . '/assets/css/' . $tailwind_file, 
+        array(), 
+        GI_THEME_VERSION
+    );
+    
+    // WordPressテーマメインスタイルシート（Tailwindの後に読み込み）
+    wp_enqueue_style('gi-style', get_stylesheet_uri(), array('gi-tailwind'), GI_THEME_VERSION);
+    
+    // 統合フロントエンドCSS（カスタムスタイル用）
+    if (file_exists(get_template_directory() . '/assets/css/unified-frontend.css')) {
+        wp_enqueue_style('gi-unified-frontend', get_template_directory_uri() . '/assets/css/unified-frontend.css', array('gi-tailwind'), GI_THEME_VERSION);
+    }
     
     // Google Fonts（日本語フォント）
     wp_enqueue_style('google-fonts-noto', 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap', array(), null);
     
     // 統合フロントエンドJavaScript（jQuery不要のVanilla JS）
-    wp_enqueue_script('gi-unified-frontend', get_template_directory_uri() . '/assets/js/unified-frontend.js', array(), GI_THEME_VERSION, true);
-    
-// AJAX設定
-    wp_localize_script('gi-unified-frontend', 'gi_ajax', array( // ← ここを修正
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('gi_ajax_nonce')
-    ));
+    if (file_exists(get_template_directory() . '/assets/js/unified-frontend.js')) {
+        wp_enqueue_script('gi-unified-frontend', get_template_directory_uri() . '/assets/js/unified-frontend.js', array(), GI_THEME_VERSION, true);
+        
+        // AJAX設定
+        wp_localize_script('gi-unified-frontend', 'gi_ajax', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('gi_ajax_nonce')
+        ));
+    }
 }
-
 add_action('wp_enqueue_scripts', 'gi_enqueue_scripts');
 
 /**
