@@ -145,6 +145,25 @@ function gi_enqueue_scripts() {
 add_action('wp_enqueue_scripts', 'gi_enqueue_scripts');
 
 /**
+ * ページテンプレートをロード
+ * 
+ * @param string $template_name テンプレート名（例: 'about', 'contact'）
+ * @param string $page_title ページタイトル（未使用、後方互換性のため）
+ */
+function gi_load_page_template($template_name, $page_title = '') {
+    $template_path = get_template_directory() . '/pages/templates/page-' . $template_name . '.php';
+    
+    if (file_exists($template_path)) {
+        include $template_path;
+    } else {
+        // テンプレートが見つからない場合は404
+        get_header();
+        echo '<div class="container"><h1>ページが見つかりません</h1><p>テンプレートファイルが存在しません。</p></div>';
+        get_footer();
+    }
+}
+
+/**
  * ウィジェットエリア登録
  */
 function gi_widgets_init() {
