@@ -2336,34 +2336,10 @@ add_action( 'after_setup_theme', 'gi_add_responsive_image_sizes' );
 
 /**
  * 4. 画像の遅延読み込み強制（loading="lazy"）
+ * Note: この関数は下部（行2470付近）の新しいバージョンに置き換えられました
+ * 新バージョンはloading="eager"を持つHero画像を除外します
  */
-function gi_add_lazy_loading_to_images( $content ) {
-    if ( is_admin() ) {
-        return $content;
-    }
-    
-    // fetchpriority="high"の画像以外に loading="lazy" を追加
-    $content = preg_replace_callback(
-        '/<img([^>]+?)>/i',
-        function( $matches ) {
-            $img_tag = $matches[0];
-            
-            // すでにloadingまたはfetchpriorityがある場合はスキップ
-            if ( strpos( $img_tag, 'loading=' ) !== false || 
-                 strpos( $img_tag, 'fetchpriority=' ) !== false ) {
-                return $img_tag;
-            }
-            
-            // loading="lazy"を追加
-            return str_replace( '<img', '<img loading="lazy"', $img_tag );
-        },
-        $content
-    );
-    
-    return $content;
-}
-add_filter( 'the_content', 'gi_add_lazy_loading_to_images', 20 );
-add_filter( 'post_thumbnail_html', 'gi_add_lazy_loading_to_images', 20 );
+// 関数定義は削除済み - 新バージョンを使用（functions.php 2470行目付近）
 
 /**
  * 5. 未使用のWordPressデフォルトCSSを削除
