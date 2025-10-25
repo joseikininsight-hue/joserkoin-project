@@ -87,11 +87,24 @@ foreach ($required_files as $file) {
 }
 
 /**
- * スタイルとスクリプトのエンキュー（PageSpeed最適化版）
+ * スタイルとスクリプトのエンキュー（PageSpeed最適化版 + Tailwind CSS Build Edition）
  */
 function gi_enqueue_scripts() {
+    // Tailwind CSS Build Edition（本番用：最小化版、開発用：通常版）
+    $tailwind_file = (defined('WP_DEBUG') && WP_DEBUG) 
+        ? 'tailwind-build.css' 
+        : 'tailwind-build.min.css';
+    
+    wp_enqueue_style(
+        'gi-tailwind', 
+        get_template_directory_uri() . '/assets/css/' . $tailwind_file, 
+        array(), 
+        GI_THEME_VERSION
+    );
+    
     // メインスタイルシート（非同期読み込みはstyle_loader_tagフィルターで処理）
-    wp_enqueue_style('gi-style', get_stylesheet_uri(), array(), GI_THEME_VERSION);
+    // Tailwindで定義されていないカスタムスタイル用
+    wp_enqueue_style('gi-style', get_stylesheet_uri(), array('gi-tailwind'), GI_THEME_VERSION);
     
     // Font Awesome（header.phpで既に非同期読み込み設定済み）
     // wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0');

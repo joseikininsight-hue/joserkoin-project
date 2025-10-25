@@ -1,9 +1,12 @@
 /*
-Theme Name: Grant Insight Perfect - Tailwind CSS Play CDN Edition
-Description: 助成金・補助金情報サイト用WordPressテーマ - Tailwind CSS Play CDN完全対応版
-Version: 5.1-tailwind-optimized
+Theme Name: Grant Insight Perfect - Tailwind CSS Build Edition
+Description: 助成金・補助金情報サイト用WordPressテーマ - Tailwind CSS Build Edition（ビルド版）
+Version: 5.2.0-tailwind-build
 Author: Grant Insight Team
 Text Domain: grant-insight-perfect
+
+Note: このファイルはTailwindで定義されていない追加のカスタムスタイル用です。
+      主要なスタイルはassets/css/tailwind-build.min.cssに含まれています。
 */
 
 /* ==========================================================================

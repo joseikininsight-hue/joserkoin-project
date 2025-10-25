@@ -55,3 +55,10 @@ wp-config.php
 *.compiled
 *.min.js.map
 *.min.css.map
+
+# Tailwind CSS build files（ビルド済みCSSは本番で使用するため、除外しない）
+# assets/css/tailwind-build.css は含める
+# assets/css/tailwind-build.min.css も含める
+
+# Tailwind CSS ソースファイルは含める
+# assets/css/src/ は含める
