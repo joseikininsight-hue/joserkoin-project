@@ -69,8 +69,7 @@ $required_files = array(
     
     // Google Sheets integration (consolidated into one file)
     'google-sheets-integration.php', // Google Sheets統合（全機能統合版）
-    'safe-sync-manager.php',         // 安全同期管理システム
-    'disable-auto-sync.php'          // 自動同期無効化
+    'safe-sync-manager.php'          // 安全同期管理システム
 );
 
 // ファイルを安全に読み込み

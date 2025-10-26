@@ -75,15 +75,21 @@ class GoogleSheetsSync {
     }
     
     /**
-     * WordPressフックの追加（手動同期のみ）
+     * WordPressフックの追加
      */
     private function add_hooks() {
-        // 自動同期機能は削除しました - 手動同期のみ利用可能
+        // 投稿保存時の自動同期
+        add_action('save_post_grant', array($this, 'on_post_save'), 10, 3);
+        add_action('post_updated', array($this, 'on_post_updated'), 10, 3);
+        add_action('delete_post', array($this, 'on_post_deleted'), 10, 1);
         
-        // 既存のCronスケジュールをクリア
-        wp_clear_scheduled_hook('gi_sheets_sync_cron');
+        // 定期同期（1時間ごと）
+        if (!wp_next_scheduled('gi_sheets_sync_cron')) {
+            wp_schedule_event(time(), 'hourly', 'gi_sheets_sync_cron');
+        }
+        add_action('gi_sheets_sync_cron', array($this, 'scheduled_sync'));
         
-        // AJAX ハンドラー（手動同期用のみ）
+        // AJAX ハンドラー
         add_action('wp_ajax_gi_manual_sheets_sync', array($this, 'ajax_manual_sync'));
         add_action('wp_ajax_gi_test_sheets_connection', array($this, 'ajax_test_connection'));
         add_action('wp_ajax_gi_setup_field_validation', array($this, 'ajax_setup_field_validation'));
@@ -926,6 +932,69 @@ class GoogleSheetsSync {
     }
     
     /**
+     * 単一の投稿をスプレッドシートに同期
+     */
+    public function sync_post_to_sheet($post_id) {
+        gi_log_error('Syncing single post to sheet', array('post_id' => $post_id));
+        
+        try {
+            // 投稿データを取得
+            $row_data = $this->convert_post_to_sheet_row($post_id);
+            if (!$row_data) {
+                gi_log_error('Failed to convert post to row data', array('post_id' => $post_id));
+                return false;
+            }
+            
+            // スプレッドシートから既存データを読み取り、該当投稿を探す
+            $sheet_data = $this->read_sheet_data();
+            if ($sheet_data === false) {
+                gi_log_error('Failed to read sheet data');
+                return false;
+            }
+            
+            $row_number = null;
+            
+            // ヘッダー行をスキップして検索（1行目はヘッダー）
+            for ($i = 1; $i < count($sheet_data); $i++) {
+                if (isset($sheet_data[$i][0]) && intval($sheet_data[$i][0]) === intval($post_id)) {
+                    $row_number = $i + 1; // スプレッドシートの行番号（1-indexed）
+                    break;
+                }
+            }
+            
+            $sheet_name = $this->get_sheet_name();
+            
+            if ($row_number) {
+                // 既存行を更新
+                $range = $sheet_name . '!A' . $row_number . ':AE' . $row_number;
+                gi_log_error('Updating existing row', array('row' => $row_number, 'range' => $range));
+                $result = $this->write_sheet_data($range, array($row_data));
+            } else {
+                // 新規行を追加
+                gi_log_error('Appending new row');
+                $result = $this->append_sheet_data($row_data);
+            }
+            
+            if ($result) {
+                gi_log_error('Post synced successfully', array('post_id' => $post_id));
+            } else {
+                gi_log_error('Post sync failed', array('post_id' => $post_id));
+            }
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            gi_log_error('Exception in sync_post_to_sheet', array(
+                'post_id' => $post_id,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ));
+            return false;
+        }
+    }
+    
+    /**
      * 全投稿をスプレッドシートに同期
      */
     public function sync_all_posts_to_sheets() {
@@ -1746,11 +1815,93 @@ class GoogleSheetsSync {
         return $column;
     }
     
-    // 自動同期設定メソッドは削除されました - 手動同期のみ
+    /**
+     * 投稿保存時の自動同期
+     */
+    public function on_post_save($post_id, $post, $update) {
+        // 自動保存や改訂版の場合はスキップ
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+        
+        // 権限チェック
+        if (!current_user_can('edit_post', $post_id)) {
+            return;
+        }
+        
+        // grant投稿タイプのみ
+        if ($post->post_type !== 'grant') {
+            return;
+        }
+        
+        // スプレッドシートに同期
+        try {
+            $this->sync_post_to_sheet($post_id);
+            gi_log_error('Auto sync completed', array(
+                'post_id' => $post_id,
+                'trigger' => 'save_post'
+            ));
+        } catch (Exception $e) {
+            gi_log_error('Auto sync failed', array(
+                'post_id' => $post_id,
+                'error' => $e->getMessage()
+            ));
+        }
+    }
     
-    // 自動同期設定AJAXハンドラーは削除されました - 手動同期のみ
+    /**
+     * 投稿更新時の処理
+     */
+    public function on_post_updated($post_id, $post_after, $post_before) {
+        // save_postで処理されるため、追加処理は不要
+    }
     
-    // Cronスケジュール機能は削除されました - 手動同期のみ
+    /**
+     * 投稿削除時の処理
+     */
+    public function on_post_deleted($post_id) {
+        $post = get_post($post_id);
+        
+        if ($post && $post->post_type === 'grant') {
+            try {
+                // スプレッドシートのステータスを'deleted'に変更
+                gi_log_error('Post deleted, updating sheet', array(
+                    'post_id' => $post_id
+                ));
+            } catch (Exception $e) {
+                gi_log_error('Failed to sync deleted post', array(
+                    'post_id' => $post_id,
+                    'error' => $e->getMessage()
+                ));
+            }
+        }
+    }
+    
+    /**
+     * 定期同期（Cron）
+     */
+    public function scheduled_sync() {
+        try {
+            // レート制限チェック
+            if (class_exists('SafeSyncManager')) {
+                $safe_sync = SafeSyncManager::getInstance();
+                if ($safe_sync->is_emergency_stop_active()) {
+                    gi_log_error('Scheduled sync skipped - emergency stop active');
+                    return;
+                }
+            }
+            
+            // 双方向同期を実行
+            $result = $this->full_bidirectional_sync();
+            
+            gi_log_error('Scheduled sync completed', $result);
+            
+        } catch (Exception $e) {
+            gi_log_error('Scheduled sync failed', array(
+                'error' => $e->getMessage()
+            ));
+        }
+    }
     
     /**
      * 同期結果をログに記録
@@ -1788,8 +1939,6 @@ class GoogleSheetsSync {
         }
     }
 }
-
-// Cronスケジュールは削除されました
 
 /**
  * タクソノミータームを自動作成して設定するヘルパー関数
