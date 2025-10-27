@@ -180,6 +180,18 @@ $regions_data = array(
                 </select>
             </div>
 
+            <!-- フリーワード検索 -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-search"></i>
+                    フリーワード
+                </label>
+                <input type="text" 
+                       id="keyword-input" 
+                       class="form-input" 
+                       placeholder="例：IT導入補助金、設備投資、創業支援など">
+            </div>
+
             <!-- ボタングループ -->
             <div class="button-group">
                 <button type="button" class="btn btn-reset" id="reset-btn">
@@ -635,7 +647,8 @@ $regions_data = array(
     margin-bottom: 8px;
 }
 
-.form-select {
+.form-select,
+.form-input {
     width: 100%;
     padding: 12px 14px;
     font-size: 15px;
@@ -646,10 +659,16 @@ $regions_data = array(
     border-radius: 0;
 }
 
-.form-select:focus {
+.form-select:focus,
+.form-input:focus {
     outline: none;
     border-color: #000000;
     box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.3);
+}
+
+.form-input::placeholder {
+    color: #666666;
+    font-weight: 400;
 }
 
 .button-group {
@@ -1066,6 +1085,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('grant-search-form');
     const categorySelect = document.getElementById('category-select');
     const prefectureSelect = document.getElementById('prefecture-select');
+    const keywordInput = document.getElementById('keyword-input');
     const searchBtn = document.getElementById('search-btn');
     const resetBtn = document.getElementById('reset-btn');
     
@@ -1076,12 +1096,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const category = categorySelect.value;
             const prefecture = prefectureSelect.value;
+            const keyword = keywordInput ? keywordInput.value.trim() : '';
             
             let searchUrl = '<?php echo home_url('/grants/'); ?>?';
             const params = [];
             
             if (category) params.push('category=' + encodeURIComponent(category));
             if (prefecture) params.push('prefecture=' + encodeURIComponent(prefecture));
+            if (keyword) params.push('search=' + encodeURIComponent(keyword));
             
             searchUrl += params.join('&');
             
@@ -1095,6 +1117,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resetBtn.addEventListener('click', function() {
             if (categorySelect) categorySelect.value = '';
             if (prefectureSelect) prefectureSelect.value = '';
+            if (keywordInput) keywordInput.value = '';
             console.log('[Reset] Form cleared');
         });
     }

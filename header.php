@@ -68,7 +68,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 12px 20px;
         }
@@ -101,7 +101,7 @@
         }
         
         .gih-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
@@ -205,7 +205,7 @@
             
             /* Layout */
             --header-height: 4.5rem;
-            --max-width: 1400px;
+            --max-width: 1200px;
         }
         
         * {
