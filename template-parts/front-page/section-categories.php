@@ -1,10 +1,10 @@
 <?php
 /**
- * Modern Categories Section - Clean Style v3.3
- * カテゴリー別助成金検索セクション - クリーンスタイル
+ * Modern Categories Section - Photo Style v4.0
+ * カテゴリー別・地域別助成金検索セクション - 写真風スタイリッシュデザイン
  *
  * @package Grant_Insight_Perfect
- * @version 24.3-clean-style
+ * @version 24.4-photo-style
  */
 
 // セキュリティチェック
@@ -28,7 +28,7 @@ $all_categories = get_terms(array(
     'order' => 'ASC'
 ));
 
-// カテゴリアイコン設定（白黒）
+// カテゴリアイコン設定
 $category_icons = array(
     0 => 'fas fa-laptop-code',
     1 => 'fas fa-industry',
@@ -51,13 +51,73 @@ if (function_exists('gi_get_cached_stats')) {
         'active_grants' => 0
     );
 }
+
+// 地域別に都道府県を整理
+$prefectures = gi_get_all_prefectures();
+$regions = array(
+    'hokkaido_tohoku' => array(
+        'name' => '北海道・東北',
+        'icon' => 'fas fa-mountain',
+        'prefectures' => array()
+    ),
+    'kanto' => array(
+        'name' => '関東',
+        'icon' => 'fas fa-building',
+        'prefectures' => array()
+    ),
+    'chubu' => array(
+        'name' => '中部',
+        'icon' => 'fas fa-torii-gate',
+        'prefectures' => array()
+    ),
+    'kinki' => array(
+        'name' => '近畿',
+        'icon' => 'fas fa-city',
+        'prefectures' => array()
+    ),
+    'chugoku' => array(
+        'name' => '中国',
+        'icon' => 'fas fa-water',
+        'prefectures' => array()
+    ),
+    'shikoku' => array(
+        'name' => '四国',
+        'icon' => 'fas fa-bridge',
+        'prefectures' => array()
+    ),
+    'kyushu' => array(
+        'name' => '九州・沖縄',
+        'icon' => 'fas fa-island-tropical',
+        'prefectures' => array()
+    )
+);
+
+// 都道府県を地域別に振り分け
+foreach ($prefectures as $pref) {
+    $region_key = match($pref['region']) {
+        'hokkaido' => 'hokkaido_tohoku',
+        'tohoku' => 'hokkaido_tohoku',
+        'kanto' => 'kanto',
+        'chubu' => 'chubu',
+        'kinki' => 'kinki',
+        'chugoku' => 'chugoku',
+        'shikoku' => 'shikoku',
+        'kyushu' => 'kyushu',
+        default => 'kyushu'
+    };
+    
+    $prefecture_term = get_term_by('slug', $pref['slug'], 'grant_prefecture');
+    $pref['count'] = $prefecture_term ? $prefecture_term->count : 0;
+    
+    $regions[$region_key]['prefectures'][] = $pref;
+}
 ?>
 
 <!-- フォント・アイコン読み込み -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-<!-- カテゴリーセクション - クリーンスタイル -->
+<!-- カテゴリーセクション - 写真風スタイリッシュデザイン -->
 <section class="giac-categories-section" id="grant-categories">
     <div class="giac-container">
         <!-- セクションヘッダー -->
@@ -73,149 +133,183 @@ if (function_exists('gi_get_cached_stats')) {
             </h2>
         </header>
 
-        <!-- メインカテゴリー -->
-        <div class="giac-main-categories">
-            <?php
-            if (!empty($main_categories)) :
-                foreach ($main_categories as $index => $category) :
-                    if ($index >= 8) break;
+        <!-- 写真風スタイリッシュ2カラムレイアウト -->
+        <div class="browse-photo-style-layout">
+            
+            <!-- 左カラム：主要カテゴリーの大きなビジュアルカード（3つ） -->
+            <div class="browse-hero-column">
+                <?php 
+                $hero_categories = array_slice($main_categories, 0, 3);
+                foreach ($hero_categories as $index => $category) : 
                     $icon = $category_icons[$index] ?? 'fas fa-folder';
                     $category_url = get_term_link($category);
-            ?>
-            <a href="<?php echo esc_url($category_url); ?>" class="giac-category-card" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
-                <div class="giac-card-number"><?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></div>
-                <div class="giac-card-icon">
-                    <i class="<?php echo esc_attr($icon); ?>"></i>
-                </div>
-                <div class="giac-card-content">
-                    <h3 class="giac-card-title"><?php echo esc_html($category->name); ?></h3>
-                    <div class="giac-card-count"><?php echo number_format($category->count); ?>件</div>
-                </div>
-                <div class="giac-card-arrow">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </a>
-            <?php
-                endforeach;
-            endif;
-            ?>
-        </div>
+                ?>
+                <a href="<?php echo esc_url($category_url); ?>" class="hero-category-card hero-category-<?php echo $index + 1; ?>">
+                    <!-- 写真風の背景グラデーション -->
+                    <div class="hero-card-background"></div>
+                    
+                    <!-- カード内容 -->
+                    <div class="hero-card-content">
+                        <div class="hero-icon-wrapper">
+                            <i class="<?php echo esc_attr($icon); ?>"></i>
+                        </div>
+                        <h3 class="hero-category-title"><?php echo esc_html($category->name); ?></h3>
+                        <p class="hero-category-count"><?php echo number_format($category->count); ?>件の補助金</p>
+                        <div class="hero-card-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- ホバー時のオーバーレイ -->
+                    <div class="hero-card-overlay"></div>
+                </a>
+                <?php endforeach; ?>
+            </div>
 
-        <!-- その他のカテゴリー -->
-        <?php if (!empty($all_categories) && count($all_categories) > 6) :
-            $other_categories = array_slice($all_categories, 6);
-        ?>
-        <div class="giac-more-section">
-            <button type="button" class="giac-more-button" id="giac-toggle-more">
-                <span>すべてのカテゴリー</span>
-                <i class="fas fa-chevron-down"></i>
-            </button>
+            <!-- 右カラム：カテゴリーから探す（小グリッド） -->
+            <div class="browse-grid-column">
+                <div class="grid-column-header">
+                    <h3 class="grid-column-title">カテゴリーから探す</h3>
+                    <p class="grid-column-subtitle">その他の業種・目的別補助金</p>
+                </div>
 
-            <div class="giac-more-categories" id="giac-more-categories">
-                <div class="giac-more-grid">
-                    <?php foreach ($other_categories as $category) :
+                <!-- コンパクトなカテゴリーグリッド -->
+                <div class="category-compact-grid">
+                    <?php 
+                    $grid_categories = array_slice($main_categories, 3);
+                    foreach ($grid_categories as $index => $category) : 
+                        $icon = $category_icons[$index + 3] ?? 'fas fa-folder';
                         $category_url = get_term_link($category);
                     ?>
-                    <a href="<?php echo esc_url($category_url); ?>" class="giac-mini-card">
-                        <i class="fas fa-folder"></i>
-                        <span class="giac-mini-title"><?php echo esc_html($category->name); ?></span>
-                        <span class="giac-mini-count"><?php echo $category->count; ?></span>
+                    <a href="<?php echo esc_url($category_url); ?>" class="category-compact-card">
+                        <div class="compact-card-icon">
+                            <i class="<?php echo esc_attr($icon); ?>"></i>
+                        </div>
+                        <div class="compact-card-content">
+                            <h4 class="compact-card-title"><?php echo esc_html($category->name); ?></h4>
+                            <span class="compact-card-count"><?php echo $category->count; ?>件</span>
+                        </div>
+                        <div class="compact-card-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
                     </a>
                     <?php endforeach; ?>
                 </div>
+
+                <!-- その他のカテゴリー表示ボタン -->
+                <?php if (count($all_categories) > 8) : ?>
+                <button type="button" class="show-more-categories-btn" id="show-more-categories">
+                    <span class="btn-text">すべてのカテゴリー</span>
+                    <i class="fas fa-chevron-down btn-icon"></i>
+                </button>
+                <?php endif; ?>
+            </div>
+
+        </div>
+
+        <!-- その他のカテゴリー（展開エリア） -->
+        <?php if (count($all_categories) > 8) : 
+            $other_categories = array_slice($all_categories, 8);
+        ?>
+        <div class="more-categories-panel" id="more-categories-panel">
+            <div class="more-categories-grid">
+                <?php foreach ($other_categories as $category) :
+                    $category_url = get_term_link($category);
+                ?>
+                <a href="<?php echo esc_url($category_url); ?>" class="mini-category-card">
+                    <i class="fas fa-folder"></i>
+                    <span class="mini-title"><?php echo esc_html($category->name); ?></span>
+                    <span class="mini-count"><?php echo $category->count; ?></span>
+                </a>
+                <?php endforeach; ?>
             </div>
         </div>
         <?php endif; ?>
 
-        <!-- 地域選択セクション -->
+        <!-- 地域選択セクション - 写真風デザイン -->
         <div class="giac-location-section">
-            <h3 class="giac-location-title">
-                <i class="fas fa-map-marker-alt"></i>
-                地域から探す
-            </h3>
-            <p class="giac-location-subtitle">都道府県・市町村別の助成金・補助金を検索</p>
-            
-            <!-- 都道府県選択 -->
-            <div class="giac-prefecture-selector">
-                <h4 class="giac-selector-title">都道府県を選択</h4>
-                <div class="giac-prefecture-grid" id="giac-prefecture-grid">
-                    <?php
-                    // 都道府県一覧を取得
-                    $prefectures = gi_get_all_prefectures();
-                    if (!empty($prefectures)) :
-                        foreach ($prefectures as $index => $pref) :
-                            if ($index >= 8) break; // 最初の8つのみ表示
-                            $prefecture_count = get_term_by('slug', $pref['slug'], 'grant_prefecture');
-                            $count = $prefecture_count ? $prefecture_count->count : 0;
-                    ?>
-                    <a href="<?php echo esc_url(get_term_link($pref['slug'], 'grant_prefecture')); ?>" 
-                       class="giac-prefecture-card" data-aos="fade-up" data-aos-delay="<?php echo $index * 30; ?>">
-                        <div class="giac-prefecture-icon">
-                            <i class="fas fa-map-marked-alt"></i>
-                        </div>
-                        <div class="giac-prefecture-content">
-                            <h5 class="giac-prefecture-name"><?php echo esc_html($pref['name']); ?></h5>
-                            <span class="giac-prefecture-count"><?php echo number_format($count); ?>件</span>
-                        </div>
-                        <div class="giac-prefecture-arrow">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                    </a>
-                    <?php 
-                        endforeach;
-                    endif; 
-                    ?>
+            <!-- セクションヘッダー -->
+            <header class="browse-header">
+                <div class="browse-badge">
+                    <div class="badge-pulse"></div>
+                    <span>LOCATION SEARCH</span>
                 </div>
+                
+                <h2 class="browse-title">
+                    <span class="title-main">地域から探す</span>
+                    <span class="title-sub">都道府県・市町村別の助成金・補助金を検索</span>
+                </h2>
+            </header>
 
-                <!-- 全都道府県表示ボタン -->
-                <button type="button" class="giac-show-all-prefectures" id="giac-show-all-prefectures">
-                    <span class="button-text">すべての都道府県を見る</span>
-                    <i class="fas fa-chevron-down button-icon"></i>
-                </button>
+            <!-- 地域別写真風レイアウト -->
+            <div class="regions-photo-layout">
+                <?php foreach ($regions as $region_key => $region) : 
+                    if (empty($region['prefectures'])) continue;
+                ?>
+                <div class="region-section" data-region="<?php echo esc_attr($region_key); ?>">
+                    <!-- 地域ヒーローカード -->
+                    <div class="region-hero-card region-<?php echo esc_attr($region_key); ?>">
+                        <div class="region-hero-background"></div>
+                        <div class="region-hero-content">
+                            <div class="region-icon-wrapper">
+                                <i class="<?php echo esc_attr($region['icon']); ?>"></i>
+                            </div>
+                            <h3 class="region-title"><?php echo esc_html($region['name']); ?></h3>
+                            <p class="region-pref-count"><?php echo count($region['prefectures']); ?>都道府県</p>
+                            <button type="button" class="region-toggle-btn" data-region-target="<?php echo esc_attr($region_key); ?>">
+                                <span class="toggle-text">詳細を見る</span>
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </button>
+                        </div>
+                        <div class="region-hero-overlay"></div>
+                    </div>
 
-                <!-- 全都道府県グリッド -->
-                <div class="giac-all-prefectures" id="giac-all-prefectures">
-                    <div class="giac-all-prefectures-grid">
-                        <?php
-                        if (!empty($prefectures)) :
-                            foreach ($prefectures as $pref) :
-                                $prefecture_count = get_term_by('slug', $pref['slug'], 'grant_prefecture');
-                                $count = $prefecture_count ? $prefecture_count->count : 0;
-                        ?>
-                        <a href="<?php echo esc_url(get_term_link($pref['slug'], 'grant_prefecture')); ?>" 
-                           class="giac-prefecture-mini-card">
-                            <span class="giac-prefecture-mini-name"><?php echo esc_html($pref['name']); ?></span>
-                            <span class="giac-prefecture-mini-count"><?php echo $count; ?></span>
-                        </a>
-                        <?php 
-                            endforeach;
-                        endif; 
-                        ?>
+                    <!-- 都道府県グリッド（モバイルでは閉じた状態） -->
+                    <div class="region-prefectures-panel" id="region-panel-<?php echo esc_attr($region_key); ?>">
+                        <div class="prefectures-grid">
+                            <?php foreach ($region['prefectures'] as $pref) : ?>
+                            <a href="<?php echo esc_url(get_term_link($pref['slug'], 'grant_prefecture')); ?>" 
+                               class="prefecture-mini-card">
+                                <div class="prefecture-mini-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="prefecture-mini-content">
+                                    <h5 class="prefecture-mini-name"><?php echo esc_html($pref['name']); ?></h5>
+                                    <span class="prefecture-mini-count"><?php echo number_format($pref['count']); ?>件</span>
+                                </div>
+                                <div class="prefecture-mini-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
+                <?php endforeach; ?>
             </div>
 
             <!-- 市町村検索 -->
-            <div class="giac-municipality-selector">
-                <h4 class="giac-selector-title">市町村で検索</h4>
-                <div class="giac-search-wrapper">
-                    <div class="giac-search-container">
+            <div class="municipality-search-section">
+                <h3 class="search-section-title">
+                    <i class="fas fa-search"></i>
+                    市町村で検索
+                </h3>
+                <div class="search-wrapper">
+                    <div class="search-container">
                         <input type="text" 
-                               id="giac-municipality-search" 
-                               class="giac-search-input" 
-                               placeholder="市町村名を入力してください（例：横浜市、大阪市）"
+                               id="municipality-search-input" 
+                               class="search-input" 
+                               placeholder="市町村名を入力（例：横浜市、大阪市）"
                                autocomplete="off">
-                        <button type="button" class="giac-search-button" id="giac-search-municipality">
+                        <button type="button" class="search-button" id="municipality-search-btn">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                     
                     <!-- 検索結果 -->
-                    <div class="giac-search-results" id="giac-search-results">
+                    <div class="search-results-panel" id="municipality-search-results">
                         <!-- 検索結果がここに表示されます -->
                     </div>
-                    
-                    <!-- 人気の市町村セクションを削除しました -->
                 </div>
             </div>
         </div>
@@ -224,10 +318,26 @@ if (function_exists('gi_get_cached_stats')) {
 
 <style>
 /* ============================================
-   カテゴリーセクション - クリーンスタイル
+   Photo Style Category & Prefecture Section
+   写真風スタイリッシュデザイン v4.0
    ============================================ */
 
-/* Browse Header Styles (統一ヘッダースタイル) */
+/* ベース設定 */
+.giac-categories-section {
+    position: relative;
+    padding: 80px 0 100px;
+    background: #ffffff;
+    border-top: 1px solid #e5e5e5;
+    font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.giac-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ヘッダースタイル */
 .browse-header {
     text-align: center;
     margin-bottom: 50px;
@@ -252,10 +362,10 @@ if (function_exists('gi_get_cached_stats')) {
     height: 7px;
     background: #ffffff;
     border-radius: 50%;
-    animation: category-pulse 2s ease-in-out infinite;
+    animation: badge-pulse-animation 2s ease-in-out infinite;
 }
 
-@keyframes category-pulse {
+@keyframes badge-pulse-animation {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.3; }
 }
@@ -264,7 +374,6 @@ if (function_exists('gi_get_cached_stats')) {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 30px;
 }
 
 .title-main {
@@ -282,297 +391,388 @@ if (function_exists('gi_get_cached_stats')) {
     line-height: 1.5;
 }
 
-/* Original Category Styles */
+/* ============================================
+   写真風2カラムレイアウト
+   ============================================ */
 
-/* ベース設定 */
-.giac-categories-section {
-    position: relative;
-    padding: 64px 0;
-    background: transparent;
-    font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
-    isolation: isolate;
-}
-
-/* コンテナ */
-.giac-container {
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* ヘッダー */
-.giac-header {
-    text-align: center;
-    margin-bottom: 32px;
-}
-
-.giac-title {
-    margin-bottom: 10px;
-}
-
-.giac-title-en {
-    display: block;
-    font-size: 26px;
-    font-weight: 900;
-    color: #000000;
-    letter-spacing: 0.05em;
-    line-height: 1.1;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.giac-title-ja {
-    font-size: 13px;
-    font-weight: 700;
-    color: #000000;
-    line-height: 1.4;
-    margin: 10px 0;
-}
-
-.giac-yellow-line {
-    width: 56px;
-    height: 3px;
-    background: #ffeb3b;
-    margin: 0 auto 11px;
-    border-radius: 2px;
-    box-shadow: 0 2px 8px rgba(255, 235, 59, 0.4);
-}
-
-.giac-subtitle {
-    font-size: 12px;
-    font-weight: 500;
-    color: #333333;
-    line-height: 1.6;
-}
-
-/* メインカテゴリー */
-.giac-main-categories {
+.browse-photo-style-layout {
     display: grid;
-    gap: 10px;
-    margin-bottom: 26px;
+    grid-template-columns: 1fr 420px;
+    gap: 30px;
+    margin-top: 50px;
+    margin-bottom: 60px;
 }
 
-.giac-category-card {
+/* ============================================
+   左カラム：ヒーローカード
+   ============================================ */
+
+.browse-hero-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.hero-category-card {
     position: relative;
+    height: 220px;
+    background: #000000;
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 4px solid #000000;
+}
+
+.hero-category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+    border-color: #ffeb3b;
+}
+
+/* ヒーローカード背景 */
+.hero-card-background {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+    z-index: 1;
+}
+
+/* 各カード固有のグラデーション */
+.hero-category-1 .hero-card-background {
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 235, 59, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+}
+
+.hero-category-2 .hero-card-background {
+    background: 
+        radial-gradient(circle at 80% 20%, rgba(255, 235, 59, 0.12) 0%, transparent 50%),
+        linear-gradient(135deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%);
+}
+
+.hero-category-3 .hero-card-background {
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(255, 235, 59, 0.1) 0%, transparent 60%),
+        linear-gradient(135deg, #000000 0%, #0d0d0d 50%, #000000 100%);
+}
+
+/* 動的パターンオーバーレイ */
+.hero-card-background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, 0.02) 10px,
+            rgba(255, 255, 255, 0.02) 20px
+        );
+    animation: pattern-slide 20s linear infinite;
+}
+
+@keyframes pattern-slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(28.28px); }
+}
+
+/* ヒーローカードコンテンツ */
+.hero-card-content {
+    position: relative;
+    z-index: 2;
+    padding: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #ffffff;
+}
+
+.hero-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px;
-    background: #ffffff;
-    border: 2px solid #000000;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    justify-content: center;
+    font-size: 32px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
 }
 
-.giac-card-number {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 26px;
-    height: 26px;
+.hero-category-card:hover .hero-icon-wrapper {
     background: #ffeb3b;
+    border-color: #ffeb3b;
     color: #000000;
-    border: 2px solid #000000;
+    transform: scale(1.05);
+}
+
+.hero-category-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.hero-category-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+.hero-card-arrow {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    z-index: 2;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    color: #ffffff;
+    font-size: 18px;
     transition: all 0.3s ease;
 }
 
-.giac-category-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
+.hero-category-card:hover .hero-card-arrow {
     background: #ffeb3b;
-    transform: scaleY(0);
-    transition: transform 0.3s ease;
+    border-color: #ffeb3b;
+    color: #000000;
+    transform: translateX(4px);
 }
 
-.giac-category-card:active {
-    transform: scale(0.98);
+.hero-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.giac-category-card:hover {
-    border-color: #000000;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+.hero-category-card:hover .hero-card-overlay {
+    opacity: 1;
 }
 
-.giac-category-card:hover::before {
-    transform: scaleY(1);
+/* ============================================
+   右カラム：コンパクトグリッド
+   ============================================ */
+
+.browse-grid-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.giac-card-icon {
-    flex-shrink: 0;
-    width: 38px;
-    height: 38px;
+.grid-column-header {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+    border-radius: 16px;
+    border: 2px solid #000000;
+}
+
+.grid-column-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #000000;
+    margin: 0 0 8px;
+}
+
+.grid-column-subtitle {
+    font-size: 13px;
+    font-weight: 500;
+    color: #666666;
+    margin: 0;
+}
+
+.category-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.category-compact-card {
+    position: relative;
+    background: #ffffff;
+    border: 3px solid #000000;
+    border-radius: 12px;
+    padding: 16px 12px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-height: 100px;
+}
+
+.category-compact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: #ffeb3b;
+    background: #fffef5;
+}
+
+.compact-card-icon {
+    width: 42px;
+    height: 42px;
     background: #000000;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     transition: all 0.3s ease;
 }
 
-.giac-category-card:hover .giac-card-icon {
-    background: #333333;
-    transform: rotate(-5deg) scale(1.05);
+.category-compact-card:hover .compact-card-icon {
+    background: #ffeb3b;
+    color: #000000;
+    transform: rotate(-5deg);
 }
 
-.giac-card-content {
+.compact-card-content {
+    text-align: center;
     flex: 1;
 }
 
-.giac-card-title {
+.compact-card-title {
     font-size: 12px;
     font-weight: 700;
     color: #000000;
-    line-height: 1.4;
-    margin-bottom: 3px;
+    margin: 0 0 4px;
+    line-height: 1.3;
 }
 
-.giac-card-count {
+.compact-card-count {
     font-size: 10px;
     font-weight: 600;
     color: #666666;
 }
 
-.giac-card-arrow {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
+.compact-card-arrow {
+    width: 24px;
+    height: 24px;
     background: #f5f5f5;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000000;
-    font-size: 12px;
+    color: #666666;
+    font-size: 10px;
     transition: all 0.3s ease;
 }
 
-.giac-category-card:hover .giac-card-arrow {
+.category-compact-card:hover .compact-card-arrow {
     background: #ffeb3b;
-    transform: translateX(4px);
+    color: #000000;
 }
 
-.giac-category-card:hover .giac-card-number {
-    background: #000000;
-    color: #ffeb3b;
-    transform: scale(1.1) rotate(5deg);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
-
-/* その他のカテゴリー */
-.giac-more-section {
-    margin-bottom: 0;
-}
-
-.giac-more-button {
+/* すべて表示ボタン */
+.show-more-categories-btn {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     padding: 14px;
     background: #ffffff;
-    border: 2px solid #000000;
+    border: 3px solid #000000;
     border-radius: 12px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: #000000;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.giac-more-button:active {
-    transform: scale(0.98);
-}
-
-.giac-more-button:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.giac-more-button.active {
+.show-more-categories-btn:hover {
     background: #000000;
     color: #ffffff;
-    border-color: #000000;
 }
 
-.giac-more-button i {
+.show-more-categories-btn.active {
+    background: #000000;
+    color: #ffffff;
+}
+
+.show-more-categories-btn .btn-icon {
     transition: transform 0.3s ease;
 }
 
-.giac-more-button.active i {
+.show-more-categories-btn.active .btn-icon {
     transform: rotate(180deg);
 }
 
-.giac-more-categories {
+/* その他のカテゴリーパネル */
+.more-categories-panel {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease;
-    margin-top: 16px;
+    margin-top: 30px;
 }
 
-.giac-more-categories.show {
+.more-categories-panel.show {
     max-height: 2000px;
 }
 
-.giac-more-grid {
+.more-categories-grid {
     display: grid;
-    gap: 8px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 30px;
+    background: #fafafa;
+    border-radius: 16px;
+    border: 2px solid #e5e5e5;
 }
 
-.giac-mini-card {
+.mini-category-card {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px 16px;
+    padding: 12px 14px;
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    border-radius: 12px;
+    border-radius: 10px;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
-.giac-mini-card:active {
-    transform: scale(0.98);
-}
-
-.giac-mini-card:hover {
+.mini-category-card:hover {
     border-color: #000000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.giac-mini-card i {
-    font-size: 18px;
+.mini-category-card i {
+    font-size: 16px;
     color: #666666;
 }
 
-.giac-mini-title {
+.mini-title {
     flex: 1;
     font-size: 12px;
     font-weight: 600;
     color: #000000;
 }
 
-.giac-mini-count {
+.mini-count {
     padding: 3px 8px;
     background: #f5f5f5;
     border-radius: 999px;
@@ -581,615 +781,539 @@ if (function_exists('gi_get_cached_stats')) {
     color: #666666;
 }
 
-/* アニメーション */
-[data-aos] {
-    opacity: 0;
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-[data-aos="fade-up"] {
-    transform: translateY(20px);
-}
-
-[data-aos].aos-animate {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* タブレット */
-@media (min-width: 768px) {
-    .giac-categories-section {
-        padding: 64px 0;
-    }
-    
-    .giac-header {
-        margin-bottom: 38px;
-    }
-    
-    .giac-title-en {
-        font-size: 34px;
-    }
-    
-    .giac-title-ja {
-        font-size: 14px;
-    }
-    
-    .giac-subtitle {
-        font-size: 11px;
-    }
-    
-    .giac-main-categories {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-bottom: 32px;
-    }
-    
-    .giac-category-card {
-        padding: 14px;
-    }
-    
-    .giac-card-number {
-        width: 24px;
-        height: 24px;
-        font-size: 10px;
-        top: 0px;
-        right: 0px;
-    }
-    
-    .giac-card-title {
-        font-size: 12px;
-    }
-    
-    .giac-card-count {
-        font-size: 9px;
-    }
-    
-    .giac-more-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-    }
-}
-
-/* デスクトップ */
-@media (min-width: 1024px) {
-    .giac-title-en {
-        font-size: 38px;
-    }
-    
-    .giac-main-categories {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 14px;
-    }
-    
-    .giac-category-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    }
-    
-    .giac-more-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-/* スマホ最適化 */
-@media (max-width: 640px) {
-    .giac-categories-section {
-        padding: 48px 0;
-    }
-    
-    .giac-container {
-        padding: 0 14px;
-    }
-    
-    .giac-header {
-        margin-bottom: 32px;
-    }
-    
-    .giac-title-en {
-        font-size: 28px;
-        letter-spacing: 0.02em;
-    }
-    
-    .giac-title-ja {
-        font-size: 12px;
-        margin: 7px 0;
-    }
-    
-    .giac-yellow-line {
-        width: 52px;
-        margin: 0 auto 10px;
-    }
-    
-    .giac-subtitle {
-        font-size: 11px;
-    }
-    
-    .giac-main-categories {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        margin-bottom: 20px;
-    }
-    
-    .giac-category-card {
-        padding: 10px;
-    }
-    
-    .giac-card-number {
-        width: 22px;
-        height: 22px;
-        font-size: 9px;
-        top: -4px;
-        right: -4px;
-    }
-    
-    .giac-card-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 15px;
-    }
-    
-    .giac-card-title {
-        font-size: 11px;
-    }
-    
-    .giac-card-count {
-        font-size: 9px;
-    }
-    
-    .giac-more-button {
-        padding: 10px;
-        font-size: 11px;
-    }
-    
-    .giac-more-grid {
-        gap: 7px;
-    }
-    
-    .giac-mini-card {
-        padding: 10px 12px;
-    }
-    
-    .giac-mini-card i {
-        font-size: 14px;
-    }
-    
-    .giac-mini-title {
-        font-size: 10px;
-    }
-    
-    .giac-mini-count {
-        font-size: 10px;
-        padding: 2px 7px;
-    }
-}
-
-/* 極小スマホ */
-@media (max-width: 375px) {
-    .giac-title-en {
-        font-size: 22px;
-    }
-    
-    .giac-title-ja {
-        font-size: 11px;
-    }
-    
-    .giac-card-icon {
-        width: 34px;
-        height: 34px;
-        font-size: 14px;
-    }
-    
-    .giac-card-title {
-        font-size: 10px;
-    }
-}
-
-/* ========================================
-   地域選択セクション - 白黒スタイリッシュデザイン
-======================================== */
-
-/* CSS Variables for consistent black/white design */
-:root {
-    --color-black: #000000;
-    --color-white: #ffffff;
-    --color-gray-50: #fafafa;
-    --color-gray-100: #f5f5f5;
-    --color-gray-200: #e5e5e5;
-    --color-gray-300: #d4d4d4;
-    --color-gray-400: #a3a3a3;
-    --color-gray-500: #737373;
-    --color-gray-600: #525252;
-    --color-gray-700: #404040;
-    --color-gray-800: #262626;
-    --color-gray-900: #171717;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
+/* ============================================
+   地域選択セクション - 写真風デザイン
+   ============================================ */
 
 .giac-location-section {
-    margin-top: 60px;
-    padding-top: 50px;
-    border-top: 3px solid var(--color-black);
-    background: var(--color-white);
+    margin-top: 80px;
+    padding-top: 80px;
+    border-top: 3px solid #000000;
 }
 
-.giac-location-title {
-    font-size: 18px;
-    font-weight: 900;
-    color: var(--color-black);
-    margin: 0 0 7px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.giac-location-title i {
-    color: var(--color-black);
-    font-size: 20px;
-}
-
-.giac-location-subtitle {
-    font-size: 12px;
-    color: var(--color-gray-600);
-    margin: 0 0 26px;
-    font-weight: 500;
-}
-
-/* 都道府県セレクター */
-.giac-prefecture-selector {
-    margin-bottom: 50px;
-}
-
-.giac-selector-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--color-black);
-    margin: 0 0 13px;
-    padding-left: 8px;
-    border-left: 3px solid var(--color-black);
-}
-
-.giac-prefecture-grid {
+/* 地域別写真風レイアウト */
+.regions-photo-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 50px;
+    margin-bottom: 60px;
 }
 
-.giac-prefecture-card {
+.region-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 地域ヒーローカード */
+.region-hero-card {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px;
-    background: var(--color-white);
-    border: 2px solid var(--color-gray-200);
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 200px;
+    background: #000000;
+    border-radius: 16px;
     overflow: hidden;
+    border: 4px solid #000000;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
 }
 
-.giac-prefecture-card::before {
-    content: '';
+.region-hero-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+    border-color: #ffeb3b;
+}
+
+/* 地域別背景グラデーション */
+.region-hero-background {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
+    inset: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%);
+    z-index: 1;
+}
+
+.region-hokkaido_tohoku .region-hero-background {
+    background: 
+        radial-gradient(circle at 30% 70%, rgba(100, 181, 246, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%);
+}
+
+.region-kanto .region-hero-background {
+    background: 
+        radial-gradient(circle at 70% 30%, rgba(255, 235, 59, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+}
+
+.region-chubu .region-hero-background {
+    background: 
+        radial-gradient(circle at 50% 80%, rgba(139, 195, 74, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 50%, #1a1a1a 100%);
+}
+
+.region-kinki .region-hero-background {
+    background: 
+        radial-gradient(circle at 80% 20%, rgba(255, 152, 0, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+}
+
+.region-chugoku .region-hero-background {
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(156, 39, 176, 0.12) 0%, transparent 50%),
+        linear-gradient(135deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%);
+}
+
+.region-shikoku .region-hero-background {
+    background: 
+        radial-gradient(circle at 60% 60%, rgba(0, 150, 136, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #0d0d0d 50%, #000000 100%);
+}
+
+.region-kyushu .region-hero-background {
+    background: 
+        radial-gradient(circle at 40% 40%, rgba(244, 67, 54, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%);
+}
+
+/* 地域ヒーローコンテンツ */
+.region-hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 24px;
     height: 100%;
-    background: var(--color-black);
-    transform: scaleY(0);
-    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-align: center;
 }
 
-.giac-prefecture-card:hover {
-    border-color: var(--color-black);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-}
-
-.giac-prefecture-card:hover::before {
-    transform: scaleY(1);
-}
-
-.giac-prefecture-icon {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    background: var(--color-black);
-    border-radius: 10px;
+.region-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-white);
-    font-size: 17px;
+    font-size: 28px;
+    color: #ffffff;
+    margin-bottom: 12px;
     transition: all 0.3s ease;
 }
 
-.giac-prefecture-card:hover .giac-prefecture-icon {
-    transform: rotate(-5deg) scale(1.1);
+.region-hero-card:hover .region-icon-wrapper {
+    background: #ffeb3b;
+    border-color: #ffeb3b;
+    color: #000000;
+    transform: scale(1.05);
 }
 
-.giac-prefecture-content {
-    flex: 1;
+.region-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0 0 6px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.giac-prefecture-name {
+.region-pref-count {
     font-size: 12px;
-    font-weight: 700;
-    color: var(--color-black);
-    margin: 0 0 2px;
-}
-
-.giac-prefecture-count {
-    font-size: 10px;
     font-weight: 600;
-    color: var(--color-gray-600);
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 16px;
 }
 
-.giac-prefecture-arrow {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    background: var(--color-gray-100);
-    border-radius: 6px;
+.region-toggle-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: var(--color-gray-600);
+    gap: 6px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    color: #ffffff;
     font-size: 12px;
-    transition: all 0.3s ease;
-}
-
-.giac-prefecture-card:hover .giac-prefecture-arrow {
-    background: var(--color-black);
-    color: var(--color-white);
-    transform: translateX(4px);
-}
-
-/* 全都道府県表示ボタン */
-.giac-show-all-prefectures {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px;
-    background: var(--color-white);
-    border: 2px solid var(--color-black);
-    border-radius: 12px;
-    font-size: 15px;
     font-weight: 700;
-    color: var(--color-black);
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-bottom: 20px;
 }
 
-.giac-show-all-prefectures:hover {
-    background: var(--color-black);
-    color: var(--color-white);
+.region-toggle-btn:hover {
+    background: #ffeb3b;
+    border-color: #ffeb3b;
+    color: #000000;
 }
 
-.giac-show-all-prefectures.active {
-    background: var(--color-black);
-    color: var(--color-white);
-}
-
-.giac-show-all-prefectures .button-icon {
-    transition: transform 0.3s ease;
-}
-
-.giac-show-all-prefectures.active .button-icon {
+.region-toggle-btn.active .toggle-icon {
     transform: rotate(180deg);
 }
 
-/* 全都道府県グリッド */
-.giac-all-prefectures {
+.region-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.region-hero-card:hover .region-hero-overlay {
+    opacity: 1;
+}
+
+/* 都道府県パネル */
+.region-prefectures-panel {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease;
 }
 
-.giac-all-prefectures.show {
+.region-prefectures-panel.show {
     max-height: 1000px;
 }
 
-.giac-all-prefectures-grid {
+.prefectures-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 8px;
-    padding: 20px;
-    background: var(--color-gray-50);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 16px;
+    background: #fafafa;
     border-radius: 12px;
+    border: 2px solid #e5e5e5;
 }
 
-.giac-prefecture-mini-card {
+.prefecture-mini-card {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: var(--color-white);
-    border: 1px solid var(--color-gray-200);
-    border-radius: 8px;
+    gap: 10px;
+    padding: 12px;
+    background: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
-.giac-prefecture-mini-card:hover {
-    border-color: var(--color-black);
-    box-shadow: var(--shadow-md);
+.prefecture-mini-card:hover {
+    border-color: #000000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
-.giac-prefecture-mini-name {
+.prefecture-mini-icon {
+    width: 32px;
+    height: 32px;
+    background: #000000;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
     font-size: 14px;
-    font-weight: 600;
-    color: var(--color-black);
+    flex-shrink: 0;
 }
 
-.giac-prefecture-mini-count {
+.prefecture-mini-card:hover .prefecture-mini-icon {
+    background: #ffeb3b;
+    color: #000000;
+}
+
+.prefecture-mini-content {
+    flex: 1;
+}
+
+.prefecture-mini-name {
     font-size: 12px;
-    color: var(--color-gray-600);
-    background: var(--color-gray-100);
-    padding: 2px 8px;
-    border-radius: 12px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 2px;
 }
 
-/* 市町村セレクター */
-.giac-municipality-selector {
-    margin-bottom: 40px;
+.prefecture-mini-count {
+    font-size: 10px;
+    font-weight: 600;
+    color: #666666;
 }
 
-.giac-search-wrapper {
+.prefecture-mini-arrow {
+    width: 24px;
+    height: 24px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666666;
+    font-size: 10px;
+    transition: all 0.3s ease;
+}
+
+.prefecture-mini-card:hover .prefecture-mini-arrow {
+    background: #ffeb3b;
+    color: #000000;
+    transform: translateX(2px);
+}
+
+/* ============================================
+   市町村検索セクション
+   ============================================ */
+
+.municipality-search-section {
+    margin-top: 60px;
+    padding: 40px;
+    background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+    border-radius: 20px;
+    border: 3px solid #000000;
+}
+
+.search-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    font-weight: 900;
+    color: #000000;
+    margin: 0 0 24px;
+}
+
+.search-section-title i {
+    font-size: 24px;
+}
+
+.search-wrapper {
     max-width: 600px;
+    margin: 0 auto;
 }
 
-.giac-search-container {
-    position: relative;
+.search-container {
     display: flex;
     margin-bottom: 20px;
 }
 
-.giac-search-input {
+.search-input {
     flex: 1;
     padding: 16px 20px;
     font-size: 16px;
-    color: var(--color-black);
-    background: var(--color-white);
-    border: 2px solid var(--color-gray-300);
+    color: #000000;
+    background: #ffffff;
+    border: 2px solid #000000;
     border-right: none;
     border-radius: 12px 0 0 12px;
     transition: all 0.2s ease;
 }
 
-.giac-search-input:focus {
+.search-input:focus {
     outline: none;
-    border-color: var(--color-black);
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.3);
 }
 
-.giac-search-input::placeholder {
-    color: var(--color-gray-500);
+.search-input::placeholder {
+    color: #999999;
 }
 
-.giac-search-button {
-    padding: 16px 20px;
-    background: var(--color-black);
-    color: var(--color-white);
-    border: none;
+.search-button {
+    padding: 16px 24px;
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
     border-radius: 0 12px 12px 0;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.giac-search-button:hover {
-    background: var(--color-gray-800);
+.search-button:hover {
+    background: #333333;
 }
 
-.giac-search-button i {
-    font-size: 16px;
+.search-button i {
+    font-size: 18px;
 }
 
-/* 検索結果 */
-.giac-search-results {
+.search-results-panel {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
-    background: var(--color-white);
-    border: 2px solid var(--color-gray-200);
+    background: #ffffff;
+    border: 2px solid #e5e5e5;
     border-radius: 12px;
-    margin-bottom: 20px;
 }
 
-.giac-search-results.show {
-    max-height: 300px;
+.search-results-panel.show {
+    max-height: 400px;
     overflow-y: auto;
 }
 
-.giac-search-result-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 20px;
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-gray-100);
-    transition: background-color 0.2s ease;
+/* ============================================
+   レスポンシブデザイン
+   ============================================ */
+
+/* タブレット */
+@media (max-width: 1024px) {
+    .browse-photo-style-layout {
+        grid-template-columns: 1fr 360px;
+        gap: 24px;
+    }
+    
+    .category-compact-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .more-categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
-.giac-search-result-item:last-child {
-    border-bottom: none;
-}
-
-.giac-search-result-item:hover {
-    background: var(--color-gray-50);
-}
-
-.giac-search-result-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-black);
-}
-
-.giac-search-result-count {
-    font-size: 12px;
-    color: var(--color-gray-600);
-}
-
-/* 人気の市町村セクション削除済み - スタイリッシュな白黒デザインに統一 */
-
-/* レスポンシブ対応 */
+/* タブレット・スマホ */
 @media (max-width: 768px) {
-    .giac-location-section {
-        margin-top: 40px;
-        padding-top: 40px;
+    .giac-categories-section {
+        padding: 60px 0 80px;
     }
     
-    .giac-location-title {
-        font-size: 24px;
+    .title-main {
+        font-size: 32px;
     }
     
-    .giac-prefecture-grid {
+    .title-sub {
+        font-size: 15px;
+    }
+    
+    .browse-photo-style-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .hero-category-card {
+        height: 200px;
+    }
+    
+    .regions-photo-layout {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .region-hero-card {
+        height: 180px;
+    }
+    
+    .more-categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .municipality-search-section {
+        padding: 30px 20px;
+    }
+    
+    /* モバイルアコーディオン：デフォルトで閉じた状態 */
+    .region-prefectures-panel {
+        max-height: 0;
+    }
+    
+    .region-prefectures-panel.show {
+        max-height: 1000px;
+    }
+}
+
+/* スマホ最適化 */
+@media (max-width: 640px) {
+    .giac-container {
+        padding: 0 16px;
+    }
+    
+    .title-main {
+        font-size: 28px;
+    }
+    
+    .title-sub {
+        font-size: 14px;
+    }
+    
+    .category-compact-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
     
-    .giac-prefecture-card {
-        padding: 16px;
+    .category-compact-card {
+        padding: 12px 10px;
+        min-height: 90px;
     }
     
-    .giac-all-prefectures-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    .compact-card-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
     }
     
-    .giac-search-input {
-        font-size: 14px;
+    .compact-card-title {
+        font-size: 11px;
     }
-}
-
-@media (max-width: 480px) {
-    .giac-location-title {
-        font-size: 20px;
-        flex-direction: column;
-        align-items: flex-start;
+    
+    .regions-photo-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .prefectures-grid {
+        grid-template-columns: 1fr;
         gap: 8px;
     }
     
-    .giac-search-container {
+    .more-categories-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .search-container {
         flex-direction: column;
     }
     
-    .giac-search-input {
+    .search-input {
         border-radius: 12px 12px 0 0;
-        border-right: 2px solid var(--color-gray-300);
+        border-right: 2px solid #000000;
     }
     
-    .giac-search-button {
+    .search-button {
         border-radius: 0 0 12px 12px;
     }
+}
+
+/* 極小スマホ */
+@media (max-width: 480px) {
+    .hero-category-card {
+        height: 180px;
+    }
     
-    .giac-popular-grid {
-        justify-content: center;
+    .hero-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        font-size: 28px;
+    }
+    
+    .hero-category-title {
+        font-size: 20px;
+    }
+    
+    .category-compact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-compact-card {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 12px;
+        min-height: auto;
+    }
+    
+    .compact-card-content {
+        text-align: left;
+    }
+    
+    .region-hero-card {
+        height: 160px;
     }
 }
 
@@ -1205,108 +1329,84 @@ if (function_exists('gi_get_cached_stats')) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // AOS アニメーション
-    const aosElements = document.querySelectorAll('[data-aos]');
-    const aosObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const delay = entry.target.getAttribute('data-aos-delay') || 0;
-                setTimeout(() => {
-                    entry.target.classList.add('aos-animate');
-                }, delay);
-                aosObserver.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
+    // すべてのカテゴリー展開
+    const moreCategoriesBtn = document.getElementById('show-more-categories');
+    const moreCategoriesPanel = document.getElementById('more-categories-panel');
     
-    aosElements.forEach(element => {
-        aosObserver.observe(element);
-    });
-    
-    // その他のカテゴリー展開
-    const moreButton = document.getElementById('giac-toggle-more');
-    const moreCategories = document.getElementById('giac-more-categories');
-    
-    if (moreButton && moreCategories) {
-        moreButton.addEventListener('click', function() {
-            const isOpen = moreCategories.classList.contains('show');
+    if (moreCategoriesBtn && moreCategoriesPanel) {
+        moreCategoriesBtn.addEventListener('click', function() {
+            const isOpen = moreCategoriesPanel.classList.contains('show');
             
             if (isOpen) {
-                moreCategories.classList.remove('show');
+                moreCategoriesPanel.classList.remove('show');
                 this.classList.remove('active');
-                this.querySelector('span').textContent = 'すべてのカテゴリー';
+                this.querySelector('.btn-text').textContent = 'すべてのカテゴリー';
             } else {
-                moreCategories.classList.add('show');
+                moreCategoriesPanel.classList.add('show');
                 this.classList.add('active');
-                this.querySelector('span').textContent = '閉じる';
-                
-                // スムーズスクロール
-                setTimeout(() => {
-                    moreCategories.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'nearest' 
-                    });
-                }, 100);
+                this.querySelector('.btn-text').textContent = '閉じる';
             }
         });
     }
     
-    // カテゴリーカードのタップフィードバック
-    document.querySelectorAll('.giac-category-card, .giac-mini-card').forEach(card => {
-        card.addEventListener('touchstart', function() {
-            this.style.opacity = '0.8';
-        });
-        
-        card.addEventListener('touchend', function() {
-            this.style.opacity = '1';
+    // 地域別都道府県パネルのトグル
+    document.querySelectorAll('.region-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const regionKey = this.getAttribute('data-region-target');
+            const panel = document.getElementById('region-panel-' + regionKey);
+            
+            if (panel) {
+                const isOpen = panel.classList.contains('show');
+                
+                if (isOpen) {
+                    panel.classList.remove('show');
+                    this.classList.remove('active');
+                    this.querySelector('.toggle-text').textContent = '詳細を見る';
+                } else {
+                    panel.classList.add('show');
+                    this.classList.add('active');
+                    this.querySelector('.toggle-text').textContent = '閉じる';
+                }
+            }
         });
     });
     
-    // 地域選択機能の初期化
-    initializeLocationSelector();
-    
-    // パフォーマンス最適化
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => {
-            console.log('Categories section loaded successfully');
-        });
+    // モバイル判定：768px以下でアコーディオンを閉じた状態に
+    function handleMobileAccordions() {
+        const isMobile = window.innerWidth <= 768;
+        const prefecturePanels = document.querySelectorAll('.region-prefectures-panel');
+        const regionToggleBtns = document.querySelectorAll('.region-toggle-btn');
+        
+        if (isMobile) {
+            prefecturePanels.forEach(panel => {
+                panel.classList.remove('show');
+            });
+            regionToggleBtns.forEach(btn => {
+                btn.classList.remove('active');
+                btn.querySelector('.toggle-text').textContent = '詳細を見る';
+            });
+        }
     }
-});
-
-// 地域選択機能
-function initializeLocationSelector() {
-    // 全都道府県表示ボタン
-    const showAllBtn = document.getElementById('giac-show-all-prefectures');
-    const allPrefectures = document.getElementById('giac-all-prefectures');
     
-    if (showAllBtn && allPrefectures) {
-        showAllBtn.addEventListener('click', function() {
-            const isOpen = allPrefectures.classList.contains('show');
-            
-            if (isOpen) {
-                allPrefectures.classList.remove('show');
-                showAllBtn.classList.remove('active');
-                showAllBtn.querySelector('.button-text').textContent = 'すべての都道府県を見る';
-            } else {
-                allPrefectures.classList.add('show');
-                showAllBtn.classList.add('active');
-                showAllBtn.querySelector('.button-text').textContent = '都道府県一覧を閉じる';
-            }
-        });
-    }
+    // 初期実行とリサイズ時の処理
+    handleMobileAccordions();
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleMobileAccordions, 250);
+    });
     
     // 市町村検索機能
-    const searchInput = document.getElementById('giac-municipality-search');
-    const searchButton = document.getElementById('giac-search-municipality');
-    const searchResults = document.getElementById('giac-search-results');
+    const searchInput = document.getElementById('municipality-search-input');
+    const searchButton = document.getElementById('municipality-search-btn');
+    const searchResults = document.getElementById('municipality-search-results');
     
     if (searchInput && searchButton && searchResults) {
         let searchTimeout;
         
-        // 検索実行
         function performMunicipalitySearch() {
             const query = searchInput.value.trim();
             
@@ -1315,11 +1415,9 @@ function initializeLocationSelector() {
                 return;
             }
             
-            // ローディング表示
             searchResults.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">検索中...</div>';
             searchResults.classList.add('show');
             
-            // AJAX検索リクエスト
             fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
                 method: 'POST',
                 headers: {
@@ -1345,7 +1443,6 @@ function initializeLocationSelector() {
             });
         }
         
-        // 検索結果表示
         function displaySearchResults(results) {
             if (results.length === 0) {
                 searchResults.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">該当する市町村が見つかりませんでした。</div>';
@@ -1353,25 +1450,32 @@ function initializeLocationSelector() {
             }
             
             const resultsHtml = results.map(result => `
-                <a href="${result.url}" class="giac-search-result-item">
-                    <span class="giac-search-result-name">${result.name}</span>
-                    <span class="giac-search-result-count">${result.count}件</span>
+                <a href="${result.url}" class="search-result-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; text-decoration: none; border-bottom: 1px solid #e5e5e5; transition: background-color 0.2s ease;">
+                    <span style="font-size: 14px; font-weight: 600; color: #000000;">${result.name}</span>
+                    <span style="font-size: 12px; color: #666666;">${result.count}件</span>
                 </a>
             `).join('');
             
             searchResults.innerHTML = resultsHtml;
+            
+            // ホバー効果を追加
+            searchResults.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#fafafa';
+                });
+                item.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = 'transparent';
+                });
+            });
         }
         
-        // 入力イベント（デバウンス）
         searchInput.addEventListener('input', function() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(performMunicipalitySearch, 300);
         });
         
-        // 検索ボタンクリック
         searchButton.addEventListener('click', performMunicipalitySearch);
         
-        // Enterキー
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1379,27 +1483,38 @@ function initializeLocationSelector() {
             }
         });
         
-        // フォーカス外したら検索結果を非表示（少し遅延）
         searchInput.addEventListener('blur', function() {
             setTimeout(() => {
                 searchResults.classList.remove('show');
             }, 200);
         });
         
-        // フォーカス時に検索結果を再表示
         searchInput.addEventListener('focus', function() {
             if (searchResults.innerHTML.trim() && this.value.trim().length >= 2) {
                 searchResults.classList.add('show');
             }
         });
     }
-}
+    
+    // タップフィードバック
+    document.querySelectorAll('.hero-category-card, .category-compact-card, .prefecture-mini-card').forEach(card => {
+        card.addEventListener('touchstart', function() {
+            this.style.opacity = '0.8';
+        });
+        
+        card.addEventListener('touchend', function() {
+            this.style.opacity = '1';
+        });
+    });
+    
+    console.log('Photo Style Category & Prefecture Section v4.0 loaded');
+});
 </script>
 
 <?php
 // デバッグ情報（開発環境のみ）
 if (defined('WP_DEBUG') && WP_DEBUG) {
-    echo '<!-- Categories Section v3.3 - Clean Style -->';
+    echo '<!-- Categories Section v4.0 - Photo Style Design -->';
     echo '<!-- Total Categories: ' . count($all_categories) . ' -->';
     echo '<!-- Main Categories: ' . count($main_categories) . ' -->';
 }
