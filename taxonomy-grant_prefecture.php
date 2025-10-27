@@ -1709,6 +1709,13 @@ $breadcrumbs = [
             state.filters.category = [categoryParam];
             console.log('📁 Category from URL:', categoryParam);
         }
+        
+        // 市町村
+        const municipalityParam = urlParams.get('municipality');
+        if (municipalityParam) {
+            state.filters.municipality = municipalityParam;
+            console.log('🏘️ Municipality from URL:', municipalityParam);
+        }
     }
     
     function loadMunicipalities() {

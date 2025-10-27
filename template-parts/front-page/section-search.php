@@ -131,7 +131,7 @@ $regions_data = array(
                 echo number_format($total_grants);
                 ?>件
             </span>
-            <span class="stat-label">公開求人</span>
+            <span class="stat-label">掲載</span>
         </div>
         <div class="stat-update">
             <?php echo date('Y/m/d'); ?> (<?php echo array('日', '月', '火', '水', '木', '金', '土')[date('w')]; ?>) 更新 / 毎週月・木曜更新
@@ -177,6 +177,17 @@ $regions_data = array(
                             <?php echo esc_html($pref['name']); ?>
                         </option>
                     <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- 市町村 -->
+            <div class="form-group" id="municipality-group" style="display: none;">
+                <label class="form-label">
+                    <i class="fas fa-building"></i>
+                    市町村
+                </label>
+                <select id="municipality-select" class="form-select">
+                    <option value="">市町村を選択</option>
                 </select>
             </div>
 
@@ -1085,9 +1096,60 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('grant-search-form');
     const categorySelect = document.getElementById('category-select');
     const prefectureSelect = document.getElementById('prefecture-select');
+    const municipalityGroup = document.getElementById('municipality-group');
+    const municipalitySelect = document.getElementById('municipality-select');
     const keywordInput = document.getElementById('keyword-input');
     const searchBtn = document.getElementById('search-btn');
     const resetBtn = document.getElementById('reset-btn');
+    
+    // 都道府県変更時に市町村を読み込む
+    if (prefectureSelect && municipalityGroup && municipalitySelect) {
+        prefectureSelect.addEventListener('change', function() {
+            const prefectureSlug = this.value;
+            
+            if (!prefectureSlug) {
+                municipalityGroup.style.display = 'none';
+                municipalitySelect.innerHTML = '<option value="">市町村を選択</option>';
+                return;
+            }
+            
+            // 市町村を取得
+            const formData = new FormData();
+            formData.append('action', 'gi_get_municipalities_for_prefecture');
+            formData.append('prefecture_slug', prefectureSlug);
+            formData.append('nonce', '<?php echo wp_create_nonce("gi_ajax_nonce"); ?>');
+            
+            fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                municipalitySelect.innerHTML = '<option value="">市町村を選択</option>';
+                
+                if (data.success && data.data && data.data.data && Array.isArray(data.data.data.municipalities)) {
+                    const municipalities = data.data.data.municipalities;
+                    if (municipalities.length > 0) {
+                        municipalities.forEach(muni => {
+                            const option = document.createElement('option');
+                            option.value = muni.slug;
+                            option.textContent = muni.name;
+                            municipalitySelect.appendChild(option);
+                        });
+                        municipalityGroup.style.display = 'block';
+                    } else {
+                        municipalityGroup.style.display = 'none';
+                    }
+                } else {
+                    municipalityGroup.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('[Municipality] Load error:', error);
+                municipalityGroup.style.display = 'none';
+            });
+        });
+    }
     
     // 検索実行
     if (form && searchBtn) {
@@ -1096,6 +1158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const category = categorySelect.value;
             const prefecture = prefectureSelect.value;
+            const municipality = municipalitySelect ? municipalitySelect.value : '';
             const keyword = keywordInput ? keywordInput.value.trim() : '';
             
             let searchUrl = '<?php echo home_url('/grants/'); ?>?';
@@ -1103,6 +1166,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (category) params.push('category=' + encodeURIComponent(category));
             if (prefecture) params.push('prefecture=' + encodeURIComponent(prefecture));
+            if (municipality) params.push('municipality=' + encodeURIComponent(municipality));
             if (keyword) params.push('search=' + encodeURIComponent(keyword));
             
             searchUrl += params.join('&');
@@ -1117,6 +1181,11 @@ document.addEventListener('DOMContentLoaded', function() {
         resetBtn.addEventListener('click', function() {
             if (categorySelect) categorySelect.value = '';
             if (prefectureSelect) prefectureSelect.value = '';
+            if (municipalitySelect) {
+                municipalitySelect.value = '';
+                municipalitySelect.innerHTML = '<option value="">市町村を選択</option>';
+            }
+            if (municipalityGroup) municipalityGroup.style.display = 'none';
             if (keywordInput) keywordInput.value = '';
             console.log('[Reset] Form cleared');
         });

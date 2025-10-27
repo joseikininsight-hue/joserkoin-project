@@ -1567,6 +1567,13 @@ $breadcrumbs = [
             state.filters.prefecture = [prefectureParam];
             console.log('📍 Prefecture from URL:', prefectureParam);
         }
+        
+        // 市町村
+        const municipalityParam = urlParams.get('municipality');
+        if (municipalityParam) {
+            state.filters.municipality = municipalityParam;
+            console.log('🏘️ Municipality from URL:', municipalityParam);
+        }
     }
     
     // ===== カスタムセレクトの初期化 =====

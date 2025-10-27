@@ -2098,6 +2098,13 @@ $popular_categories = array_slice($all_categories, 0, 6);
             state.filters.prefecture = [prefectureParam];
             console.log('📍 Prefecture from URL:', prefectureParam);
         }
+        
+        // 市町村（自分自身以外の場合のみ）
+        const municipalityParam = urlParams.get('municipality');
+        if (municipalityParam) {
+            state.filters.municipality = municipalityParam;
+            console.log('🏘️ Municipality from URL:', municipalityParam);
+        }
     }
     
     function setupCustomSelects() {

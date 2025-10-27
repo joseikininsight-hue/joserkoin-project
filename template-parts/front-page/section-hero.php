@@ -64,7 +64,7 @@ $schema_data = array(
     'aggregateRating' => array(
         '@type' => 'AggregateRating',
         'ratingValue' => '4.8',
-        'ratingCount' => '3809',
+        'ratingCount' => strval(wp_count_posts('grant')->publish),
         'bestRating' => '5',
         'worstRating' => '1'
     ),
@@ -103,15 +103,21 @@ $organization_schema = array(
 );
 ?>
 
+<?php
+// 掲載件数を取得
+$total_grants_count = wp_count_posts('grant')->publish;
+$grants_count_formatted = number_format($total_grants_count);
+?>
+
 <!-- SEO メタタグ - 拡張版 -->
-<meta name="description" content="補助金・助成金をAIが効率的に検索｜全国3,809件のデータベースから最適な制度を発見。業種別・地域別対応、専門家による申請サポート。完全無料で今すぐ検索開始。">
+<meta name="description" content="補助金・助成金をAIが効率的に検索｜全国<?php echo $grants_count_formatted; ?>件のデータベースから最適な制度を発見。業種別・地域別対応、専門家による申請サポート。完全無料で今すぐ検索開始。">
 <meta name="keywords" content="補助金,助成金,AI検索,事業支援,申請サポート,無料検索,ビジネス支援">
 <link rel="canonical" href="<?php echo esc_url($hero_config['site_url']); ?>">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="補助金・助成金をAIが効率的に検索 | <?php echo esc_attr($hero_config['site_name']); ?>">
-<meta property="og:description" content="全国3,809件のデータベースから最適な補助金・助成金を発見。専門家による充実したサポートで成功まで導きます。">
+<meta property="og:description" content="全国<?php echo $grants_count_formatted; ?>件のデータベースから最適な補助金・助成金を発見。専門家による充実したサポートで成功まで導きます。">
 <meta property="og:url" content="<?php echo esc_url($hero_config['site_url']); ?>">
 <meta property="og:image" content="<?php echo esc_url($hero_config['hero_image']); ?>">
 <meta property="og:site_name" content="<?php echo esc_attr($hero_config['site_name']); ?>">
@@ -120,7 +126,7 @@ $organization_schema = array(
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="補助金・助成金をAIが効率的に検索">
-<meta name="twitter:description" content="全国3,809件のデータベースから最適な制度を発見。完全無料。">
+<meta name="twitter:description" content="全国<?php echo $grants_count_formatted; ?>件のデータベースから最適な制度を発見。完全無料。">
 <meta name="twitter:image" content="<?php echo esc_url($hero_config['hero_image']); ?>">
 
 <!-- 構造化データ - WebApplication -->
@@ -174,7 +180,7 @@ $organization_schema = array(
                             <svg class="gih-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                                 <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
                             </svg>
-                            <span>全国3,809件の補助金・助成金データベース</span>
+                            <span>全国<?php echo $grants_count_formatted; ?>件の補助金・助成金データベース</span>
                         </li>
                         <li class="gih-feature-item">
                             <svg class="gih-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -251,7 +257,7 @@ $organization_schema = array(
                     <svg class="gih-mobile-feature-icon" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                         <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
                     </svg>
-                    <span>3,809件のデータベース</span>
+                    <span><?php echo $grants_count_formatted; ?>件のデータベース</span>
                 </li>
                 <li class="gih-mobile-feature-item">
                     <svg class="gih-mobile-feature-icon" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
