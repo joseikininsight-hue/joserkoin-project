@@ -32,19 +32,17 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
     <div class="section-container">
         
         <!-- Section Header -->
-        <div class="section-header" data-aos="fade-up">
-            <div class="header-accent"></div>
+        <header class="browse-header" data-aos="fade-up">
+            <div class="browse-badge">
+                <div class="badge-pulse"></div>
+                <span>AI POWERED SEARCH</span>
+            </div>
             
-            <h2 class="section-title">
-                <span class="title-en">AI POWERED SEARCH</span>
-                <span class="title-ja">補助金AI検索</span>
-                <div class="yellow-marker"></div>
+            <h2 class="browse-title">
+                <span class="title-main">補助金AI検索</span>
+                <span class="title-sub">最適な補助金を瞬時に発見<br>💡 AI質問ボタンを押して、なんでも質問してみてください！</span>
             </h2>
-            
-            <p class="section-description">
-                最適な補助金を瞬時に発見
-            </p>
-        </div>
+        </header>
 
         <!-- Main Search Interface -->
         <div class="ai-search-interface">
@@ -132,121 +130,12 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
                 </button>
             </div>
 
+
+
             <!-- AI Chat & Results -->
             <div class="ai-main-content">
                 
-                <!-- Left: AI Assistant -->
-                <div class="ai-assistant-panel">
-                    <div class="assistant-header">
-                        <div class="assistant-avatar">
-                            <div class="avatar-ring"></div>
-                            <span class="avatar-icon">AI</span>
-                        </div>
-                        <div class="assistant-info">
-                            <h3 class="assistant-name">補助金AIアシスタント</h3>
-                            <span class="assistant-status">
-                                <span class="status-dot"></span>
-                                オンライン
-                            </span>
-                        </div>
-                        <button class="ai-history-btn" onclick="toggleChatHistory()" title="会話履歴" aria-label="会話履歴を表示">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M10 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M10 6v4l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                            <span class="history-text">履歴</span>
-                            <span class="history-count">0</span>
-                        </button>
-                    </div>
-                    
-                    <!-- AI会話履歴パネル -->
-                    <div class="ai-history-panel" id="ai-history-panel" style="display:none;">
-                        <div class="ai-history-header">
-                            <h4>
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                    <path d="M9 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                    <path d="M9 5v4l2.5 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                </svg>
-                                会話履歴
-                            </h4>
-                            <button onclick="clearChatHistory()" class="ai-history-clear" aria-label="履歴をクリア">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M3 4h10M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1M6 7v4M10 7v4M4 4l.5 9a1 1 0 001 1h5a1 1 0 001-1L12 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                </svg>
-                                クリア
-                            </button>
-                        </div>
-                        <div class="ai-history-list" id="ai-history-list">
-                            <p class="ai-history-empty">履歴がありません</p>
-                        </div>
-                    </div>
-                    
-                    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
-                        <div class="message message-ai">
-                            <div class="message-avatar">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
-                                    <path d="M9 10h6M9 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                    <circle cx="12" cy="3" r="1" fill="currentColor"/>
-                                </svg>
-                            </div>
-                            <div class="message-bubble">
-                                どのような補助金をお探しですか？<br>
-                                業種や目的をお聞かせください。
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="chat-input-area">
-                        <div class="typing-indicator" id="typing-indicator">
-                            <span></span><span></span><span></span>
-                        </div>
-                        <textarea 
-                            id="chat-input" 
-                            class="chat-input"
-                            placeholder="質問を入力してください"
-                            rows="1"
-                            aria-label="チャット入力"></textarea>
-                        <button id="chat-send" class="chat-send-btn" aria-label="メッセージ送信">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M18 2L9 11M18 2l-6 16-3-7-7-3 16-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span class="btn-text-desktop">送信</span>
-                        </button>
-                    </div>
-
-                    <!-- Quick Questions -->
-                    <div class="quick-questions" id="quick-questions">
-                        <button class="quick-q" data-q="申請の流れを教えて">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                <path d="M1 7h12M7 1v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                            申請の流れ
-                        </button>
-                        <button class="quick-q" data-q="必要書類は？">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                <rect x="2" y="1" width="10" height="12" rx="1" stroke="currentColor" stroke-width="2"/>
-                                <path d="M4 4h6M4 7h6M4 10h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                            必要書類
-                        </button>
-                        <button class="quick-q" data-q="締切はいつ？">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="2"/>
-                                <path d="M7 4v3l2 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                            締切確認
-                        </button>
-                        <button class="quick-q" data-q="採択率は？">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                <path d="M1 10l3-3 3 3 5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            採択率
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Right: Search Results -->
+                <!-- Search Results Only (AI Assistant removed) -->
                 <div class="search-results-panel">
                     <div class="results-header">
                         <h3 class="results-title">
@@ -687,6 +576,18 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
     line-height: var(--gi-line-height-relaxed);
 }
 
+.monochrome-ai-search .ai-help-text {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.95em;
+    color: #555;
+    font-weight: 500;
+    padding: 8px 16px;
+    background: rgba(255, 235, 59, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 235, 59, 0.3);
+}
+
 .monochrome-ai-search .yellow-marker {
     width: 60px;
     height: 4px;
@@ -988,28 +889,57 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
 }
 
 /* ============================================
-   Main Content - Responsive Grid
+   AI Consult Link
+   ============================================ */
+.monochrome-ai-search .ai-consult-link-wrapper {
+    margin-top: var(--gi-spacing-xl);
+    margin-bottom: var(--gi-spacing-2xl);
+    text-align: center;
+}
+
+.monochrome-ai-search .ai-consult-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    background: var(--gi-color-primary);
+    color: var(--gi-color-background);
+    border: 2px solid var(--gi-color-primary);
+    font-size: var(--gi-font-size-md);
+    font-weight: 700;
+    text-decoration: none;
+    transition: all var(--gi-transition-base);
+    border-radius: 0;
+    box-shadow: var(--gi-shadow-md);
+}
+
+.monochrome-ai-search .ai-consult-link:hover {
+    background: var(--gi-color-background);
+    color: var(--gi-color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--gi-shadow-xl);
+}
+
+.monochrome-ai-search .ai-consult-link svg:last-child {
+    transition: transform var(--gi-transition-base);
+}
+
+.monochrome-ai-search .ai-consult-link:hover svg:last-child {
+    transform: translateX(4px);
+}
+
+/* ============================================
+   Main Content - Responsive Grid (AI Assistant Removed)
    ============================================ */
 .monochrome-ai-search .ai-main-content {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: var(--gi-spacing-xl);
+    display: block;
     margin-bottom: var(--gi-spacing-2xl);
 }
 
 /* ============================================
-   AI Assistant Panel
+   AI Assistant Panel (REMOVED)
    ============================================ */
-.monochrome-ai-search .ai-assistant-panel {
-    background: var(--gi-color-surface);
-    border-radius: var(--gi-radius-2xl);
-    border: 2px solid #000000;
-    display: flex;
-    flex-direction: column;
-    height: 600px;
-    position: sticky;
-    top: var(--gi-spacing-lg);
-}
+/* AI Assistant section removed as requested */
 
 .monochrome-ai-search .assistant-header {
     padding: var(--gi-spacing-lg);
@@ -1490,8 +1420,10 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
    ============================================ */
 .monochrome-ai-search .featured-grants {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--gi-spacing-lg);
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .monochrome-ai-search .grant-card {
@@ -1888,15 +1820,7 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
    Tablet (768px - 1023px)
    ============================================ */
 @media (min-width: 768px) and (max-width: 1023px) {
-    .monochrome-ai-search .ai-main-content {
-        grid-template-columns: 1fr;
-        gap: var(--gi-spacing-lg);
-    }
-    
-    .monochrome-ai-search .ai-assistant-panel {
-        height: 450px;
-        position: static;
-    }
+    /* AI Assistant removed - no specific tablet overrides needed */
     
     .monochrome-ai-search .section-container {
         padding: 0 var(--gi-spacing-lg);
@@ -1904,7 +1828,13 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
     
     .monochrome-ai-search .featured-grants,
     .monochrome-ai-search .results-list {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+    
+    .monochrome-ai-search .search-results-panel {
+        max-width: 100%;
+        border-width: 3px;
     }
     
     .monochrome-ai-search .keyboard-shortcuts-hint {
@@ -1924,32 +1854,7 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
         margin-bottom: var(--gi-spacing-2xl);
     }
     
-    .monochrome-ai-search .ai-main-content {
-        grid-template-columns: 1fr;
-        gap: var(--gi-spacing-lg);
-    }
-    
-    /* Mobile: Larger Chat Panel */
-    .monochrome-ai-search .ai-assistant-panel {
-        height: 70vh;
-        min-height: 500px;
-        max-height: 800px;
-        position: static;
-    }
-    
-    .monochrome-ai-search .chat-messages {
-        font-size: 13px;
-    }
-    
-    .monochrome-ai-search .message-bubble {
-        max-width: 90%;
-        font-size: 13px;
-        padding: 12px 16px;
-    }
-    
-    .monochrome-ai-search .chat-input {
-        font-size: 14px;
-    }
+    /* AI Assistant removed - mobile layout simplified */
     
     .monochrome-ai-search .quick-filters {
         display: grid;
@@ -2134,14 +2039,7 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
         height: 32px;
     }
     
-    .monochrome-ai-search .ai-main-content {
-        gap: var(--gi-spacing-sm);
-    }
-    
-    .monochrome-ai-search .ai-assistant-panel {
-        height: 60vh;
-        min-height: 400px;
-    }
+    /* AI Assistant removed */
     
     .monochrome-ai-search .section-container {
         padding: 0 var(--gi-spacing-sm);
@@ -2172,14 +2070,7 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
         padding: 0 var(--gi-spacing-3xl);
     }
     
-    .monochrome-ai-search .ai-main-content {
-        grid-template-columns: 420px 1fr;
-        gap: var(--gi-spacing-2xl);
-    }
-    
-    .monochrome-ai-search .ai-assistant-panel {
-        height: 700px;
-    }
+    /* AI Assistant removed */
     
     .monochrome-ai-search .featured-grants {
         grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -2199,9 +2090,7 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
         max-width: 1800px;
     }
     
-    .monochrome-ai-search .ai-main-content {
-        grid-template-columns: 480px 1fr;
-    }
+    /* AI Assistant removed */
     
     .monochrome-ai-search .featured-grants {
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -2244,8 +2133,7 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
     .monochrome-ai-search .grant-card,
     .monochrome-ai-search .search-input-wrapper,
     .monochrome-ai-search .filter-chip,
-    .monochrome-ai-search .ai-assistant-panel {
-        border-width: 3px;
+    /* AI Assistant removed */
     }
 }
 
@@ -2309,7 +2197,7 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
 .monochrome-ai-search .featured-grants .grant-card,
 .monochrome-ai-search .results-list .grant-card,
 .monochrome-ai-search .results-container .grant-card {
-    border: 3px solid #000000 !important;
+    border: 4px solid #000000 !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
@@ -2317,21 +2205,15 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
 .monochrome-ai-search .featured-grants .grant-card:hover,
 .monochrome-ai-search .results-list .grant-card:hover,
 .monochrome-ai-search .results-container .grant-card:hover {
-    border: 3px solid #333333 !important;
+    border: 4px solid #333333 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
 }
 
 .monochrome-ai-search .results-header {
-    border-bottom: 3px solid #000000 !important;
+    border-bottom: 4px solid #000000 !important;
 }
 
-.monochrome-ai-search .ai-assistant-panel {
-    border: 2px solid #000000 !important;
-}
-
-.monochrome-ai-search .assistant-header {
-    border-bottom: 2px solid #000000 !important;
-}
+/* AI Assistant styles removed */
 
 .monochrome-ai-search .suggestion-item {
     border-bottom: 1px solid #000000 !important;
@@ -4029,10 +3911,10 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
                         if (controller) {
                             controller.showGrantAssistant(grantId, grantTitle, grantPermalink);
                         } else {
-                            alert(`AI相談機能：${grantTitle}`);
+                            alert(`AI質問機能：${grantTitle}`);
                         }
                     } else {
-                        alert('AI相談機能 - データが不正です');
+                        alert('AI質問機能 - データが不正です');
                     }
                 };
             });
@@ -4204,5 +4086,854 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
         console.log('Chat history initialized');
     });
 
+})();
+</script>
+
+<?php
+/**
+ * =====================================================
+ * Browse Section Integration (用途から探す統合)
+ * =====================================================
+ * 検索セクションの下に「用途から探す」を統合表示
+ */
+
+// やりたいこと別カテゴリー（ユーザー視点の自然な言葉で表現）
+$purpose_categories = array(
+    array(
+        'title' => '設備を導入したい',
+        'icon' => 'fas fa-industry',
+        'slug' => 'equipment',
+        'url' => home_url('/purpose/equipment/'),
+        'description' => '製造設備・機械・IT機器などの導入支援',
+        'keywords' => 'ものづくり補助金, IT導入補助金, 設備投資',
+        'categories' => array('ものづくり補助金', 'IT導入補助金', '設備投資補助金')
+    ),
+    array(
+        'title' => '人材育成したい',
+        'icon' => 'fas fa-user-graduate',
+        'slug' => 'training',
+        'url' => home_url('/purpose/training/'),
+        'description' => '従業員研修・資格取得・スキルアップ支援',
+        'keywords' => '人材開発, 教育訓練, キャリアアップ',
+        'categories' => array('人材育成・雇用', '教育訓練給付', 'キャリアアップ助成金')
+    ),
+    array(
+        'title' => '営業強化したい',
+        'icon' => 'fas fa-chart-line',
+        'slug' => 'sales',
+        'url' => home_url('/purpose/sales/'),
+        'description' => '販路開拓・マーケティング・広告宣伝の支援',
+        'keywords' => '販路拡大, 展示会出展, EC構築',
+        'categories' => array('販路開拓', '小規模事業者持続化補助金', 'EC・IT活用')
+    ),
+    array(
+        'title' => '事業を始めたい',
+        'icon' => 'fas fa-rocket',
+        'slug' => 'startup',
+        'url' => home_url('/purpose/startup/'),
+        'description' => '創業・起業・新規事業立ち上げの支援',
+        'keywords' => '創業支援, スタートアップ, 新規開業',
+        'categories' => array('創業・起業', '新規開業', '事業再構築補助金')
+    ),
+    array(
+        'title' => 'IT化を進めたい',
+        'icon' => 'fas fa-laptop-code',
+        'slug' => 'digital',
+        'url' => home_url('/purpose/digital/'),
+        'description' => 'デジタル化・DX推進・システム導入の支援',
+        'keywords' => 'DX, IT導入, デジタル化',
+        'categories' => array('IT導入補助金', 'DX推進', 'デジタル化支援')
+    ),
+    array(
+        'title' => '資金調達したい',
+        'icon' => 'fas fa-yen-sign',
+        'slug' => 'funding',
+        'url' => home_url('/purpose/funding/'),
+        'description' => '運転資金・設備資金・開発資金の調達支援',
+        'keywords' => '融資, 補助金, 助成金',
+        'categories' => array('融資制度', '資金調達', '補助金・助成金全般')
+    ),
+    array(
+        'title' => '環境対策したい',
+        'icon' => 'fas fa-leaf',
+        'slug' => 'environment',
+        'url' => home_url('/purpose/environment/'),
+        'description' => '省エネ・脱炭素・環境配慮型事業への支援',
+        'keywords' => 'カーボンニュートラル, 省エネ, 再生可能エネルギー',
+        'categories' => array('環境・エネルギー', '省エネルギー', 'カーボンニュートラル')
+    ),
+    array(
+        'title' => '事業を引き継ぎたい',
+        'icon' => 'fas fa-handshake',
+        'slug' => 'succession',
+        'url' => home_url('/purpose/succession/'),
+        'description' => '事業承継・M&A・後継者育成の支援',
+        'keywords' => '事業承継, 世代交代, M&A',
+        'categories' => array('事業承継', '後継者支援', '事業引継ぎ')
+    ),
+    array(
+        'title' => '海外展開したい',
+        'icon' => 'fas fa-globe-asia',
+        'slug' => 'global',
+        'url' => home_url('/purpose/global/'),
+        'description' => '輸出・海外進出・インバウンド対応の支援',
+        'keywords' => '海外進出, 輸出, グローバル展開',
+        'categories' => array('海外展開', '輸出支援', 'インバウンド')
+    ),
+    array(
+        'title' => '研究開発したい',
+        'icon' => 'fas fa-flask',
+        'slug' => 'rnd',
+        'url' => home_url('/purpose/rnd/'),
+        'description' => '新技術開発・製品開発・研究活動の支援',
+        'keywords' => 'R&D, イノベーション, 新技術開発',
+        'categories' => array('研究開発', 'イノベーション', '技術開発')
+    ),
+    array(
+        'title' => '働き方改善したい',
+        'icon' => 'fas fa-briefcase',
+        'slug' => 'workstyle',
+        'url' => home_url('/purpose/workstyle/'),
+        'description' => 'テレワーク・労務管理・福利厚生の充実支援',
+        'keywords' => '働き方改革, テレワーク, 労働環境改善',
+        'categories' => array('働き方改革', 'テレワーク', '職場環境改善')
+    ),
+    array(
+        'title' => '地域活性化したい',
+        'icon' => 'fas fa-city',
+        'slug' => 'regional',
+        'url' => home_url('/purpose/regional/'),
+        'description' => '地域資源活用・観光振興・まちづくりの支援',
+        'keywords' => '地域振興, 観光, まちづくり',
+        'categories' => array('地域活性化', '観光振興', 'まちづくり')
+    ),
+    array(
+        'title' => '個人で使いたい',
+        'icon' => 'fas fa-user',
+        'slug' => 'individual',
+        'url' => home_url('/purpose/individual/'),
+        'description' => '個人事業主・フリーランス・資格取得など個人向け支援',
+        'keywords' => '個人事業主, フリーランス, 資格取得, 個人起業',
+        'categories' => array('個人事業主支援', 'フリーランス', '資格取得助成', '個人向け補助金')
+    ),
+);
+?>
+
+<!-- フォント・アイコン読み込み -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<section class="browse-section-integrated" itemscope itemtype="https://schema.org/WebPageElement" aria-label="補助金検索ナビゲーション">
+    <meta itemprop="name" content="補助金検索">
+    <meta itemprop="description" content="やりたいこと・診断・一覧から補助金を検索">
+    
+    <div class="browse-container">
+        
+        <!-- セクションヘッダー -->
+        <header class="browse-header">
+            <div class="browse-badge">
+                <div class="badge-pulse"></div>
+                <span>BROWSE GRANTS</span>
+            </div>
+            
+            <h2 class="browse-title" itemprop="headline">
+                <span class="title-main">用途から探す</span>
+                <span class="title-sub">あなたの目的に合った補助金・助成金を見つけよう</span>
+            </h2>
+        </header>
+
+        <!-- 検索タブナビゲーション -->
+        <nav class="browse-tabs" role="navigation" aria-label="補助金検索方法">
+            <button class="tab-button active" data-tab="purpose" aria-selected="true" role="tab">
+                <i class="fas fa-compass"></i>
+                <span>やりたいことから探す</span>
+            </button>
+            <button class="tab-button" data-tab="diagnosis" aria-selected="false" role="tab">
+                <i class="fas fa-clipboard-check"></i>
+                <span>診断して探す</span>
+            </button>
+            <button class="tab-button" data-tab="all" aria-selected="false" role="tab">
+                <i class="fas fa-list"></i>
+                <span>一覧から探す</span>
+            </button>
+        </nav>
+
+        <!-- タブコンテンツ -->
+        <div class="browse-content">
+            
+            <!-- やりたいことから探す -->
+            <div class="tab-content active" data-content="purpose" role="tabpanel" aria-label="やりたいことから探す">
+                <div class="purpose-grid" itemscope itemtype="https://schema.org/ItemList">
+                    <meta itemprop="name" content="補助金検索 - やりたいこと別">
+                    <meta itemprop="description" content="事業の目的別に補助金・助成金を検索できます">
+                    <?php 
+                    $position = 1;
+                    foreach ($purpose_categories as $purpose) : 
+                    ?>
+                    <a href="<?php echo esc_url($purpose['url']); ?>" class="purpose-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <meta itemprop="position" content="<?php echo $position++; ?>">
+                        <link itemprop="url" href="<?php echo esc_url($purpose['url']); ?>">
+                        <div class="purpose-icon">
+                            <i class="<?php echo esc_attr($purpose['icon']); ?>"></i>
+                        </div>
+                        <h3 class="purpose-title" itemprop="name"><?php echo esc_html($purpose['title']); ?></h3>
+                        <p class="purpose-description" itemprop="description"><?php echo esc_html($purpose['description']); ?></p>
+                        <meta itemprop="keywords" content="<?php echo esc_attr($purpose['keywords']); ?>">
+                        <div class="purpose-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- 診断して探す -->
+            <div class="tab-content" data-content="diagnosis">
+                <div class="diagnosis-card" itemscope itemtype="https://schema.org/WebApplication">
+                    <meta itemprop="name" content="補助金診断ツール">
+                    <meta itemprop="description" content="簡単な質問に答えるだけで、あなたに最適な補助金・助成金を見つけることができます">
+                    <meta itemprop="applicationCategory" content="BusinessApplication">
+                    <meta itemprop="operatingSystem" content="Web Browser">
+                    
+                    <div class="diagnosis-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3 class="diagnosis-title" itemprop="headline">AI補助金診断</h3>
+                    <p class="diagnosis-description" itemprop="description">
+                        簡単な質問に答えるだけで、あなたの事業に最適な補助金・助成金を自動でマッチング。
+                        業種・規模・目的に応じた最適な制度を最短30秒で診断します。
+                    </p>
+                    
+                    <div class="diagnosis-features">
+                        <div class="feature-item">
+                            <i class="fas fa-clock"></i>
+                            <span>所要時間：約30秒</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-robot"></i>
+                            <span>AI自動マッチング</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>無料で利用可能</span>
+                        </div>
+                    </div>
+                    
+                    <a href="<?php echo esc_url(home_url('/ai-diagnosis/')); ?>" class="diagnosis-button" itemprop="url">
+                        <span>無料で診断を始める</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    
+                    <div class="diagnosis-note">
+                        ※登録不要、個人情報の入力も不要です
+                    </div>
+                </div>
+            </div>
+
+            <!-- 一覧から探す -->
+            <div class="tab-content" data-content="all" role="tabpanel" aria-label="一覧から探す">
+                <div class="all-browse-card" itemscope itemtype="https://schema.org/WebPage">
+                    <meta itemprop="name" content="補助金・助成金一覧">
+                    <meta itemprop="description" content="国・地方自治体が提供する補助金・助成金の完全一覧">
+                    <div class="all-browse-icon">
+                        <i class="fas fa-th-list"></i>
+                    </div>
+                    <h3 class="all-browse-title" itemprop="headline">全ての補助金・助成金を見る</h3>
+                    <p class="all-browse-description" itemprop="description">
+                        国・地方自治体が提供する補助金・助成金を一覧で表示。並び替えや絞り込み機能で最適な制度を見つけられます。
+                    </p>
+                    <a href="<?php echo esc_url(get_post_type_archive_link('grant')); ?>" class="all-browse-button" itemprop="url">
+                        <span>補助金一覧を見る</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<style>
+/* ============================================
+   Browse Section Integration - 統合版スタイル
+   ============================================ */
+
+.browse-section-integrated {
+    padding: 80px 0 100px;
+    background: #ffffff;
+    border-top: 1px solid #e5e5e5;
+    font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.browse-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ヘッダー */
+.browse-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.browse-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #000000;
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    margin-bottom: 20px;
+}
+
+.badge-pulse {
+    width: 7px;
+    height: 7px;
+    background: #ffffff;
+    border-radius: 50%;
+    animation: browse-pulse 2s ease-in-out infinite;
+}
+
+@keyframes browse-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.browse-title {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.title-main {
+    font-size: 42px;
+    font-weight: 900;
+    color: #000000;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.title-sub {
+    font-size: 17px;
+    font-weight: 500;
+    color: #666666;
+    line-height: 1.5;
+}
+
+/* タブナビゲーション */
+.browse-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 40px;
+    background: #f8f8f8;
+    padding: 6px;
+    border-radius: 12px;
+}
+
+.tab-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 12px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    color: #666666;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button i {
+    font-size: 20px;
+}
+
+.tab-button:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #e0e0e0;
+}
+
+.tab-button.active {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+/* タブコンテンツ */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: browse-fadeIn 0.4s ease;
+}
+
+@keyframes browse-fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* やりたいことから探す */
+.purpose-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.purpose-card {
+    position: relative;
+    padding: 20px;
+    background: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+}
+
+.purpose-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #000000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.purpose-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.purpose-card:hover::before {
+    transform: translateX(0);
+}
+
+.purpose-icon {
+    width: 48px;
+    height: 48px;
+    background: #000000;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 22px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.purpose-card:hover .purpose-icon {
+    transform: rotate(10deg) scale(1.1);
+}
+
+.purpose-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 6px 0;
+    line-height: 1.3;
+}
+
+.purpose-description {
+    font-size: 12px;
+    color: #666666;
+    line-height: 1.5;
+    margin: 0 0 auto 0;
+    flex: 1;
+}
+
+.purpose-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: #000000;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+    margin-top: 8px;
+}
+
+.purpose-card:hover .purpose-arrow {
+    transform: translateX(6px);
+}
+
+/* 診断して探す */
+.diagnosis-card {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+    border: 2px solid #000000;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.diagnosis-icon {
+    width: 80px;
+    height: 80px;
+    background: #000000;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 36px;
+    margin: 0 auto 24px;
+    animation: browse-pulse-icon 2s ease-in-out infinite;
+}
+
+@keyframes browse-pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.diagnosis-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #000000;
+    margin: 0 0 16px 0;
+}
+
+.diagnosis-description {
+    font-size: 15px;
+    color: #666666;
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto 32px;
+}
+
+.diagnosis-features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333333;
+    font-weight: 600;
+}
+
+.feature-item i {
+    color: #000000;
+    font-size: 18px;
+}
+
+.diagnosis-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 36px;
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.diagnosis-button:hover {
+    background: #ffffff;
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+}
+
+.diagnosis-button i {
+    transition: transform 0.3s ease;
+}
+
+.diagnosis-button:hover i {
+    transform: translateX(4px);
+}
+
+.diagnosis-note {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #999999;
+    font-style: italic;
+}
+
+/* 一覧から探す */
+.all-browse-card {
+    text-align: center;
+    padding: 60px 40px;
+    background: #f8f8f8;
+    border: 2px solid #000000;
+    border-radius: 16px;
+}
+
+.all-browse-icon {
+    width: 80px;
+    height: 80px;
+    background: #000000;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 36px;
+    margin: 0 auto 24px;
+}
+
+.all-browse-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #000000;
+    margin: 0 0 16px 0;
+}
+
+.all-browse-description {
+    font-size: 15px;
+    color: #666666;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto 32px;
+}
+
+.all-browse-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.all-browse-button:hover {
+    background: #ffffff;
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.all-browse-button i {
+    transition: transform 0.3s ease;
+}
+
+.all-browse-button:hover i {
+    transform: translateX(4px);
+}
+
+/* レスポンシブ */
+@media (max-width: 1023px) {
+    .browse-tabs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .purpose-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .purpose-card {
+        padding: 16px;
+        min-height: 160px;
+    }
+}
+
+@media (max-width: 767px) {
+    .browse-section-integrated {
+        padding: 50px 0 60px;
+    }
+    
+    .title-main {
+        font-size: 32px;
+    }
+    
+    .title-sub {
+        font-size: 15px;
+    }
+    
+    .browse-tabs {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .tab-button {
+        font-size: 13px;
+        padding: 14px 12px;
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .tab-button i {
+        font-size: 18px;
+    }
+    
+    .purpose-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .purpose-card {
+        padding: 14px;
+        min-height: 150px;
+    }
+    
+    .purpose-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    
+    .purpose-title {
+        font-size: 14px;
+    }
+    
+    .purpose-description {
+        font-size: 11px;
+    }
+    
+    .diagnosis-card {
+        padding: 40px 24px;
+    }
+    
+    .diagnosis-title {
+        font-size: 24px;
+    }
+    
+    .diagnosis-features {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .all-browse-card {
+        padding: 40px 24px;
+    }
+    
+    .all-browse-title {
+        font-size: 24px;
+    }
+}
+</style>
+
+<script>
+(function() {
+    'use strict';
+    
+    console.log('[Browse Section] Script loaded');
+    
+    // DOMContentLoaded と load の両方で初期化を試みる（カスタマイザー対策）
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('[Browse Section] DOMContentLoaded fired');
+        initBrowseTabsIntegrated();
+    });
+    
+    // カスタマイザーなどで DOMContentLoaded が既に発火している場合の対策
+    if (document.readyState === 'loading') {
+        console.log('[Browse Section] Document is still loading, waiting for DOMContentLoaded');
+    } else {
+        console.log('[Browse Section] Document already loaded, initializing immediately');
+        setTimeout(function() {
+            initBrowseTabsIntegrated();
+        }, 100);
+    }
+    
+    function initBrowseTabsIntegrated() {
+        console.log('[Browse Init] Starting Browse Section Integrated initialization...');
+        
+        const tabButtons = document.querySelectorAll('.browse-section-integrated .tab-button');
+        const tabContents = document.querySelectorAll('.browse-section-integrated .tab-content');
+        
+        console.log('[Browse Init] Found', tabButtons.length, 'tab buttons');
+        console.log('[Browse Init] Found', tabContents.length, 'tab contents');
+        
+        if (tabButtons.length === 0) {
+            console.error('[Browse Init] ERROR: No tab buttons found!');
+            return;
+        }
+        
+        if (tabContents.length === 0) {
+            console.error('[Browse Init] ERROR: No tab contents found!');
+            return;
+        }
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+                
+                // 全てのタブをリセット
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                });
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // 選択されたタブをアクティブ化
+                this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
+                
+                console.log('[Browse Tab] Switched to tab:', targetTab);
+                
+                // Browse section内のタブコンテンツのみを対象とする
+                const browseSectionContents = document.querySelectorAll('.browse-section-integrated .tab-content');
+                browseSectionContents.forEach(content => {
+                    if (content.getAttribute('data-content') === targetTab) {
+                        content.classList.add('active');
+                        console.log('[Browse Tab] Activated content:', targetTab);
+                    }
+                });
+                
+                // トラッキング（Google Analyticsが有効な場合）
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'browse_tab_click_integrated', {
+                        event_category: 'navigation',
+                        event_label: targetTab
+                    });
+                }
+            });
+        });
+        
+        console.log('[✓] Browse Section Integrated initialized successfully');
+        console.log('[Browse Init] Active tab button:', document.querySelector('.browse-section-integrated .tab-button.active'));
+        console.log('[Browse Init] Active tab content:', document.querySelector('.browse-section-integrated .tab-content.active'));
+    }
+    
+    // セクションの存在確認
+    const browseSection = document.querySelector('.browse-section-integrated');
+    if (browseSection) {
+        console.log('[✓] Browse Section Integrated DOM element found');
+    } else {
+        console.error('[✗] Browse Section Integrated DOM element NOT FOUND!');
+    }
 })();
 </script>

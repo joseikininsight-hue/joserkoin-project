@@ -18,7 +18,7 @@ $main_categories = get_terms(array(
     'hide_empty' => false,
     'orderby' => 'count',
     'order' => 'DESC',
-    'number' => 6
+    'number' => 8
 ));
 
 $all_categories = get_terms(array(
@@ -35,7 +35,9 @@ $category_icons = array(
     2 => 'fas fa-rocket',
     3 => 'fas fa-store',
     4 => 'fas fa-leaf',
-    5 => 'fas fa-users'
+    5 => 'fas fa-users',
+    6 => 'fas fa-chart-line',
+    7 => 'fas fa-handshake'
 );
 
 $archive_base_url = get_post_type_archive_link('grant');
@@ -59,21 +61,24 @@ if (function_exists('gi_get_cached_stats')) {
 <section class="giac-categories-section" id="grant-categories">
     <div class="giac-container">
         <!-- セクションヘッダー -->
-        <div class="giac-header">
-            <h2 class="giac-title">
-                <span class="giac-title-en">CATEGORY SEARCH</span>
+        <header class="browse-header">
+            <div class="browse-badge">
+                <div class="badge-pulse"></div>
+                <span>CATEGORY SEARCH</span>
+            </div>
+            
+            <h2 class="browse-title">
+                <span class="title-main">カテゴリー別検索</span>
+                <span class="title-sub">最適な補助金を業種・目的別に発見</span>
             </h2>
-            <p class="giac-title-ja">カテゴリー別AI検索</p>
-            <div class="giac-yellow-line"></div>
-            <p class="giac-subtitle">最適な補助金を業種・目的別に発見</p>
-        </div>
+        </header>
 
         <!-- メインカテゴリー -->
         <div class="giac-main-categories">
             <?php
             if (!empty($main_categories)) :
                 foreach ($main_categories as $index => $category) :
-                    if ($index >= 6) break;
+                    if ($index >= 8) break;
                     $icon = $category_icons[$index] ?? 'fas fa-folder';
                     $category_url = get_term_link($category);
             ?>
@@ -221,6 +226,63 @@ if (function_exists('gi_get_cached_stats')) {
 /* ============================================
    カテゴリーセクション - クリーンスタイル
    ============================================ */
+
+/* Browse Header Styles (統一ヘッダースタイル) */
+.browse-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.browse-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #000000;
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    margin-bottom: 20px;
+}
+
+.badge-pulse {
+    width: 7px;
+    height: 7px;
+    background: #ffffff;
+    border-radius: 50%;
+    animation: category-pulse 2s ease-in-out infinite;
+}
+
+@keyframes category-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.browse-title {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.title-main {
+    font-size: 42px;
+    font-weight: 900;
+    color: #000000;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.title-sub {
+    font-size: 17px;
+    font-weight: 500;
+    color: #666666;
+    line-height: 1.5;
+}
+
+/* Original Category Styles */
 
 /* ベース設定 */
 .giac-categories-section {
@@ -557,7 +619,7 @@ if (function_exists('gi_get_cached_stats')) {
     }
     
     .giac-main-categories {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
         margin-bottom: 32px;
     }
@@ -583,7 +645,7 @@ if (function_exists('gi_get_cached_stats')) {
     }
     
     .giac-more-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 10px;
     }
 }
@@ -595,7 +657,7 @@ if (function_exists('gi_get_cached_stats')) {
     }
     
     .giac-main-categories {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 14px;
     }
     
@@ -605,7 +667,7 @@ if (function_exists('gi_get_cached_stats')) {
     }
     
     .giac-more-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
@@ -643,6 +705,7 @@ if (function_exists('gi_get_cached_stats')) {
     }
     
     .giac-main-categories {
+        grid-template-columns: repeat(2, 1fr);
         gap: 8px;
         margin-bottom: 20px;
     }

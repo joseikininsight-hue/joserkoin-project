@@ -773,7 +773,7 @@ function gi_save_search_history($query, $filters = [], $results_count = 0, $sess
                     'search_query' => $query,
                     'search_filter' => is_array($filters) ? json_encode($filters) : $filters,
                     'results_count' => $results_count,
-                    'search_time' => current_time('mysql')
+                    'created_at' => current_time('mysql')
                 ],
                 ['%s', '%d', '%s', '%s', '%d', '%s']
             );

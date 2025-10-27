@@ -1060,6 +1060,8 @@
                 $diagnosis_url = home_url('/subsidy-diagnosis/');
                 $contact_url = home_url('/contact/');
                 
+                $how_to_use_url = home_url('/how-to-use/');
+                
                 $menu_items = array(
                     array(
                         'url' => $home_url, 
@@ -1067,6 +1069,13 @@
                         'title_ja' => 'ホーム',
                         'icon' => 'fas fa-home',
                         'current' => ($current_url === $home_url)
+                    ),
+                    array(
+                        'url' => $how_to_use_url, 
+                        'title_en' => 'How To Use',
+                        'title_ja' => '使い方',
+                        'icon' => 'fas fa-book-open',
+                        'current' => (strpos($current_url, '/how-to-use/') !== false)
                     ),
                     array(
                         'url' => $grants_url, 
