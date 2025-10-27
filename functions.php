@@ -192,11 +192,14 @@ $required_files = array(
     
     // Performance optimization
     'performance-optimization.php', // パフォーマンス最適化（v9.2.0+）
-    'seo-optimization.php',         // SEO最適化（v9.2.1+）
     
     // Google Sheets integration (consolidated into one file)
     'google-sheets-integration.php', // Google Sheets統合（全機能統合版）
-    'safe-sync-manager.php'          // 安全同期管理システム
+    'safe-sync-manager.php',         // 安全同期管理システム
+    
+    // Grant SEO System (最新版のみ使用)
+    'grant-content-seo-optimizer.php',  // セマンティックHTML生成
+    'grant-advanced-seo-enhancer.php'   // OGP、Schema.org、内部リンク
 );
 
 // ファイルを安全に読み込み

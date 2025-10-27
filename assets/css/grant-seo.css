@@ -1,0 +1,696 @@
+/**
+ * Grant SEO Styles - Monochrome Stylish Design
+ * 
+ * 助成金・補助金投稿のSEO最適化スタイル
+ * - 白黒スタイリッシュデザイン
+ * - 表を使った情報整理
+ * - 優れたUI/UX
+ * - 完璧なSEO最適化
+ * 
+ * @package Grant_Insight
+ * @since 2.0.0
+ */
+
+/* ==========================================================================
+   1. 変数定義（モノクロームテーマ）
+   ========================================================================== */
+:root {
+    /* モノクロームカラーパレット */
+    --grant-black: #000000;
+    --grant-gray-900: #111111;
+    --grant-gray-800: #1a1a1a;
+    --grant-gray-700: #2d2d2d;
+    --grant-gray-600: #4a4a4a;
+    --grant-gray-500: #6b6b6b;
+    --grant-gray-400: #9a9a9a;
+    --grant-gray-300: #cccccc;
+    --grant-gray-200: #e5e5e5;
+    --grant-gray-100: #f5f5f5;
+    --grant-white: #ffffff;
+    
+    /* セマンティックカラー */
+    --grant-text-primary: #111111;
+    --grant-text-secondary: #4a4a4a;
+    --grant-text-tertiary: #6b6b6b;
+    --grant-bg-primary: #ffffff;
+    --grant-bg-secondary: #f5f5f5;
+    --grant-bg-dark: #1a1a1a;
+    --grant-border: #e5e5e5;
+    --grant-border-dark: #2d2d2d;
+    
+    /* スペーシング */
+    --grant-spacing-xs: 0.5rem;
+    --grant-spacing-sm: 1rem;
+    --grant-spacing-md: 1.5rem;
+    --grant-spacing-lg: 2rem;
+    --grant-spacing-xl: 3rem;
+    --grant-spacing-2xl: 4rem;
+    
+    /* フォントサイズ */
+    --grant-text-xs: 0.75rem;
+    --grant-text-sm: 0.875rem;
+    --grant-text-base: 1rem;
+    --grant-text-lg: 1.125rem;
+    --grant-text-xl: 1.25rem;
+    --grant-text-2xl: 1.5rem;
+    --grant-text-3xl: 1.875rem;
+    --grant-text-4xl: 2.25rem;
+    
+    /* レイアウト */
+    --grant-radius: 2px;
+    --grant-transition: all 0.2s ease;
+}
+
+/* ==========================================================================
+   2. 記事全体のスタイル
+   ========================================================================== */
+.grant-article {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--grant-spacing-xl) var(--grant-spacing-lg);
+    background: var(--grant-bg-primary);
+    line-height: 1.8;
+    color: var(--grant-text-primary);
+    font-size: var(--grant-text-base);
+}
+
+.grant-article__content {
+    margin-top: var(--grant-spacing-xl);
+}
+
+/* ==========================================================================
+   3. ヘッダーセクション - スタイリッシュ
+   ========================================================================== */
+.grant-article__header {
+    padding-bottom: var(--grant-spacing-xl);
+    border-bottom: 3px solid var(--grant-black);
+    margin-bottom: var(--grant-spacing-xl);
+}
+
+/* パンくずリスト */
+.grant-breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--grant-spacing-xs);
+    margin-bottom: var(--grant-spacing-lg);
+    font-size: var(--grant-text-sm);
+    color: var(--grant-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.grant-breadcrumbs__link {
+    color: var(--grant-text-tertiary);
+    text-decoration: none;
+    transition: var(--grant-transition);
+    font-weight: 500;
+}
+
+.grant-breadcrumbs__link:hover {
+    color: var(--grant-black);
+}
+
+.grant-breadcrumbs__current {
+    color: var(--grant-black);
+    font-weight: 700;
+}
+
+.grant-breadcrumbs__separator {
+    color: var(--grant-gray-400);
+    margin: 0 var(--grant-spacing-xs);
+}
+
+/* タイトル - 大胆でスタイリッシュ */
+.grant-article__title {
+    font-size: var(--grant-text-4xl);
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--grant-black);
+    margin: var(--grant-spacing-lg) 0;
+    letter-spacing: -0.02em;
+}
+
+/* メタ情報テーブル - 表形式で整理 */
+.grant-article__meta {
+    margin: var(--grant-spacing-xl) 0;
+    border: 2px solid var(--grant-black);
+    background: var(--grant-white);
+}
+
+.grant-article__meta table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.grant-article__meta th,
+.grant-article__meta td {
+    padding: var(--grant-spacing-md);
+    text-align: left;
+    border: 1px solid var(--grant-gray-300);
+}
+
+.grant-article__meta th {
+    background: var(--grant-black);
+    color: var(--grant-white);
+    font-weight: 700;
+    font-size: var(--grant-text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    width: 30%;
+}
+
+.grant-article__meta td {
+    background: var(--grant-white);
+    font-weight: 600;
+    font-size: var(--grant-text-lg);
+    color: var(--grant-text-primary);
+}
+
+/* 助成金額の強調 */
+.grant-article__meta tr:first-child td {
+    font-size: var(--grant-text-2xl);
+    font-weight: 900;
+    color: var(--grant-black);
+}
+
+/* 抜粋 - ボックススタイル */
+.grant-article__excerpt {
+    margin: var(--grant-spacing-xl) 0;
+    padding: var(--grant-spacing-lg);
+    background: var(--grant-gray-100);
+    color: var(--grant-black);
+    border-left: 4px solid var(--grant-black);
+    font-size: var(--grant-text-lg);
+    line-height: 1.8;
+    font-weight: 500;
+}
+
+.grant-article__excerpt p {
+    margin: 0;
+}
+
+/* ==========================================================================
+   4. セクションスタイル - クリーンでモダン
+   ========================================================================== */
+.grant-section {
+    margin: var(--grant-spacing-2xl) 0;
+    border: 2px solid var(--grant-black);
+    background: var(--grant-white);
+}
+
+/* セクション見出し */
+.grant-section__heading {
+    display: flex;
+    align-items: center;
+    gap: var(--grant-spacing-sm);
+    padding: var(--grant-spacing-md) var(--grant-spacing-lg);
+    background: var(--grant-black);
+    color: var(--grant-white);
+    font-size: var(--grant-text-xl);
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.grant-section__icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+/* セクションコンテンツ */
+.grant-section__content {
+    padding: var(--grant-spacing-xl);
+    background: var(--grant-white);
+    line-height: 1.9;
+}
+
+.grant-section__content > *:first-child {
+    margin-top: 0;
+}
+
+.grant-section__content > *:last-child {
+    margin-bottom: 0;
+}
+
+/* サブセクション見出し */
+.grant-subsection__heading {
+    font-size: var(--grant-text-xl);
+    font-weight: 700;
+    color: var(--grant-black);
+    margin: var(--grant-spacing-lg) 0 var(--grant-spacing-md);
+    padding-bottom: var(--grant-spacing-sm);
+    border-bottom: 2px solid var(--grant-gray-300);
+}
+
+/* サブサブセクション見出し */
+.grant-subsubsection__heading {
+    font-size: var(--grant-text-lg);
+    font-weight: 700;
+    color: var(--grant-text-primary);
+    margin: var(--grant-spacing-md) 0 var(--grant-spacing-sm);
+}
+
+/* 段落 */
+.grant-article p,
+.grant-section__content p {
+    margin: var(--grant-spacing-md) 0;
+    line-height: 1.9;
+}
+
+.grant-article p:first-child,
+.grant-section__content p:first-child {
+    margin-top: 0;
+}
+
+.grant-article p:last-child,
+.grant-section__content p:last-child {
+    margin-bottom: 0;
+}
+
+/* 強調 */
+.grant-article strong,
+.grant-article b,
+.grant-section__content strong,
+.grant-section__content b {
+    font-weight: 800;
+    color: var(--grant-black);
+}
+
+/* ==========================================================================
+   5. リストスタイル - シンプルで読みやすい
+   ========================================================================== */
+.grant-section__content ul,
+.grant-section__content ol {
+    margin: var(--grant-spacing-lg) 0;
+    padding-left: var(--grant-spacing-xl);
+    line-height: 1.9;
+}
+
+.grant-section__content li {
+    margin: var(--grant-spacing-sm) 0;
+    line-height: 1.9;
+}
+
+.grant-section__content ul li {
+    list-style-type: none;
+    position: relative;
+    padding-left: var(--grant-spacing-md);
+}
+
+.grant-section__content ul li::before {
+    content: "■";
+    position: absolute;
+    left: 0;
+    color: var(--grant-black);
+    font-size: 0.7em;
+}
+
+.grant-section__content ol li {
+    list-style-type: decimal;
+    font-weight: 600;
+}
+
+.grant-section__content ol li::marker {
+    color: var(--grant-black);
+    font-weight: 800;
+}
+
+/* ==========================================================================
+   6. テーブルスタイル - プロフェッショナル
+   ========================================================================== */
+.grant-section__content table,
+.table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--grant-spacing-xl) 0;
+    border: 2px solid var(--grant-black);
+    background: var(--grant-white);
+    font-size: var(--grant-text-base);
+}
+
+/* テーブルキャプション */
+.grant-section__content table caption {
+    caption-side: top;
+    padding: var(--grant-spacing-sm);
+    font-size: var(--grant-text-lg);
+    font-weight: 800;
+    color: var(--grant-black);
+    text-align: left;
+    background: var(--grant-gray-100);
+    border: 2px solid var(--grant-black);
+    border-bottom: none;
+}
+
+/* テーブルヘッダー */
+.grant-section__content th {
+    padding: var(--grant-spacing-md);
+    text-align: left;
+    background: var(--grant-gray-900);
+    color: var(--grant-white);
+    font-weight: 700;
+    font-size: var(--grant-text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--grant-black);
+}
+
+/* テーブルセル */
+.grant-section__content td {
+    padding: var(--grant-spacing-md);
+    text-align: left;
+    border: 1px solid var(--grant-gray-300);
+    line-height: 1.8;
+    color: var(--grant-text-primary);
+}
+
+/* ストライプ行 */
+.grant-section__content tbody tr:nth-child(even) {
+    background: var(--grant-gray-100);
+}
+
+.grant-section__content tbody tr:nth-child(odd) {
+    background: var(--grant-white);
+}
+
+/* ホバー効果 */
+.grant-section__content tbody tr:hover {
+    background: var(--grant-gray-200);
+    transition: background 0.2s ease;
+}
+
+/* レスポンシブテーブル */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: var(--grant-spacing-xl) 0;
+    border: 2px solid var(--grant-black);
+}
+
+.table-responsive table {
+    margin: 0;
+    border: none;
+}
+
+/* ==========================================================================
+   7. 公式リンクスタイル - CTAボタン
+   ========================================================================== */
+.grant-section--official-link {
+    border: 3px solid var(--grant-black);
+}
+
+.grant-section--official-link .grant-section__content {
+    background: var(--grant-black);
+    padding: 0;
+}
+
+.grant-official-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--grant-spacing-sm);
+    padding: var(--grant-spacing-xl);
+    color: var(--grant-white);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: var(--grant-text-xl);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: var(--grant-transition);
+}
+
+.grant-official-link:hover {
+    background: var(--grant-gray-900);
+}
+
+.grant-official-link__arrow {
+    transition: var(--grant-transition);
+}
+
+.grant-official-link:hover .grant-official-link__arrow {
+    transform: translateX(8px);
+}
+
+/* ==========================================================================
+   8. フッターセクション
+   ========================================================================== */
+.grant-article__footer {
+    margin-top: var(--grant-spacing-2xl);
+    padding-top: var(--grant-spacing-xl);
+    border-top: 3px solid var(--grant-black);
+}
+
+/* タグスタイル */
+.grant-tags {
+    margin: var(--grant-spacing-lg) 0;
+}
+
+.grant-tags__heading {
+    font-size: var(--grant-text-lg);
+    font-weight: 800;
+    color: var(--grant-black);
+    margin-bottom: var(--grant-spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.grant-tags__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--grant-spacing-sm);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.grant-tags__item {
+    margin: 0;
+}
+
+.grant-tags__link {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--grant-spacing-xs) var(--grant-spacing-md);
+    background: var(--grant-white);
+    border: 2px solid var(--grant-black);
+    color: var(--grant-black);
+    text-decoration: none;
+    font-size: var(--grant-text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: var(--grant-transition);
+}
+
+.grant-tags__link:hover {
+    background: var(--grant-black);
+    color: var(--grant-white);
+    transform: translateY(-2px);
+}
+
+.grant-tags__hash {
+    margin-right: 0.25rem;
+}
+
+/* ==========================================================================
+   9. レスポンシブデザイン
+   ========================================================================== */
+
+/* タブレット */
+@media (max-width: 768px) {
+    .grant-article {
+        padding: var(--grant-spacing-lg) var(--grant-spacing-md);
+    }
+    
+    .grant-article__title {
+        font-size: var(--grant-text-3xl);
+    }
+    
+    .grant-section__heading {
+        font-size: var(--grant-text-lg);
+        padding: var(--grant-spacing-sm) var(--grant-spacing-md);
+    }
+    
+    .grant-section__content {
+        padding: var(--grant-spacing-lg);
+    }
+    
+    /* テーブルをスクロール可能に */
+    .grant-section__content table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .grant-article__meta th {
+        font-size: var(--grant-text-xs);
+    }
+    
+    .grant-article__meta td {
+        font-size: var(--grant-text-base);
+    }
+}
+
+/* モバイル */
+@media (max-width: 480px) {
+    .grant-article {
+        padding: var(--grant-spacing-md) var(--grant-spacing-sm);
+    }
+    
+    .grant-article__title {
+        font-size: var(--grant-text-2xl);
+        line-height: 1.3;
+    }
+    
+    .grant-article__excerpt {
+        font-size: var(--grant-text-base);
+        padding: var(--grant-spacing-md);
+    }
+    
+    .grant-breadcrumbs {
+        font-size: var(--grant-text-xs);
+    }
+    
+    .grant-section {
+        margin: var(--grant-spacing-lg) 0;
+    }
+    
+    .grant-section__heading {
+        font-size: var(--grant-text-base);
+        padding: var(--grant-spacing-sm);
+        gap: var(--grant-spacing-xs);
+    }
+    
+    .grant-section__icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .grant-section__content {
+        padding: var(--grant-spacing-md);
+    }
+    
+    .grant-official-link {
+        font-size: var(--grant-text-base);
+        padding: var(--grant-spacing-lg);
+    }
+    
+    /* モバイルテーブル */
+    .grant-article__meta th,
+    .grant-article__meta td,
+    .grant-section__content th,
+    .grant-section__content td {
+        padding: var(--grant-spacing-sm);
+        font-size: var(--grant-text-sm);
+    }
+    
+    .grant-article__meta tr:first-child td {
+        font-size: var(--grant-text-xl);
+    }
+}
+
+/* ==========================================================================
+   10. アクセシビリティ
+   ========================================================================== */
+
+/* フォーカス表示 */
+.grant-breadcrumbs__link:focus,
+.grant-tags__link:focus,
+.grant-official-link:focus {
+    outline: 3px solid var(--grant-black);
+    outline-offset: 3px;
+}
+
+/* 高コントラストモード */
+@media (prefers-contrast: high) {
+    :root {
+        --grant-border: #000000;
+        --grant-gray-300: #666666;
+    }
+    
+    .grant-section {
+        border-width: 3px;
+    }
+}
+
+/* ==========================================================================
+   11. 印刷スタイル
+   ========================================================================== */
+@media print {
+    .grant-article {
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    .grant-article__header {
+        border-bottom: 3px solid #000000;
+    }
+    
+    .grant-section {
+        border: 2px solid #000000;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    .grant-section__heading {
+        background: #000000 !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .grant-section__content {
+        background: transparent;
+    }
+    
+    /* テーブル印刷 */
+    .grant-section__content table {
+        border: 2px solid #000000;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    .grant-section__content th {
+        background: #000000 !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .grant-breadcrumbs,
+    .grant-tags,
+    .grant-official-link {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   12. アニメーション
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+    .grant-section {
+        animation: fadeIn 0.4s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+}
+
+/* モーション削減 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

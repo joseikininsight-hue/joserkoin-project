@@ -477,36 +477,3 @@
         gap: 8px;
     }
 }
-
-/* ダークモード対応（WordPress管理画面） */
-@media (prefers-color-scheme: dark) {
-    .gi-sheets-card {
-        background: #1e1e1e;
-        border-color: #3c3c3c;
-        color: #e0e0e0;
-    }
-    
-    .gi-sheets-card h2,
-    .gi-sheets-card h3 {
-        color: #e0e0e0;
-    }
-    
-    .gi-sheets-form-group input,
-    .gi-sheets-form-group textarea,
-    .gi-sheets-form-group select {
-        background: #2c2c2c;
-        border-color: #4c4c4c;
-        color: #e0e0e0;
-    }
-    
-    .gi-sheets-stat-item {
-        background: #2c2c2c;
-        border-color: #4c4c4c;
-    }
-    
-    .gi-sheets-log {
-        background: #2c2c2c;
-        border-color: #4c4c4c;
-        color: #e0e0e0;
-    }
-}

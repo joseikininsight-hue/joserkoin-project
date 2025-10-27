@@ -1150,8 +1150,8 @@ if (function_exists('gi_get_cached_stats')) {
     }
     
     .giac-prefecture-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
     
     .giac-prefecture-card {
