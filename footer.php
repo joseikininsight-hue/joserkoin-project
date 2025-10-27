@@ -53,6 +53,7 @@ if (!function_exists('gi_get_sns_urls')) {
                     <h4 class="font-semibold text-black mb-4">クイックリンク</h4>
                     <nav class="space-y-2">
                         <a href="<?php echo esc_url(home_url()); ?>" class="block text-gray-600 hover:text-black transition-colors text-sm">ホーム</a>
+                        <a href="<?php echo esc_url(home_url('/how-to-use/')); ?>" class="block text-gray-600 hover:text-black transition-colors text-sm">使い方ガイド</a>
                         <a href="<?php echo esc_url(get_post_type_archive_link('grant')); ?>" class="block text-gray-600 hover:text-black transition-colors text-sm">助成金検索</a>
                         <a href="<?php echo esc_url(home_url('/about')); ?>" class="block text-gray-600 hover:text-black transition-colors text-sm">サービスについて</a>
                         <a href="<?php echo esc_url(home_url('/contact')); ?>" class="block text-gray-600 hover:text-black transition-colors text-sm">お問い合わせ</a>

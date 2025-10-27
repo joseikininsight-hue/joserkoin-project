@@ -16,6 +16,25 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+/**
+ * Custom logging function for Google Sheets integration
+ * Logs errors with context to WordPress error log
+ * 
+ * @param string $message Error message
+ * @param array $context Additional context data
+ */
+if (!function_exists('gi_log_error')) {
+    function gi_log_error($message, $context = array()) {
+        $log_message = '[Google Sheets] ' . $message;
+        
+        if (!empty($context)) {
+            $log_message .= ' | Context: ' . json_encode($context, JSON_UNESCAPED_UNICODE);
+        }
+        
+        error_log($log_message);
+    }
+}
+
 class GoogleSheetsSync {
     
     private static $instance = null;

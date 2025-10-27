@@ -97,19 +97,19 @@ html {
     <section class="front-page-section section-animate" id="hero-section">
         <?php get_template_part('template-parts/front-page/section', 'hero'); ?>
     </section>
-	
-<section class="front-page-section section-animate" id="how-to-use-section">
-    <?php get_template_part('template-parts/front-page/section', 'how-to-use'); ?>
-</section>
 
     <?php
     /**
-     * 2. Search Section
-     * AI検索セクション
+     * 2. Search + Browse Section (統合版)
+     * AI検索セクション + 用途から探す
      */
     ?>
     <section class="front-page-section section-animate" id="search-section">
-        <?php get_template_part('template-parts/front-page/section', 'search'); ?>
+        <?php 
+        error_log('[Front Page] Loading section-search.php');
+        get_template_part('template-parts/front-page/section', 'search'); 
+        error_log('[Front Page] section-search.php loaded');
+        ?>
     </section>
 
     <?php
@@ -208,6 +208,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     console.log('[OK] Grant Insight Perfect - フロントページ初期化完了 (v7.1-optimized)');
+    
+    // セクションの読み込み確認
+    console.log('[Debug] Hero section exists:', !!document.getElementById('hero-section'));
+    console.log('[Debug] Search section exists:', !!document.getElementById('search-section'));
+    console.log('[Debug] Categories section exists:', !!document.getElementById('categories-section'));
+    console.log('[Debug] Browse section integrated exists:', !!document.querySelector('.browse-section-integrated'));
 });
 </script>
 
