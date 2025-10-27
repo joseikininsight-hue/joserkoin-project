@@ -4103,7 +4103,9 @@ $nonce = wp_create_nonce('gi_ai_search_nonce');
  */
 
 // やりたいこと別カテゴリー（ユーザー視点の自然な言葉で表現）
+// データ分析により最も需要の高い8つの用途を厳選
 $purpose_categories = array(
+    // メイン8カード（カテゴリーセクションと同じ表示数）
     array(
         'title' => '設備を導入したい',
         'icon' => 'fas fa-industry',
@@ -4111,115 +4113,114 @@ $purpose_categories = array(
         'url' => home_url('/purpose/equipment/'),
         'description' => '製造設備・機械・IT機器などの導入支援',
         'keywords' => 'ものづくり補助金, IT導入補助金, 設備投資',
-        'categories' => array('ものづくり補助金', 'IT導入補助金', '設備投資補助金')
+        'categories' => array('設備投資', 'ものづくり・新商品開発', 'IT導入・DX', '生産性向上・業務効率化', '防犯・防災・BCP', '省エネ・再エネ', '医療・福祉', '観光・インバウンド', '農業・林業・漁業')
     ),
     array(
-        'title' => '人材育成したい',
+        'title' => '経営を改善したい',
+        'icon' => 'fas fa-chart-line',
+        'slug' => 'management',
+        'url' => home_url('/purpose/management/'),
+        'description' => '経営強化・生産性向上・業務効率化の支援',
+        'keywords' => '経営改善, 生産性向上, 業務効率化, 経営強化',
+        'categories' => array('経営改善・経営強化', '生産性向上・業務効率化', '事業承継', '事業再建', '経営コンサル', '専門家派遣', 'DX推進', 'IT・デジタル化')
+    ),
+    array(
+        'title' => '人材を育成したい',
         'icon' => 'fas fa-user-graduate',
         'slug' => 'training',
         'url' => home_url('/purpose/training/'),
-        'description' => '従業員研修・資格取得・スキルアップ支援',
-        'keywords' => '人材開発, 教育訓練, キャリアアップ',
-        'categories' => array('人材育成・雇用', '教育訓練給付', 'キャリアアップ助成金')
+        'description' => '従業員研修・資格取得・スキルアップ・雇用支援',
+        'keywords' => '人材開発, 教育訓練, キャリアアップ, 雇用促進',
+        'categories' => array('人材育成・雇用', '人材確保・育成', '雇用維持・促進', '働き方改革', '職場環境改善', '福利厚生', '資格取得', '研修・教育訓練')
     ),
     array(
-        'title' => '営業強化したい',
-        'icon' => 'fas fa-chart-line',
+        'title' => '販路を拡大したい',
+        'icon' => 'fas fa-rocket',
         'slug' => 'sales',
         'url' => home_url('/purpose/sales/'),
-        'description' => '販路開拓・マーケティング・広告宣伝の支援',
-        'keywords' => '販路拡大, 展示会出展, EC構築',
-        'categories' => array('販路開拓', '小規模事業者持続化補助金', 'EC・IT活用')
+        'description' => '販路開拓・マーケティング・広告宣伝・海外展開',
+        'keywords' => '販路拡大, 展示会出展, EC構築, 海外進出',
+        'categories' => array('販路開拓・販路拡大', '海外展開', '販売促進', 'マーケティング', '広告・宣伝', 'EC・IT活用', 'インバウンド', '輸出支援')
     ),
     array(
         'title' => '事業を始めたい',
-        'icon' => 'fas fa-rocket',
+        'icon' => 'fas fa-lightbulb',
         'slug' => 'startup',
         'url' => home_url('/purpose/startup/'),
-        'description' => '創業・起業・新規事業立ち上げの支援',
-        'keywords' => '創業支援, スタートアップ, 新規開業',
-        'categories' => array('創業・起業', '新規開業', '事業再構築補助金')
+        'description' => '創業・起業・新規事業・店舗開業の支援',
+        'keywords' => '創業支援, スタートアップ, 新規開業, 起業',
+        'categories' => array('起業・創業・ベンチャー', '創業支援', '新規事業・第二創業', '店舗改装', '家賃補助', '開業支援', '事業承継', '移住・起業')
     ),
     array(
-        'title' => 'IT化を進めたい',
+        'title' => 'IT化・DXを進めたい',
         'icon' => 'fas fa-laptop-code',
         'slug' => 'digital',
         'url' => home_url('/purpose/digital/'),
-        'description' => 'デジタル化・DX推進・システム導入の支援',
-        'keywords' => 'DX, IT導入, デジタル化',
-        'categories' => array('IT導入補助金', 'DX推進', 'デジタル化支援')
-    ),
-    array(
-        'title' => '資金調達したい',
-        'icon' => 'fas fa-yen-sign',
-        'slug' => 'funding',
-        'url' => home_url('/purpose/funding/'),
-        'description' => '運転資金・設備資金・開発資金の調達支援',
-        'keywords' => '融資, 補助金, 助成金',
-        'categories' => array('融資制度', '資金調達', '補助金・助成金全般')
+        'description' => 'デジタル化・DX推進・システム導入・IT活用',
+        'keywords' => 'DX, IT導入, デジタル化, デジタルトランスフォーメーション',
+        'categories' => array('IT導入・DX', 'DX推進', 'IT・DX化', 'デジタル', 'デジタル化', 'IT化・デジタル化', '業務効率化・IT', 'システム導入')
     ),
     array(
         'title' => '環境対策したい',
         'icon' => 'fas fa-leaf',
         'slug' => 'environment',
         'url' => home_url('/purpose/environment/'),
-        'description' => '省エネ・脱炭素・環境配慮型事業への支援',
-        'keywords' => 'カーボンニュートラル, 省エネ, 再生可能エネルギー',
-        'categories' => array('環境・エネルギー', '省エネルギー', 'カーボンニュートラル')
+        'description' => '省エネ・脱炭素・再エネ・環境配慮型事業',
+        'keywords' => 'カーボンニュートラル, 省エネ, 再生可能エネルギー, GX',
+        'categories' => array('省エネ・再エネ', '省エネ・脱炭素', '環境・エネルギー', '再エネ・畜エネ', 'カーボンニュートラル', 'GX', '環境保全', '省エネルギー')
     ),
+    array(
+        'title' => '地域を活性化したい',
+        'icon' => 'fas fa-city',
+        'slug' => 'regional',
+        'url' => home_url('/purpose/regional/'),
+        'description' => '地域資源活用・観光振興・まちづくり・地域貢献',
+        'keywords' => '地域振興, 観光, まちづくり, 地方創生',
+        'categories' => array('地域活性・まちづくり', '地域活性化', '観光・インバウンド', '観光振興', 'まちづくり', '地域振興', '地方創生', '移住・定住支援')
+    ),
+);
+
+// その他の用途（「もっと見る」で表示）
+$other_purposes = array(
     array(
         'title' => '事業を引き継ぎたい',
         'icon' => 'fas fa-handshake',
         'slug' => 'succession',
         'url' => home_url('/purpose/succession/'),
         'description' => '事業承継・M&A・後継者育成の支援',
-        'keywords' => '事業承継, 世代交代, M&A',
-        'categories' => array('事業承継', '後継者支援', '事業引継ぎ')
-    ),
-    array(
-        'title' => '海外展開したい',
-        'icon' => 'fas fa-globe-asia',
-        'slug' => 'global',
-        'url' => home_url('/purpose/global/'),
-        'description' => '輸出・海外進出・インバウンド対応の支援',
-        'keywords' => '海外進出, 輸出, グローバル展開',
-        'categories' => array('海外展開', '輸出支援', 'インバウンド')
+        'categories' => array('事業承継', '事業承継・M&A', '後継者支援', '事業引継ぎ')
     ),
     array(
         'title' => '研究開発したい',
         'icon' => 'fas fa-flask',
         'slug' => 'rnd',
         'url' => home_url('/purpose/rnd/'),
-        'description' => '新技術開発・製品開発・研究活動の支援',
-        'keywords' => 'R&D, イノベーション, 新技術開発',
-        'categories' => array('研究開発', 'イノベーション', '技術開発')
+        'description' => '新技術開発・製品開発・研究活動・イノベーション',
+        'categories' => array('研究開発', '研究・実証実験・産学連携', 'イノベーション', '技術開発', '新製品開発', '特許・知的財産')
     ),
     array(
-        'title' => '働き方改善したい',
-        'icon' => 'fas fa-briefcase',
-        'slug' => 'workstyle',
-        'url' => home_url('/purpose/workstyle/'),
-        'description' => 'テレワーク・労務管理・福利厚生の充実支援',
-        'keywords' => '働き方改革, テレワーク, 労働環境改善',
-        'categories' => array('働き方改革', 'テレワーク', '職場環境改善')
+        'title' => '住宅関連の支援',
+        'icon' => 'fas fa-home',
+        'slug' => 'housing',
+        'url' => home_url('/purpose/housing/'),
+        'description' => '住宅改修・リフォーム・省エネ住宅・バリアフリー',
+        'categories' => array('住宅・リフォーム', '住宅改修', '住宅支援', '空き家利用', '空き家対策', 'バリアフリー', '防災・減災')
     ),
     array(
-        'title' => '地域活性化したい',
-        'icon' => 'fas fa-city',
-        'slug' => 'regional',
-        'url' => home_url('/purpose/regional/'),
-        'description' => '地域資源活用・観光振興・まちづくりの支援',
-        'keywords' => '地域振興, 観光, まちづくり',
-        'categories' => array('地域活性化', '観光振興', 'まちづくり')
+        'title' => '農林水産業を支援',
+        'icon' => 'fas fa-tractor',
+        'slug' => 'agriculture',
+        'url' => home_url('/purpose/agriculture/'),
+        'description' => '農業・林業・水産業・六次産業化の支援',
+        'categories' => array('農業・林業・漁業', '農林水産業', '農業支援', '六次産業化', '新規就農', '農業法人')
     ),
     array(
         'title' => '個人で使いたい',
         'icon' => 'fas fa-user',
         'slug' => 'individual',
         'url' => home_url('/purpose/individual/'),
-        'description' => '個人事業主・フリーランス・資格取得など個人向け支援',
-        'keywords' => '個人事業主, フリーランス, 資格取得, 個人起業',
-        'categories' => array('個人事業主支援', 'フリーランス', '資格取得助成', '個人向け補助金')
+        'description' => '個人事業主・フリーランス・資格取得・生活支援',
+        'categories' => array('個人事業主支援', 'フリーランス', '資格取得', '就職・転職支援', '生活支援', '子育て支援', '移住・定住')
     ),
 );
 ?>
@@ -4267,28 +4268,54 @@ $purpose_categories = array(
             
             <!-- やりたいことから探す -->
             <div class="tab-content active" data-content="purpose" role="tabpanel" aria-label="やりたいことから探す">
+                <!-- メイン8カード -->
                 <div class="purpose-grid" itemscope itemtype="https://schema.org/ItemList">
                     <meta itemprop="name" content="補助金検索 - やりたいこと別">
                     <meta itemprop="description" content="事業の目的別に補助金・助成金を検索できます">
                     <?php 
                     $position = 1;
-                    foreach ($purpose_categories as $purpose) : 
+                    foreach ($purpose_categories as $index => $purpose) : 
                     ?>
                     <a href="<?php echo esc_url($purpose['url']); ?>" class="purpose-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <meta itemprop="position" content="<?php echo $position++; ?>">
                         <link itemprop="url" href="<?php echo esc_url($purpose['url']); ?>">
+                        <div class="purpose-card-number"><?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></div>
                         <div class="purpose-icon">
                             <i class="<?php echo esc_attr($purpose['icon']); ?>"></i>
                         </div>
-                        <h3 class="purpose-title" itemprop="name"><?php echo esc_html($purpose['title']); ?></h3>
-                        <p class="purpose-description" itemprop="description"><?php echo esc_html($purpose['description']); ?></p>
+                        <div class="purpose-content">
+                            <h3 class="purpose-title" itemprop="name"><?php echo esc_html($purpose['title']); ?></h3>
+                            <p class="purpose-description" itemprop="description"><?php echo esc_html($purpose['description']); ?></p>
+                        </div>
                         <meta itemprop="keywords" content="<?php echo esc_attr($purpose['keywords']); ?>">
                         <div class="purpose-arrow">
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-chevron-right"></i>
                         </div>
                     </a>
                     <?php endforeach; ?>
                 </div>
+
+                <!-- その他の用途 -->
+                <?php if (!empty($other_purposes)) : ?>
+                <div class="purpose-more-section">
+                    <button type="button" class="purpose-more-button" id="purpose-toggle-more">
+                        <span>その他の用途</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+
+                    <div class="purpose-more-categories" id="purpose-more-categories">
+                        <div class="purpose-more-grid">
+                            <?php foreach ($other_purposes as $purpose) : ?>
+                            <a href="<?php echo esc_url($purpose['url']); ?>" class="purpose-mini-card">
+                                <i class="<?php echo esc_attr($purpose['icon']); ?>"></i>
+                                <span class="purpose-mini-title"><?php echo esc_html($purpose['title']); ?></span>
+                                <i class="fas fa-chevron-right purpose-mini-arrow"></i>
+                            </a>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
 
             <!-- 診断して探す -->
@@ -4495,25 +4522,47 @@ $purpose_categories = array(
     }
 }
 
-/* やりたいことから探す */
+/* やりたいことから探す - カテゴリーセクションと同じデザイン */
 .purpose-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+    gap: 10px;
+    margin-bottom: 26px;
 }
 
 .purpose-card {
     position: relative;
-    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
     background: #ffffff;
     border: 2px solid #000000;
-    border-radius: 12px;
+    border-radius: 10px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.purpose-card-number {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 26px;
+    height: 26px;
+    background: #ffeb3b;
+    color: #000000;
+    border: 2px solid #000000;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
-    min-height: 180px;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
 }
 
 .purpose-card::before {
@@ -4523,66 +4572,183 @@ $purpose_categories = array(
     left: 0;
     width: 4px;
     height: 100%;
-    background: #000000;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    background: #ffeb3b;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .purpose-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateX(4px);
+    border-color: #333333;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .purpose-card:hover::before {
-    transform: translateX(0);
+    transform: scaleY(1);
+    transform-origin: top;
+}
+
+.purpose-card:hover .purpose-card-number {
+    transform: scale(1.1) rotate(8deg);
+    background: #000000;
+    color: #ffeb3b;
 }
 
 .purpose-icon {
-    width: 48px;
-    height: 48px;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
     background: #000000;
-    border-radius: 10px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 22px;
-    margin-bottom: 12px;
+    font-size: 20px;
     transition: all 0.3s ease;
 }
 
 .purpose-card:hover .purpose-icon {
-    transform: rotate(10deg) scale(1.1);
+    background: #ffeb3b;
+    color: #000000;
+    transform: scale(1.05);
+}
+
+.purpose-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .purpose-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: #000000;
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
     line-height: 1.3;
+    letter-spacing: -0.01em;
 }
 
 .purpose-description {
-    font-size: 12px;
+    font-size: 11px;
     color: #666666;
-    line-height: 1.5;
-    margin: 0 0 auto 0;
-    flex: 1;
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .purpose-arrow {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     color: #000000;
-    font-size: 14px;
-    transition: transform 0.3s ease;
-    margin-top: 8px;
+    font-size: 12px;
+    transition: all 0.3s ease;
 }
 
 .purpose-card:hover .purpose-arrow {
-    transform: translateX(6px);
+    transform: translateX(4px);
+    color: #ffeb3b;
+}
+
+/* その他の用途セクション */
+.purpose-more-section {
+    margin-top: 32px;
+}
+
+.purpose-more-button {
+    width: 100%;
+    padding: 16px 24px;
+    background: #f8f8f8;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    color: #333333;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.purpose-more-button:hover {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+.purpose-more-button i {
+    transition: transform 0.3s ease;
+}
+
+.purpose-more-button.active i {
+    transform: rotate(180deg);
+}
+
+.purpose-more-categories {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 16px;
+}
+
+.purpose-more-categories.show {
+    max-height: 1000px;
+}
+
+.purpose-more-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.purpose-mini-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.purpose-mini-card:hover {
+    border-color: #000000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transform: translateX(2px);
+}
+
+.purpose-mini-card i:first-child {
+    color: #000000;
+    font-size: 16px;
+}
+
+.purpose-mini-title {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.purpose-mini-arrow {
+    color: #999999;
+    font-size: 10px;
+    transition: all 0.3s ease;
+}
+
+.purpose-mini-card:hover .purpose-mini-arrow {
+    color: #000000;
+    transform: translateX(3px);
 }
 
 /* 診断して探す */
@@ -4757,20 +4923,34 @@ $purpose_categories = array(
     transform: translateX(4px);
 }
 
-/* レスポンシブ */
-@media (max-width: 1023px) {
-    .browse-tabs {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
+/* レスポンシブ - カテゴリーセクションと統一 */
+@media (min-width: 1024px) {
     .purpose-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .purpose-grid {
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
+        margin-bottom: 32px;
     }
     
     .purpose-card {
-        padding: 16px;
-        min-height: 160px;
+        padding: 14px;
+    }
+    
+    .purpose-card-number {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+        top: 0px;
+        right: 0px;
+    }
+    
+    .purpose-more-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -4805,27 +4985,49 @@ $purpose_categories = array(
     
     .purpose-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 8px;
     }
     
     .purpose-card {
-        padding: 14px;
-        min-height: 150px;
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .purpose-card-number {
+        width: 22px;
+        height: 22px;
+        font-size: 9px;
+        top: -4px;
+        right: -4px;
     }
     
     .purpose-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-        margin-bottom: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
     }
     
     .purpose-title {
-        font-size: 14px;
+        font-size: 13px;
     }
     
     .purpose-description {
-        font-size: 11px;
+        font-size: 10px;
+        -webkit-line-clamp: 2;
+    }
+    
+    .purpose-arrow {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+    
+    .purpose-more-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .purpose-mini-card {
+        padding: 10px 12px;
     }
     
     .diagnosis-card {
@@ -4939,6 +5141,38 @@ $purpose_categories = array(
         console.log('[✓] Browse Section Integrated DOM element found');
     } else {
         console.error('[✗] Browse Section Integrated DOM element NOT FOUND!');
+    }
+    
+    // 用途「もっと見る」ボタン機能
+    const purposeToggleBtn = document.getElementById('purpose-toggle-more');
+    const purposeMoreCategories = document.getElementById('purpose-more-categories');
+    
+    if (purposeToggleBtn && purposeMoreCategories) {
+        purposeToggleBtn.addEventListener('click', function() {
+            const isExpanded = purposeMoreCategories.classList.contains('show');
+            
+            if (isExpanded) {
+                purposeMoreCategories.classList.remove('show');
+                purposeToggleBtn.classList.remove('active');
+                purposeToggleBtn.querySelector('span').textContent = 'その他の用途';
+            } else {
+                purposeMoreCategories.classList.add('show');
+                purposeToggleBtn.classList.add('active');
+                purposeToggleBtn.querySelector('span').textContent = '閉じる';
+            }
+            
+            console.log('[Purpose Toggle] More categories:', isExpanded ? 'hidden' : 'shown');
+            
+            // トラッキング
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'purpose_more_toggle', {
+                    event_category: 'interaction',
+                    event_label: isExpanded ? 'collapse' : 'expand'
+                });
+            }
+        });
+        
+        console.log('[✓] Purpose "More" button functionality initialized');
     }
 })();
 </script>
