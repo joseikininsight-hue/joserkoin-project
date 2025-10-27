@@ -112,15 +112,6 @@ html {
         ?>
     </section>
 
-    <?php
-    /**
-     * 3. Categories Section
-     * カテゴリーセクション
-     */
-    ?>
-    <section class="front-page-section section-animate" id="categories-section">
-        <?php get_template_part('template-parts/front-page/section', 'categories'); ?>
-    </section>
 
 </main>
 
