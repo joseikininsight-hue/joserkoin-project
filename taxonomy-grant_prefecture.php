@@ -740,7 +740,7 @@ $breadcrumbs = [
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -1678,10 +1678,37 @@ $breadcrumbs = [
     
     function init() {
         console.log('Prefecture archive initialized:', PREF_SLUG);
+        
+        // URLパラメータから検索条件を取得
+        initializeFromUrlParams();
+        
         loadMunicipalities();
         setupSelects();
         setupEvents();
         loadGrants();
+    }
+    
+    // ===== URLパラメータから初期化 =====
+    function initializeFromUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // キーワード検索
+        const searchParam = urlParams.get('search');
+        if (searchParam) {
+            state.filters.search = searchParam;
+            if (elements.keywordSearch) {
+                elements.keywordSearch.value = searchParam;
+                elements.searchClearBtn.style.display = 'flex';
+            }
+            console.log('🔍 Search keyword from URL:', searchParam);
+        }
+        
+        // カテゴリ
+        const categoryParam = urlParams.get('category');
+        if (categoryParam) {
+            state.filters.category = [categoryParam];
+            console.log('📁 Category from URL:', categoryParam);
+        }
     }
     
     function loadMunicipalities() {

@@ -729,7 +729,7 @@ $breadcrumbs = [
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -1713,9 +1713,42 @@ $breadcrumbs = [
             defaultView: state.view
         });
         
+        // URLパラメータから検索条件を取得
+        initializeFromUrlParams();
+        
         setupCustomSelects();
         setupEventListeners();
         loadGrants();
+    }
+    
+    // ===== URLパラメータから初期化 =====
+    function initializeFromUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // キーワード検索
+        const searchParam = urlParams.get('search');
+        if (searchParam) {
+            state.filters.search = searchParam;
+            if (elements.keywordSearch) {
+                elements.keywordSearch.value = searchParam;
+                elements.searchClearBtn.style.display = 'flex';
+            }
+            console.log('🔍 Search keyword from URL:', searchParam);
+        }
+        
+        // カテゴリ
+        const categoryParam = urlParams.get('category');
+        if (categoryParam) {
+            state.filters.category = [categoryParam];
+            console.log('📁 Category from URL:', categoryParam);
+        }
+        
+        // 都道府県
+        const prefectureParam = urlParams.get('prefecture');
+        if (prefectureParam) {
+            state.filters.prefecture = [prefectureParam];
+            console.log('📍 Prefecture from URL:', prefectureParam);
+        }
     }
     
     // ===== カスタムセレクトの初期化 =====

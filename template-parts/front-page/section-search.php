@@ -1037,7 +1037,7 @@ $regions_data = array(
     .prefecture-wrapper,
     .recommend-wrapper,
     .new-grants-wrapper {
-        max-width: 750px;
+        max-width: 700px;
     }
     
     .category-grid,
@@ -1058,7 +1058,7 @@ $regions_data = array(
     .prefecture-wrapper,
     .recommend-wrapper,
     .new-grants-wrapper {
-        max-width: 1200px;
+        max-width: 960px;
     }
     
     .category-grid {
