@@ -2055,6 +2055,11 @@ $breadcrumbs = [
         el.noResults.style.display = 'none';
         
         el.list.innerHTML = grants.map(g => g.html).join('');
+        
+        // Setup AI button listeners for dynamically loaded grant cards
+        if (typeof setupAIButtonListeners === 'function') {
+            setupAIButtonListeners();
+        }
     }
     
     function updateStats(stats) {

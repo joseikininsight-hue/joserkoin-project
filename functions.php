@@ -197,9 +197,14 @@ $required_files = array(
     'google-sheets-integration.php', // Google Sheets統合（全機能統合版）
     'safe-sync-manager.php',         // 安全同期管理システム
     
-    // Grant SEO System (最新版のみ使用)
-    'grant-content-seo-optimizer.php',  // セマンティックHTML生成
-    'grant-advanced-seo-enhancer.php'   // OGP、Schema.org、内部リンク
+    // Grant Content SEO Optimizer (v9.3.0+)
+    'grant-content-seo-optimizer.php',  // 助成金コンテンツSEO最適化
+    
+    // Dynamic CSS Generator (v9.3.1+)
+    'grant-dynamic-css-generator.php',  // 投稿内容に応じた動的CSS生成
+    
+    // Advanced SEO Enhancer (v9.3.2+)
+    'grant-advanced-seo-enhancer.php'   // SEO大幅強化（OGP、Schema.org拡張、内部リンク）
 );
 
 // ファイルを安全に読み込み
