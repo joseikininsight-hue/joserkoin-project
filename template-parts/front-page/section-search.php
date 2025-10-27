@@ -196,6 +196,18 @@ $regions_data = array(
                 </label>
                 <select id="municipality-select" class="form-select">
                     <option value="">市町村を選択</option>
+                    <?php if (!empty($all_municipalities) && !is_wp_error($all_municipalities)) : ?>
+                        <?php foreach ($all_municipalities as $municipality) : ?>
+                            <?php 
+                            $related_pref_slug = get_term_meta($municipality->term_id, 'prefecture_slug', true);
+                            ?>
+                            <option value="<?php echo esc_attr($municipality->slug); ?>" 
+                                    data-prefecture="<?php echo esc_attr($related_pref_slug); ?>"
+                                    style="display: none;">
+                                <?php echo esc_html($municipality->name); ?> (<?php echo $municipality->count; ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </select>
             </div>
 
@@ -1279,52 +1291,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('search-btn');
     const resetBtn = document.getElementById('reset-btn');
     
-    // 都道府県変更時に市町村を読み込む
+    // 都道府県変更時に市町村をフィルタリング
     if (prefectureSelect && municipalityGroup && municipalitySelect) {
         prefectureSelect.addEventListener('change', function() {
             const prefectureSlug = this.value;
             
+            // すべての市町村オプションを取得
+            const allOptions = municipalitySelect.querySelectorAll('option[data-prefecture]');
+            
             if (!prefectureSlug) {
+                // 都道府県未選択の場合は市町村グループを非表示
                 municipalityGroup.style.display = 'none';
-                municipalitySelect.innerHTML = '<option value="">市町村を選択</option>';
+                municipalitySelect.value = '';
+                allOptions.forEach(opt => opt.style.display = 'none');
                 return;
             }
             
-            // 市町村を取得
-            const formData = new FormData();
-            formData.append('action', 'gi_get_municipalities_for_prefecture');
-            formData.append('prefecture_slug', prefectureSlug);
-            formData.append('nonce', '<?php echo wp_create_nonce("gi_ajax_nonce"); ?>');
-            
-            fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                municipalitySelect.innerHTML = '<option value="">市町村を選択</option>';
-                
-                if (data.success && data.data && data.data.data && Array.isArray(data.data.data.municipalities)) {
-                    const municipalities = data.data.data.municipalities;
-                    if (municipalities.length > 0) {
-                        municipalities.forEach(muni => {
-                            const option = document.createElement('option');
-                            option.value = muni.slug;
-                            option.textContent = muni.name;
-                            municipalitySelect.appendChild(option);
-                        });
-                        municipalityGroup.style.display = 'block';
-                    } else {
-                        municipalityGroup.style.display = 'none';
-                    }
+            // 選択された都道府県に属する市町村のみ表示
+            let visibleCount = 0;
+            allOptions.forEach(opt => {
+                const optPref = opt.getAttribute('data-prefecture');
+                if (optPref === prefectureSlug) {
+                    opt.style.display = 'block';
+                    visibleCount++;
                 } else {
-                    municipalityGroup.style.display = 'none';
+                    opt.style.display = 'none';
                 }
-            })
-            .catch(error => {
-                console.error('[Municipality] Load error:', error);
-                municipalityGroup.style.display = 'none';
             });
+            
+            // 市町村が存在する場合のみグループを表示
+            if (visibleCount > 0) {
+                municipalityGroup.style.display = 'block';
+                municipalitySelect.value = '';
+            } else {
+                municipalityGroup.style.display = 'none';
+            }
+            
+            console.log('[Municipality Filter] Showing', visibleCount, 'municipalities for', prefectureSlug);
         });
     }
     
