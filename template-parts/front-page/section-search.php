@@ -1,9 +1,10 @@
 <?php
 /**
- * AI-Powered Grant Search Section - Complete Responsive Edition v2.2
+ * Job-Site Style Grant Search Section v3.0
+ * 求人サイト風補助金検索セクション + レコメンド + 新着
  * 
  * @package Grant_Insight_Perfect
- * @version 2.2.0 - Fixed Hero Section Color Issue
+ * @version 3.0.0 - Job Site Style Interface
  */
 
 // セキュリティチェック
@@ -14,7 +15,886 @@ if (!defined('ABSPATH')) {
 // セッションID生成
 $session_id = 'gi_session_' . wp_generate_uuid4();
 $nonce = wp_create_nonce('gi_ai_search_nonce');
+
+// カテゴリー（職種）を取得
+$categories = get_terms(array(
+    'taxonomy' => 'grant_category',
+    'hide_empty' => false,
+    'orderby' => 'count',
+    'order' => 'DESC',
+    'number' => 20
+));
+
+// 都道府県（勤務地）を取得
+$prefectures = gi_get_all_prefectures();
+
+// レコメンド補助金を取得（注目度の高い6件）
+$recommended_grants = get_posts(array(
+    'post_type' => 'grant',
+    'posts_per_page' => 4,
+    'meta_key' => 'is_featured',
+    'meta_value' => '1',
+    'orderby' => 'rand', // ランダムでパーソナライズ感を演出
+    'order' => 'DESC'
+));
+
+// 新着補助金を取得（最新8件）
+$new_grants = get_posts(array(
+    'post_type' => 'grant',
+    'posts_per_page' => 8,
+    'orderby' => 'date',
+    'order' => 'DESC'
+));
 ?>
+
+<!-- Job-Site Style Search Interface -->
+<section class="job-search-section">
+    <div class="job-search-container">
+        
+        <!-- 求人サイト風検索バー -->
+        <div class="job-search-bar-wrapper">
+            <div class="job-search-bar">
+                
+                <!-- 職種（カテゴリー）ドロップダウン -->
+                <div class="search-field search-category">
+                    <label for="grant-category-select" class="search-label">
+                        <i class="fas fa-briefcase"></i>
+                        職種
+                    </label>
+                    <select id="grant-category-select" class="search-select">
+                        <option value="">職種を選択してください</option>
+                        <?php foreach ($categories as $category) : ?>
+                            <option value="<?php echo esc_attr($category->slug); ?>">
+                                <?php echo esc_html($category->name); ?> (<?php echo $category->count; ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <i class="fas fa-chevron-down select-arrow"></i>
+                </div>
+                
+                <!-- 勤務地（都道府県）ドロップダウン -->
+                <div class="search-field search-location">
+                    <label for="grant-prefecture-select" class="search-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        勤務地
+                    </label>
+                    <select id="grant-prefecture-select" class="search-select">
+                        <option value="">勤務地を選択してください</option>
+                        <?php foreach ($prefectures as $pref) : ?>
+                            <option value="<?php echo esc_attr($pref['slug']); ?>">
+                                <?php echo esc_html($pref['name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <i class="fas fa-chevron-down select-arrow"></i>
+                </div>
+                
+                <!-- キーワード検索 -->
+                <div class="search-field search-keyword">
+                    <label for="grant-keyword-input" class="search-label">
+                        <i class="fas fa-search"></i>
+                        スキルや条件など
+                    </label>
+                    <input 
+                        type="text" 
+                        id="grant-keyword-input" 
+                        class="search-input" 
+                        placeholder="キーワードを入力"
+                        autocomplete="off">
+                </div>
+                
+                <!-- 検索ボタン -->
+                <button type="button" id="job-search-btn" class="job-search-button">
+                    <i class="fas fa-search"></i>
+                    <span class="btn-text">検索</span>
+                </button>
+                
+            </div>
+            
+            <!-- 検索条件絞り込みリンク -->
+            <div class="search-options">
+                <button type="button" class="search-option-btn" id="detailed-search-toggle">
+                    <i class="fas fa-sliders-h"></i>
+                    詳しい条件から探す
+                </button>
+                <button type="button" class="search-option-btn" id="saved-search-btn">
+                    <i class="fas fa-star"></i>
+                    新着のみ
+                </button>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<!-- レコメンドシステムセクション -->
+<section class="recommendation-section">
+    <div class="recommendation-container">
+        
+        <!-- セクションヘッダー -->
+        <div class="section-header">
+            <div class="header-left">
+                <h2 class="section-title">
+                    <i class="fas fa-user-circle"></i>
+                    あなたへのおすすめ補助金
+                </h2>
+                <p class="section-subtitle">閲覧履歴や希望条件に基づいたおすすめ</p>
+            </div>
+            <a href="<?php echo home_url('/grants/'); ?>" class="view-all-link">
+                一覧へ
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+        <!-- レコメンド補助金カード -->
+        <div class="grant-cards-grid">
+            <?php foreach ($recommended_grants as $grant) : 
+                $deadline = get_post_meta($grant->ID, 'deadline', true);
+                $max_amount = get_post_meta($grant->ID, 'max_amount', true);
+                $organization = get_post_meta($grant->ID, 'organization', true);
+                $is_featured = get_post_meta($grant->ID, 'is_featured', true);
+                $permalink = get_permalink($grant->ID);
+                
+                // カテゴリー取得
+                $grant_categories = get_the_terms($grant->ID, 'grant_category');
+                $category_name = $grant_categories && !is_wp_error($grant_categories) ? $grant_categories[0]->name : '';
+                
+                // 都道府県取得
+                $grant_prefectures = get_the_terms($grant->ID, 'grant_prefecture');
+                $prefecture_name = $grant_prefectures && !is_wp_error($grant_prefectures) ? $grant_prefectures[0]->name : '';
+            ?>
+            <article class="grant-card">
+                <?php if ($is_featured) : ?>
+                <span class="grant-badge grant-badge-featured">注目</span>
+                <?php endif; ?>
+                
+                <a href="<?php echo esc_url($permalink); ?>" class="grant-card-link">
+                    <div class="grant-card-header">
+                        <?php if ($organization) : ?>
+                        <span class="grant-company">
+                            <i class="fas fa-building"></i>
+                            <?php echo esc_html($organization); ?>
+                        </span>
+                        <?php endif; ?>
+                        <button class="grant-bookmark" aria-label="ブックマーク">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                    </div>
+                    
+                    <h3 class="grant-card-title"><?php echo esc_html($grant->post_title); ?></h3>
+                    
+                    <div class="grant-card-meta">
+                        <?php if ($category_name) : ?>
+                        <span class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <?php echo esc_html($category_name); ?>
+                        </span>
+                        <?php endif; ?>
+                        
+                        <?php if ($prefecture_name) : ?>
+                        <span class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <?php echo esc_html($prefecture_name); ?>
+                        </span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="grant-card-footer">
+                        <?php if ($max_amount) : ?>
+                        <span class="grant-amount">
+                            <i class="fas fa-yen-sign"></i>
+                            最大<?php echo esc_html($max_amount); ?>
+                        </span>
+                        <?php endif; ?>
+                        
+                        <?php if ($deadline) : ?>
+                        <span class="grant-deadline">
+                            <i class="fas fa-clock"></i>
+                            <?php echo esc_html(date('Y/m/d', strtotime($deadline))); ?>まで
+                        </span>
+                        <?php endif; ?>
+                    </div>
+                </a>
+            </article>
+            <?php endforeach; ?>
+        </div>
+        
+    </div>
+</section>
+
+<!-- 新着補助金セクション -->
+<section class="new-grants-section">
+    <div class="new-grants-container">
+        
+        <!-- セクションヘッダー -->
+        <div class="section-header">
+            <div class="header-left">
+                <h2 class="section-title">
+                    <i class="fas fa-clock"></i>
+                    新着補助金
+                    <span class="count-badge"><?php echo number_format(count($new_grants)); ?>件</span>
+                </h2>
+                <p class="section-subtitle"><?php echo date('Y/m/d'); ?> 更新　毎月・木曜更新</p>
+            </div>
+            <a href="<?php echo home_url('/grants/?orderby=date'); ?>" class="view-all-link">
+                一覧へ
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+        <!-- 新着補助金カードグリッド -->
+        <div class="grant-cards-grid grant-cards-grid-large">
+            <?php foreach ($new_grants as $grant) : 
+                $deadline = get_post_meta($grant->ID, 'deadline', true);
+                $max_amount = get_post_meta($grant->ID, 'max_amount', true);
+                $organization = get_post_meta($grant->ID, 'organization', true);
+                $is_new = (strtotime($grant->post_date) > strtotime('-7 days'));
+                $permalink = get_permalink($grant->ID);
+                
+                // カテゴリー取得
+                $grant_categories = get_the_terms($grant->ID, 'grant_category');
+                $category_name = $grant_categories && !is_wp_error($grant_categories) ? $grant_categories[0]->name : '';
+                
+                // 都道府県取得
+                $grant_prefectures = get_the_terms($grant->ID, 'grant_prefecture');
+                $prefecture_name = $grant_prefectures && !is_wp_error($grant_prefectures) ? $grant_prefectures[0]->name : '';
+            ?>
+            <article class="grant-card">
+                <?php if ($is_new) : ?>
+                <span class="grant-badge grant-badge-new">NEW</span>
+                <?php endif; ?>
+                
+                <a href="<?php echo esc_url($permalink); ?>" class="grant-card-link">
+                    <div class="grant-card-header">
+                        <?php if ($organization) : ?>
+                        <span class="grant-company">
+                            <i class="fas fa-building"></i>
+                            <?php echo esc_html($organization); ?>
+                        </span>
+                        <?php endif; ?>
+                        <button class="grant-bookmark" aria-label="ブックマーク">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                    </div>
+                    
+                    <h3 class="grant-card-title"><?php echo esc_html($grant->post_title); ?></h3>
+                    
+                    <div class="grant-card-meta">
+                        <?php if ($category_name) : ?>
+                        <span class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <?php echo esc_html($category_name); ?>
+                        </span>
+                        <?php endif; ?>
+                        
+                        <?php if ($prefecture_name) : ?>
+                        <span class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <?php echo esc_html($prefecture_name); ?>
+                        </span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="grant-card-footer">
+                        <?php if ($max_amount) : ?>
+                        <span class="grant-amount">
+                            <i class="fas fa-yen-sign"></i>
+                            最大<?php echo esc_html($max_amount); ?>
+                        </span>
+                        <?php endif; ?>
+                        
+                        <?php if ($deadline) : ?>
+                        <span class="grant-deadline">
+                            <i class="fas fa-clock"></i>
+                            <?php echo esc_html(date('Y/m/d', strtotime($deadline))); ?>まで
+                        </span>
+                        <?php endif; ?>
+                    </div>
+                </a>
+            </article>
+            <?php endforeach; ?>
+        </div>
+        
+    </div>
+</section>
+
+<style>
+/* ============================================
+   Job-Site Style Search Interface v3.0
+   求人サイト風検索インターフェース
+   ============================================ */
+
+/* 検索セクション */
+.job-search-section {
+    padding: 60px 0 40px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.job-search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 検索バーラッパー */
+.job-search-bar-wrapper {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 2px solid #000000;
+}
+
+/* 検索バー */
+.job-search-bar {
+    display: grid;
+    grid-template-columns: 2fr 2fr 3fr auto;
+    gap: 16px;
+    align-items: end;
+}
+
+/* 検索フィールド */
+.search-field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.search-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.search-label i {
+    font-size: 14px;
+}
+
+/* セレクトボックス */
+.search-select {
+    width: 100%;
+    padding: 14px 40px 14px 16px;
+    font-size: 15px;
+    color: #000000;
+    background: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.search-select:hover {
+    border-color: #333333;
+}
+
+.search-select:focus {
+    outline: none;
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.3);
+}
+
+.select-arrow {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    font-size: 12px;
+    color: #666666;
+    pointer-events: none;
+}
+
+/* キーワード入力 */
+.search-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 15px;
+    color: #000000;
+    background: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.search-input:hover {
+    border-color: #333333;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.3);
+}
+
+.search-input::placeholder {
+    color: #999999;
+}
+
+/* 検索ボタン */
+.job-search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    height: 52px;
+}
+
+.job-search-button:hover {
+    background: #ffeb3b;
+    color: #000000;
+    border-color: #ffeb3b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.job-search-button i {
+    font-size: 16px;
+}
+
+/* 検索オプション */
+.search-options {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.search-option-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: transparent;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-option-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.search-option-btn i {
+    font-size: 12px;
+}
+
+/* ============================================
+   レコメンドセクション
+   ============================================ */
+
+.recommendation-section,
+.new-grants-section {
+    padding: 60px 0;
+    background: #ffffff;
+}
+
+.recommendation-container,
+.new-grants-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* セクションヘッダー */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid #000000;
+}
+
+.header-left {
+    flex: 1;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 28px;
+    font-weight: 900;
+    color: #000000;
+    margin: 0 0 8px;
+}
+
+.section-title i {
+    font-size: 32px;
+}
+
+.count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    background: #ffeb3b;
+    color: #000000;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 8px;
+}
+
+.section-subtitle {
+    font-size: 13px;
+    color: #666666;
+    font-weight: 500;
+    margin: 0;
+}
+
+.view-all-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    background: #000000;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.view-all-link:hover {
+    background: #ffeb3b;
+    color: #000000;
+    transform: translateY(-2px);
+}
+
+.view-all-link i {
+    font-size: 12px;
+}
+
+/* ============================================
+   補助金カードグリッド
+   ============================================ */
+
+.grant-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.grant-cards-grid-large {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* 補助金カード */
+.grant-card {
+    position: relative;
+    background: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.grant-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: #ffeb3b;
+}
+
+.grant-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    z-index: 2;
+    color: #ffffff;
+}
+
+.grant-badge-featured {
+    background: #ff4444;
+}
+
+.grant-badge-new {
+    background: #ffeb3b;
+    color: #000000;
+}
+
+.grant-card-link {
+    display: block;
+    padding: 16px;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* カードヘッダー */
+.grant-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.grant-company {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #666666;
+    font-weight: 600;
+}
+
+.grant-company i {
+    font-size: 11px;
+}
+
+.grant-bookmark {
+    padding: 6px;
+    background: transparent;
+    border: none;
+    color: #666666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.grant-bookmark:hover {
+    color: #ffeb3b;
+    transform: scale(1.1);
+}
+
+/* カードタイトル */
+.grant-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000000;
+    line-height: 1.4;
+    margin: 0 0 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* カードメタ */
+.grant-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #666666;
+    font-weight: 600;
+}
+
+.meta-item i {
+    font-size: 10px;
+}
+
+/* カードフッター */
+.grant-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.grant-amount {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #000000;
+}
+
+.grant-amount i {
+    font-size: 11px;
+}
+
+.grant-deadline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #ff4444;
+}
+
+.grant-deadline i {
+    font-size: 11px;
+}
+
+/* ============================================
+   レスポンシブデザイン
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .job-search-bar {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    
+    .job-search-button {
+        grid-column: 1 / -1;
+    }
+    
+    .grant-cards-grid,
+    .grant-cards-grid-large {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .job-search-section {
+        padding: 40px 0 30px;
+    }
+    
+    .job-search-bar-wrapper {
+        padding: 24px 20px;
+    }
+    
+    .job-search-bar {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .job-search-button {
+        width: 100%;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .section-title {
+        font-size: 24px;
+    }
+    
+    .section-title i {
+        font-size: 28px;
+    }
+    
+    .grant-cards-grid,
+    .grant-cards-grid-large {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .job-search-section {
+        padding: 30px 0 20px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+    }
+    
+    .grant-cards-grid,
+    .grant-cards-grid-large {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-options {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .search-option-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 求人サイト風検索機能
+    const searchBtn = document.getElementById('job-search-btn');
+    const categorySelect = document.getElementById('grant-category-select');
+    const prefectureSelect = document.getElementById('grant-prefecture-select');
+    const keywordInput = document.getElementById('grant-keyword-input');
+    
+    if (searchBtn) {
+        searchBtn.addEventListener('click', function() {
+            const category = categorySelect.value;
+            const prefecture = prefectureSelect.value;
+            const keyword = keywordInput.value;
+            
+            // 検索URLの構築
+            let searchUrl = '<?php echo home_url('/grants/'); ?>?';
+            const params = [];
+            
+            if (category) params.push('category=' + encodeURIComponent(category));
+            if (prefecture) params.push('prefecture=' + encodeURIComponent(prefecture));
+            if (keyword) params.push('s=' + encodeURIComponent(keyword));
+            
+            searchUrl += params.join('&');
+            
+            // 検索結果ページへ遷移
+            window.location.href = searchUrl;
+        });
+    }
+    
+    // Enterキーで検索
+    if (keywordInput) {
+        keywordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchBtn.click();
+            }
+        });
+    }
+    
+    // ブックマーク機能
+    document.querySelectorAll('.grant-bookmark').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                this.style.color = '#ffeb3b';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                this.style.color = '#666666';
+            }
+        });
+    });
+    
+    console.log('[OK] Job-Site Style Search Interface v3.0 loaded');
+});
+</script>
 
 <!-- AI Grant Search Section - Full Responsive Monochrome Professional Edition -->
 <section id="ai-search-section" class="monochrome-ai-search" data-session-id="<?php echo esc_attr($session_id); ?>">
