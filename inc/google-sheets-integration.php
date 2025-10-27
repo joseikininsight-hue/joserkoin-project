@@ -1225,6 +1225,9 @@ class GoogleSheetsSync {
         set_time_limit(300); // 5分
         ini_set('memory_limit', '256M');
         
+        // シャットダウンハンドラーを登録（致命的エラーをキャッチ）
+        register_shutdown_function(array($this, 'ajax_shutdown_handler'));
+        
         // 全体をtry-catchでラップして500エラーを防ぐ
         try {
             // デバッグ: AJAXリクエストが到達したことをログに記録
@@ -1317,6 +1320,31 @@ class GoogleSheetsSync {
                 'trace' => method_exists($e, 'getTraceAsString') ? $e->getTraceAsString() : 'no trace'
             ));
             wp_send_json_error('予期しないエラーが発生しました: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * シャットダウンハンドラー - 致命的エラーをキャッチ
+     */
+    public function ajax_shutdown_handler() {
+        $error = error_get_last();
+        if ($error && in_array($error['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR))) {
+            gi_log_error('Fatal error during AJAX sync', array(
+                'error_type' => $error['type'],
+                'error_message' => $error['message'],
+                'error_file' => $error['file'],
+                'error_line' => $error['line']
+            ));
+            
+            // AJAXレスポンスとしてエラーを返す
+            if (!headers_sent()) {
+                header('Content-Type: application/json');
+                echo json_encode(array(
+                    'success' => false,
+                    'data' => 'PHPの致命的エラーが発生しました: ' . $error['message'] . ' in ' . $error['file'] . ' on line ' . $error['line']
+                ));
+            }
+            exit;
         }
     }
     
