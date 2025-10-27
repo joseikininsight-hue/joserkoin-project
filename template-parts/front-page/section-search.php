@@ -4247,28 +4247,79 @@ $other_purposes = array(
             </h2>
         </header>
 
-        <!-- 検索タブナビゲーション -->
-        <nav class="browse-tabs" role="navigation" aria-label="補助金検索方法">
-            <button class="tab-button active" data-tab="purpose" aria-selected="true" role="tab">
-                <i class="fas fa-compass"></i>
-                <span>やりたいことから探す</span>
-            </button>
-            <button class="tab-button" data-tab="diagnosis" aria-selected="false" role="tab">
-                <i class="fas fa-clipboard-check"></i>
-                <span>診断して探す</span>
-            </button>
-            <button class="tab-button" data-tab="all" aria-selected="false" role="tab">
-                <i class="fas fa-list"></i>
-                <span>一覧から探す</span>
-            </button>
-        </nav>
-
-        <!-- タブコンテンツ -->
-        <div class="browse-content">
+        <!-- 2カラムレイアウト：左側にアクション、右側に用途グリッド -->
+        <div class="browse-split-layout">
             
-            <!-- やりたいことから探す -->
-            <div class="tab-content active" data-content="purpose" role="tabpanel" aria-label="やりたいことから探す">
-                <!-- メイン8カード -->
+            <!-- 左カラム：主要アクション -->
+            <div class="browse-actions-column">
+                <!-- 診断カード -->
+                <div class="action-card action-diagnosis" itemscope itemtype="https://schema.org/WebApplication">
+                    <div class="action-visual">
+                        <div class="action-icon-wrapper">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="action-badge">AI POWERED</div>
+                    </div>
+                    <div class="action-content">
+                        <h3 class="action-title">診断して探す</h3>
+                        <p class="action-description">簡単な質問に答えるだけで、あなたに最適な補助金を自動マッチング</p>
+                        <div class="action-features">
+                            <span class="feature-badge"><i class="fas fa-clock"></i> 約30秒</span>
+                            <span class="feature-badge"><i class="fas fa-check"></i> 無料</span>
+                        </div>
+                    </div>
+                    <a href="<?php echo esc_url(home_url('/ai-diagnosis/')); ?>" class="action-button">
+                        <span>診断を始める</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- 使い方ガイドカード -->
+                <div class="action-card action-guide">
+                    <div class="action-visual action-visual-video">
+                        <div class="video-play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="action-content">
+                        <h3 class="action-title">使い方を見る</h3>
+                        <p class="action-description">補助金検索から申請までの流れを動画でわかりやすく解説</p>
+                    </div>
+                    <a href="#" class="action-button action-button-secondary">
+                        <span>動画を見る</span>
+                        <i class="fas fa-play-circle"></i>
+                    </a>
+                </div>
+
+                <!-- AI検索カード -->
+                <div class="action-card action-ai-search">
+                    <div class="action-visual action-visual-ai">
+                        <div class="ai-animation">
+                            <div class="ai-icon"><i class="fas fa-robot"></i></div>
+                            <div class="ai-particles">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-content">
+                        <h3 class="action-title">AI検索してみる</h3>
+                        <p class="action-description">自然な言葉で質問するだけで、AIが最適な補助金を提案</p>
+                    </div>
+                    <button class="action-button action-button-ai" onclick="openAIAssistant()">
+                        <span>AI検索を試す</span>
+                        <i class="fas fa-sparkles"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右カラム：用途から探す -->
+            <div class="browse-purposes-column">
+                <div class="purposes-header">
+                    <h3 class="purposes-title">用途から探す</h3>
+                    <p class="purposes-subtitle">やりたいことから最適な補助金を見つけよう</p>
+                </div>
+
+                <!-- 用途グリッド（3x4レイアウト）-->
                 <div class="purpose-grid" itemscope itemtype="https://schema.org/ItemList">
                     <meta itemprop="name" content="補助金検索 - やりたいこと別">
                     <meta itemprop="description" content="事業の目的別に補助金・助成金を検索できます">
@@ -4295,11 +4346,11 @@ $other_purposes = array(
                     <?php endforeach; ?>
                 </div>
 
-                <!-- その他の用途 -->
+                <!-- その他の用途（コンパクト表示）-->
                 <?php if (!empty($other_purposes)) : ?>
                 <div class="purpose-more-section">
                     <button type="button" class="purpose-more-button" id="purpose-toggle-more">
-                        <span>その他の用途</span>
+                        <span>その他の用途を見る</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
 
@@ -4318,70 +4369,7 @@ $other_purposes = array(
                 <?php endif; ?>
             </div>
 
-            <!-- 診断して探す -->
-            <div class="tab-content" data-content="diagnosis">
-                <div class="diagnosis-card" itemscope itemtype="https://schema.org/WebApplication">
-                    <meta itemprop="name" content="補助金診断ツール">
-                    <meta itemprop="description" content="簡単な質問に答えるだけで、あなたに最適な補助金・助成金を見つけることができます">
-                    <meta itemprop="applicationCategory" content="BusinessApplication">
-                    <meta itemprop="operatingSystem" content="Web Browser">
-                    
-                    <div class="diagnosis-icon">
-                        <i class="fas fa-clipboard-check"></i>
-                    </div>
-                    <h3 class="diagnosis-title" itemprop="headline">AI補助金診断</h3>
-                    <p class="diagnosis-description" itemprop="description">
-                        簡単な質問に答えるだけで、あなたの事業に最適な補助金・助成金を自動でマッチング。
-                        業種・規模・目的に応じた最適な制度を最短30秒で診断します。
-                    </p>
-                    
-                    <div class="diagnosis-features">
-                        <div class="feature-item">
-                            <i class="fas fa-clock"></i>
-                            <span>所要時間：約30秒</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-robot"></i>
-                            <span>AI自動マッチング</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>無料で利用可能</span>
-                        </div>
-                    </div>
-                    
-                    <a href="<?php echo esc_url(home_url('/ai-diagnosis/')); ?>" class="diagnosis-button" itemprop="url">
-                        <span>無料で診断を始める</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                    
-                    <div class="diagnosis-note">
-                        ※登録不要、個人情報の入力も不要です
-                    </div>
-                </div>
-            </div>
-
-            <!-- 一覧から探す -->
-            <div class="tab-content" data-content="all" role="tabpanel" aria-label="一覧から探す">
-                <div class="all-browse-card" itemscope itemtype="https://schema.org/WebPage">
-                    <meta itemprop="name" content="補助金・助成金一覧">
-                    <meta itemprop="description" content="国・地方自治体が提供する補助金・助成金の完全一覧">
-                    <div class="all-browse-icon">
-                        <i class="fas fa-th-list"></i>
-                    </div>
-                    <h3 class="all-browse-title" itemprop="headline">全ての補助金・助成金を見る</h3>
-                    <p class="all-browse-description" itemprop="description">
-                        国・地方自治体が提供する補助金・助成金を一覧で表示。並び替えや絞り込み機能で最適な制度を見つけられます。
-                    </p>
-                    <a href="<?php echo esc_url(get_post_type_archive_link('grant')); ?>" class="all-browse-button" itemprop="url">
-                        <span>補助金一覧を見る</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
         </div>
-
     </div>
 </section>
 
@@ -4458,90 +4446,360 @@ $other_purposes = array(
     line-height: 1.5;
 }
 
-/* タブナビゲーション */
-.browse-tabs {
+/* ============================================
+   2カラムスプリットレイアウト（写真風デザイン）
+   ============================================ */
+
+.browse-split-layout {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 40px;
-    background: #f8f8f8;
-    padding: 6px;
-    border-radius: 12px;
+    grid-template-columns: 360px 1fr;
+    gap: 30px;
+    margin-top: 40px;
 }
 
-.tab-button {
+/* ============================================
+   左カラム：アクションカード
+   ============================================ */
+
+.browse-actions-column {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+}
+
+.action-card {
+    position: relative;
+    background: #ffffff;
+    border: 3px solid #000000;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* アクションカードビジュアル */
+.action-visual {
+    position: relative;
+    height: 160px;
+    background: linear-gradient(135deg, #000000 0%, #333333 100%);
+    display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 16px 12px;
-    background: transparent;
-    border: 2px solid transparent;
-    border-radius: 8px;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.action-visual::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.05) 70%, transparent 70%),
+        linear-gradient(-45deg, transparent 30%, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.05) 70%, transparent 70%);
+    background-size: 40px 40px;
+    animation: pattern-move 20s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes pattern-move {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 40px; }
+}
+
+.action-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: #ffffff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #000000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.action-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #ffeb3b;
+    color: #000000;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    z-index: 2;
+}
+
+/* ビデオプレイボタン */
+.action-visual-video {
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23111" width="400" height="300"/><circle cx="200" cy="150" r="100" fill="%23222"/><circle cx="200" cy="150" r="80" fill="%23333"/></svg>');
+    background-size: cover;
+    background-position: center;
+}
+
+.video-play-button {
+    width: 80px;
+    height: 80px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #000000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    padding-left: 6px;
+    transition: all 0.3s ease;
+}
+
+.action-card:hover .video-play-button {
+    transform: scale(1.1);
+    background: #ffeb3b;
+}
+
+/* AIアニメーション */
+.action-visual-ai {
+    background: 
+        radial-gradient(circle at 30% 50%, rgba(255, 235, 59, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 50%, rgba(255, 235, 59, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+}
+
+.ai-animation {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.ai-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: #000000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.ai-particles {
+    position: absolute;
+    inset: 0;
+    animation: rotate 10s linear infinite;
+}
+
+.ai-particles span {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #ffeb3b;
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(255, 235, 59, 0.8);
+}
+
+.ai-particles span:nth-child(1) {
+    top: 10%;
+    left: 50%;
+    animation: float 3s ease-in-out infinite;
+}
+
+.ai-particles span:nth-child(2) {
+    top: 50%;
+    right: 10%;
+    animation: float 3s ease-in-out infinite 1s;
+}
+
+.ai-particles span:nth-child(3) {
+    bottom: 10%;
+    left: 30%;
+    animation: float 3s ease-in-out infinite 2s;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* アクションコンテンツ */
+.action-content {
+    padding: 20px;
+}
+
+.action-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #000000;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.action-description {
+    font-size: 13px;
     color: #666666;
-    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 12px 0;
+}
+
+.action-features {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.feature-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f5f5f5;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
     font-weight: 600;
+    color: #000000;
+}
+
+.feature-badge i {
+    font-size: 10px;
+}
+
+/* アクションボタン */
+.action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 20px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.tab-button i {
-    font-size: 20px;
+.action-button:hover {
+    background: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.tab-button:hover {
+.action-button i {
+    font-size: 14px;
+}
+
+.action-button-secondary {
     background: #ffffff;
     color: #000000;
-    border-color: #e0e0e0;
+    border: 2px solid #000000;
 }
 
-.tab-button.active {
+.action-button-secondary:hover {
     background: #000000;
     color: #ffffff;
-    border-color: #000000;
 }
 
-/* タブコンテンツ */
-.tab-content {
-    display: none;
+.action-button-ai {
+    background: linear-gradient(135deg, #000000 0%, #333333 100%);
+    position: relative;
+    overflow: hidden;
 }
 
-.tab-content.active {
-    display: block;
-    animation: browse-fadeIn 0.4s ease;
+.action-button-ai::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 235, 59, 0.3), transparent);
+    animation: shine 3s ease-in-out infinite;
 }
 
-@keyframes browse-fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes shine {
+    to { left: 100%; }
 }
 
-/* やりたいことから探す - カテゴリーセクションと同じデザイン */
+/* ============================================
+   右カラム：用途グリッド
+   ============================================ */
+
+.browse-purposes-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.purposes-header {
+    margin-bottom: 20px;
+}
+
+.purposes-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: #000000;
+    margin: 0 0 6px 0;
+    line-height: 1.2;
+}
+
+.purposes-subtitle {
+    font-size: 14px;
+    color: #666666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* やりたいことから探す - 3x4 グリッドレイアウト */
 .purpose-grid {
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    margin-bottom: 26px;
+    margin-bottom: 20px;
 }
 
 .purpose-card {
     position: relative;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px 14px;
     background: #ffffff;
     border: 2px solid #000000;
-    border-radius: 10px;
+    border-radius: 12px;
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-height: 120px;
 }
 
 .purpose-card-number {
@@ -4597,6 +4855,23 @@ $other_purposes = array(
 
 .purpose-icon {
     flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: #000000;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.purpose-card:hover .purpose-icon {
+    background: #ffeb3b;
+    color: #000000;
+    transform: scale(1.1) rotate(-5deg);
+}
     width: 44px;
     height: 44px;
     background: #000000;
@@ -4621,10 +4896,10 @@ $other_purposes = array(
 }
 
 .purpose-title {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: #000000;
-    margin: 0 0 4px 0;
+    margin: 0 0 6px 0;
     line-height: 1.3;
     letter-spacing: -0.01em;
 }
@@ -4632,7 +4907,7 @@ $other_purposes = array(
 .purpose-description {
     font-size: 11px;
     color: #666666;
-    line-height: 1.4;
+    line-height: 1.5;
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -4641,9 +4916,13 @@ $other_purposes = array(
 }
 
 .purpose-arrow {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    background: #f5f5f5;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4653,8 +4932,8 @@ $other_purposes = array(
 }
 
 .purpose-card:hover .purpose-arrow {
+    background: #ffeb3b;
     transform: translateX(4px);
-    color: #ffeb3b;
 }
 
 /* その他の用途セクション */
@@ -4930,7 +5209,51 @@ $other_purposes = array(
     }
 }
 
+/* ==========================
+   レスポンシブデザイン
+   ========================== */
+
+/* タブレット (768px - 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
+    .browse-split-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .browse-actions-column {
+        grid-template-columns: repeat(3, 1fr);
+        display: grid;
+        gap: 16px;
+    }
+    
+    .action-visual {
+        height: 120px;
+    }
+    
+    .action-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+    }
+    
+    .video-play-button {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+    
+    .action-content {
+        padding: 16px;
+    }
+    
+    .action-title {
+        font-size: 16px;
+    }
+    
+    .action-description {
+        font-size: 12px;
+    }
+    
     .purpose-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
@@ -4954,6 +5277,7 @@ $other_purposes = array(
     }
 }
 
+/* モバイル (< 768px) */
 @media (max-width: 767px) {
     .browse-section-integrated {
         padding: 50px 0 60px;
@@ -4967,20 +5291,69 @@ $other_purposes = array(
         font-size: 15px;
     }
     
-    .browse-tabs {
+    .browse-split-layout {
         grid-template-columns: 1fr;
-        gap: 8px;
+        gap: 30px;
     }
     
-    .tab-button {
+    .browse-actions-column {
+        gap: 16px;
+    }
+    
+    .action-card {
+        border-width: 2px;
+    }
+    
+    .action-visual {
+        height: 140px;
+    }
+    
+    .action-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+    }
+    
+    .video-play-button {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+    
+    .ai-animation {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .ai-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+    }
+    
+    .action-content {
+        padding: 16px;
+    }
+    
+    .action-title {
+        font-size: 16px;
+    }
+    
+    .action-description {
+        font-size: 12px;
+    }
+    
+    .action-button {
+        padding: 12px 18px;
         font-size: 13px;
-        padding: 14px 12px;
-        flex-direction: row;
-        gap: 10px;
     }
     
-    .tab-button i {
-        font-size: 18px;
+    .purposes-title {
+        font-size: 20px;
+    }
+    
+    .purposes-subtitle {
+        font-size: 13px;
     }
     
     .purpose-grid {
@@ -4989,8 +5362,9 @@ $other_purposes = array(
     }
     
     .purpose-card {
-        padding: 10px;
+        padding: 14px 12px;
         gap: 8px;
+        min-height: 100px;
     }
     
     .purpose-card-number {
@@ -5004,11 +5378,13 @@ $other_purposes = array(
     .purpose-icon {
         width: 36px;
         height: 36px;
-        font-size: 16px;
+        font-size: 18px;
+        border-radius: 8px;
     }
     
     .purpose-title {
-        font-size: 13px;
+        font-size: 12px;
+        margin-bottom: 4px;
     }
     
     .purpose-description {
@@ -5017,9 +5393,11 @@ $other_purposes = array(
     }
     
     .purpose-arrow {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         font-size: 10px;
+        bottom: 10px;
+        right: 10px;
     }
     
     .purpose-more-grid {
