@@ -349,42 +349,14 @@ $regions_data = array(
             <!-- 市町村リスト -->
             <div class="municipality-grid" id="municipality-list">
                 <?php if (!empty($all_municipalities) && !is_wp_error($all_municipalities)) : ?>
-                    <?php 
-                    // 市町村と都道府県の関連付けマップを作成
-                    foreach ($all_municipalities as $municipality) : 
+                    <?php foreach ($all_municipalities as $municipality) : ?>
+                        <?php 
                         $muni_url = get_term_link($municipality, 'grant_municipality');
                         if (is_wp_error($muni_url)) continue;
                         
-                        // 市町村に関連する都道府県を特定
-                        $related_pref_slug = '';
-                        
-                        // まずカスタムフィールドをチェック
-                        $stored_pref = get_term_meta($municipality->term_id, 'prefecture_slug', true);
-                        if (!empty($stored_pref)) {
-                            $related_pref_slug = $stored_pref;
-                        } else {
-                            // 市町村に紐づいた投稿から都道府県を推測
-                            $posts_with_muni = get_posts(array(
-                                'post_type' => 'grant',
-                                'posts_per_page' => 1,
-                                'tax_query' => array(
-                                    array(
-                                        'taxonomy' => 'grant_municipality',
-                                        'field' => 'term_id',
-                                        'terms' => $municipality->term_id,
-                                    ),
-                                ),
-                            ));
-                            
-                            if (!empty($posts_with_muni)) {
-                                $post = $posts_with_muni[0];
-                                $prefs = wp_get_post_terms($post->ID, 'grant_prefecture');
-                                if (!empty($prefs) && !is_wp_error($prefs)) {
-                                    $related_pref_slug = $prefs[0]->slug;
-                                }
-                            }
-                        }
-                    ?>
+                        // カスタムフィールドから都道府県を取得（軽量化のため投稿検索は削除）
+                        $related_pref_slug = get_term_meta($municipality->term_id, 'prefecture_slug', true);
+                        ?>
                         <a href="<?php echo esc_url($muni_url); ?>" 
                            class="municipality-link" 
                            data-prefecture="<?php echo esc_attr($related_pref_slug); ?>">
