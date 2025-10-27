@@ -229,7 +229,7 @@ $site_url = home_url('/');
 
 /* ベース */
 .gus-single {
-    max-width: 1200px;
+    max-width: 960px;
     margin: 0 auto;
     padding: var(--gus-space-lg);
     background: var(--gus-white);
@@ -923,37 +923,6 @@ img[loading="lazy"].loaded {
         </div>
         
         <h1 class="gus-title"><?php the_title(); ?></h1>
-        
-        <!-- キー情報 -->
-        <div class="gus-key-info">
-            <?php if ($formatted_amount): ?>
-            <div class="gus-key-item">
-                <div class="gus-key-label">最大助成額</div>
-                <div class="gus-key-value"><?php echo esc_html($formatted_amount); ?></div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ($deadline_info): ?>
-            <div class="gus-key-item">
-                <div class="gus-key-label">申請締切</div>
-                <div class="gus-key-value"><?php echo esc_html($deadline_info); ?></div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ($grant_data['adoption_rate'] > 0): ?>
-            <div class="gus-key-item">
-                <div class="gus-key-label">採択率</div>
-                <div class="gus-key-value"><?php echo number_format($grant_data['adoption_rate'], 1); ?>%</div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ($grant_data['organization']): ?>
-            <div class="gus-key-item">
-                <div class="gus-key-label">実施機関</div>
-                <div class="gus-key-value"><?php echo esc_html(wp_trim_words($grant_data['organization'], 3, '...')); ?></div>
-            </div>
-            <?php endif; ?>
-        </div>
     </header>
     
     <!-- レイアウト -->
@@ -989,38 +958,10 @@ img[loading="lazy"].loaded {
                 </header>
                 <div class="gus-section-content">
                     <table class="gus-table">
-                        <?php if ($grant_data['organization']): ?>
-                        <tr>
-                            <th>実施機関</th>
-                            <td><?php echo esc_html($grant_data['organization']); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        
-                        <?php if ($formatted_amount): ?>
-                        <tr>
-                            <th>最大助成額</th>
-                            <td><strong><?php echo esc_html($formatted_amount); ?></strong></td>
-                        </tr>
-                        <?php endif; ?>
-                        
                         <?php if ($grant_data['subsidy_rate']): ?>
                         <tr>
                             <th>補助率</th>
                             <td><?php echo esc_html($grant_data['subsidy_rate']); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        
-                        <?php if ($deadline_info): ?>
-                        <tr>
-                            <th>申請締切</th>
-                            <td><strong><?php echo esc_html($deadline_info); ?></strong></td>
-                        </tr>
-                        <?php endif; ?>
-                        
-                        <?php if ($grant_data['adoption_rate'] > 0): ?>
-                        <tr>
-                            <th>採択率</th>
-                            <td><strong><?php echo number_format($grant_data['adoption_rate'], 1); ?>%</strong></td>
                         </tr>
                         <?php endif; ?>
                         
@@ -1107,13 +1048,6 @@ img[loading="lazy"].loaded {
                     <span class="gus-icon gus-icon-chart"></span> 統計
                 </h3>
                 <div class="gus-stats">
-                    <?php if ($grant_data['adoption_rate'] > 0): ?>
-                    <div class="gus-stat">
-                        <span class="gus-stat-number"><?php echo number_format($grant_data['adoption_rate'], 1); ?>%</span>
-                        <span class="gus-stat-label">採択率</span>
-                    </div>
-                    <?php endif; ?>
-                    
                     <div class="gus-stat">
                         <span class="gus-stat-number"><?php echo number_format($grant_data['views_count']); ?></span>
                         <span class="gus-stat-label">閲覧</span>

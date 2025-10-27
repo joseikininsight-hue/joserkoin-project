@@ -70,7 +70,7 @@
             justify-content: space-between;
             max-width: 960px;
             margin: 0 auto;
-            padding: 12px 20px;
+            padding: 8px 16px;
         }
         
         .stylish-logo {
@@ -87,7 +87,7 @@
         }
         
         .stylish-logo-text h1 {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #000000;
             line-height: 1.2;
@@ -328,7 +328,7 @@
         }
         
         .stylish-logo-image {
-            height: 2.25rem;
+            height: 1.75rem;
             width: auto;
             aspect-ratio: 200 / 60;
             object-fit: contain;
@@ -337,7 +337,7 @@
         
         @media (min-width: 768px) {
             .stylish-logo-image {
-                height: 2.75rem;
+                height: 2rem;
             }
         }
         
@@ -354,7 +354,7 @@
         .stylish-logo-text h1,
         .stylish-logo-text .site-name {
             margin: 0;
-            font-size: 1.375rem;
+            font-size: 1rem;
             font-weight: var(--font-weight-bold);
             color: var(--text-primary);
             line-height: 1.2;
@@ -364,7 +364,7 @@
         
         @media (min-width: 768px) {
             .stylish-logo-text h1 {
-                font-size: 1.5rem;
+                font-size: 1.125rem;
             }
         }
         
