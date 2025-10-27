@@ -4247,126 +4247,90 @@ $other_purposes = array(
             </h2>
         </header>
 
-        <!-- 2カラムレイアウト：左側にアクション、右側に用途グリッド -->
-        <div class="browse-split-layout">
+        <!-- 写真のようなスタイリッシュな2カラムレイアウト -->
+        <div class="browse-photo-style-layout">
             
-            <!-- 左カラム：主要アクション -->
-            <div class="browse-actions-column">
-                <!-- 診断カード -->
-                <div class="action-card action-diagnosis" itemscope itemtype="https://schema.org/WebApplication">
-                    <div class="action-visual">
-                        <div class="action-icon-wrapper">
-                            <i class="fas fa-clipboard-check"></i>
-                        </div>
-                        <div class="action-badge">AI POWERED</div>
-                    </div>
-                    <div class="action-content">
-                        <h3 class="action-title">診断して探す</h3>
-                        <p class="action-description">簡単な質問に答えるだけで、あなたに最適な補助金を自動マッチング</p>
-                        <div class="action-features">
-                            <span class="feature-badge"><i class="fas fa-clock"></i> 約30秒</span>
-                            <span class="feature-badge"><i class="fas fa-check"></i> 無料</span>
-                        </div>
-                    </div>
-                    <a href="<?php echo esc_url(home_url('/ai-diagnosis/')); ?>" class="action-button">
-                        <span>診断を始める</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-
-                <!-- 使い方ガイドカード -->
-                <div class="action-card action-guide">
-                    <div class="action-visual action-visual-video">
-                        <div class="video-play-button">
-                            <i class="fas fa-play"></i>
-                        </div>
-                    </div>
-                    <div class="action-content">
-                        <h3 class="action-title">使い方を見る</h3>
-                        <p class="action-description">補助金検索から申請までの流れを動画でわかりやすく解説</p>
-                    </div>
-                    <a href="#" class="action-button action-button-secondary">
-                        <span>動画を見る</span>
-                        <i class="fas fa-play-circle"></i>
-                    </a>
-                </div>
-
-                <!-- AI検索カード -->
-                <div class="action-card action-ai-search">
-                    <div class="action-visual action-visual-ai">
-                        <div class="ai-animation">
-                            <div class="ai-icon"><i class="fas fa-robot"></i></div>
-                            <div class="ai-particles">
-                                <span></span><span></span><span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="action-content">
-                        <h3 class="action-title">AI検索してみる</h3>
-                        <p class="action-description">自然な言葉で質問するだけで、AIが最適な補助金を提案</p>
-                    </div>
-                    <button class="action-button action-button-ai" onclick="openAIAssistant()">
-                        <span>AI検索を試す</span>
-                        <i class="fas fa-sparkles"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 右カラム：用途から探す -->
-            <div class="browse-purposes-column">
-                <div class="purposes-header">
-                    <h3 class="purposes-title">用途から探す</h3>
-                    <p class="purposes-subtitle">やりたいことから最適な補助金を見つけよう</p>
-                </div>
-
-                <!-- 用途グリッド（3x4レイアウト）-->
-                <div class="purpose-grid" itemscope itemtype="https://schema.org/ItemList">
-                    <meta itemprop="name" content="補助金検索 - やりたいこと別">
-                    <meta itemprop="description" content="事業の目的別に補助金・助成金を検索できます">
-                    <?php 
-                    $position = 1;
-                    foreach ($purpose_categories as $index => $purpose) : 
-                    ?>
-                    <a href="<?php echo esc_url($purpose['url']); ?>" class="purpose-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                        <meta itemprop="position" content="<?php echo $position++; ?>">
-                        <link itemprop="url" href="<?php echo esc_url($purpose['url']); ?>">
-                        <div class="purpose-card-number"><?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></div>
-                        <div class="purpose-icon">
+            <!-- 左カラム：主要用途の大きなビジュアルカード（3つ） -->
+            <div class="browse-hero-column">
+                <?php 
+                // 最も需要の高い3つの用途を大きく表示
+                $hero_purposes = array_slice($purpose_categories, 0, 3);
+                foreach ($hero_purposes as $index => $purpose) : 
+                ?>
+                <a href="<?php echo esc_url($purpose['url']); ?>" class="hero-purpose-card hero-purpose-<?php echo $index + 1; ?>">
+                    <!-- 写真風の背景グラデーション -->
+                    <div class="hero-card-background"></div>
+                    
+                    <!-- カード内容 -->
+                    <div class="hero-card-content">
+                        <div class="hero-icon-wrapper">
                             <i class="<?php echo esc_attr($purpose['icon']); ?>"></i>
                         </div>
-                        <div class="purpose-content">
-                            <h3 class="purpose-title" itemprop="name"><?php echo esc_html($purpose['title']); ?></h3>
-                            <p class="purpose-description" itemprop="description"><?php echo esc_html($purpose['description']); ?></p>
+                        <h3 class="hero-purpose-title"><?php echo esc_html($purpose['title']); ?></h3>
+                        <p class="hero-purpose-description"><?php echo esc_html($purpose['description']); ?></p>
+                        <div class="hero-card-arrow">
+                            <i class="fas fa-arrow-right"></i>
                         </div>
-                        <meta itemprop="keywords" content="<?php echo esc_attr($purpose['keywords']); ?>">
-                        <div class="purpose-arrow">
+                    </div>
+                    
+                    <!-- ホバー時のオーバーレイ -->
+                    <div class="hero-card-overlay"></div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- 右カラム：用途から探す（小グリッド） -->
+            <div class="browse-grid-column">
+                <div class="grid-column-header">
+                    <h3 class="grid-column-title">用途から探す</h3>
+                    <p class="grid-column-subtitle">その他のニーズに合った補助金を見つける</p>
+                </div>
+
+                <!-- コンパクトな用途グリッド（残りの用途 + その他） -->
+                <div class="purpose-compact-grid" itemscope itemtype="https://schema.org/ItemList">
+                    <meta itemprop="name" content="補助金検索 - やりたいこと別">
+                    <meta itemprop="description" content="事業の目的別に補助金・助成金を検索できます">
+                    
+                    <?php 
+                    // 4番目以降の用途を小カードで表示
+                    $grid_purposes = array_slice($purpose_categories, 3);
+                    $position = 4;
+                    foreach ($grid_purposes as $purpose) : 
+                    ?>
+                    <a href="<?php echo esc_url($purpose['url']); ?>" class="purpose-compact-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <meta itemprop="position" content="<?php echo $position++; ?>">
+                        <link itemprop="url" href="<?php echo esc_url($purpose['url']); ?>">
+                        <div class="compact-card-icon">
+                            <i class="<?php echo esc_attr($purpose['icon']); ?>"></i>
+                        </div>
+                        <div class="compact-card-content">
+                            <h4 class="compact-card-title" itemprop="name"><?php echo esc_html($purpose['title']); ?></h4>
+                        </div>
+                        <div class="compact-card-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </a>
+                    <?php endforeach; ?>
+                    
+                    <?php 
+                    // その他の用途も小カードで追加
+                    foreach ($other_purposes as $purpose) : 
+                    ?>
+                    <a href="<?php echo esc_url($purpose['url']); ?>" class="purpose-compact-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <meta itemprop="position" content="<?php echo $position++; ?>">
+                        <link itemprop="url" href="<?php echo esc_url($purpose['url']); ?>">
+                        <div class="compact-card-icon">
+                            <i class="<?php echo esc_attr($purpose['icon']); ?>"></i>
+                        </div>
+                        <div class="compact-card-content">
+                            <h4 class="compact-card-title" itemprop="name"><?php echo esc_html($purpose['title']); ?></h4>
+                        </div>
+                        <div class="compact-card-arrow">
                             <i class="fas fa-chevron-right"></i>
                         </div>
                     </a>
                     <?php endforeach; ?>
                 </div>
-
-                <!-- その他の用途（コンパクト表示）-->
-                <?php if (!empty($other_purposes)) : ?>
-                <div class="purpose-more-section">
-                    <button type="button" class="purpose-more-button" id="purpose-toggle-more">
-                        <span>その他の用途を見る</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-
-                    <div class="purpose-more-categories" id="purpose-more-categories">
-                        <div class="purpose-more-grid">
-                            <?php foreach ($other_purposes as $purpose) : ?>
-                            <a href="<?php echo esc_url($purpose['url']); ?>" class="purpose-mini-card">
-                                <i class="<?php echo esc_attr($purpose['icon']); ?>"></i>
-                                <span class="purpose-mini-title"><?php echo esc_html($purpose['title']); ?></span>
-                                <i class="fas fa-chevron-right purpose-mini-arrow"></i>
-                            </a>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
             </div>
 
         </div>
@@ -4447,840 +4411,367 @@ $other_purposes = array(
 }
 
 /* ============================================
-   2カラムスプリットレイアウト（写真風デザイン）
+   写真風スタイリッシュ2カラムレイアウト
    ============================================ */
 
-.browse-split-layout {
+.browse-photo-style-layout {
     display: grid;
-    grid-template-columns: 360px 1fr;
+    grid-template-columns: 1fr 420px;
     gap: 30px;
-    margin-top: 40px;
+    margin-top: 50px;
 }
 
 /* ============================================
-   左カラム：アクションカード
+   左カラム：ヒーローカード（大きなビジュアルカード）
    ============================================ */
 
-.browse-actions-column {
+.browse-hero-column {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.action-card {
+.hero-purpose-card {
     position: relative;
-    background: #ffffff;
-    border: 3px solid #000000;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-}
-
-.action-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-}
-
-/* アクションカードビジュアル */
-.action-visual {
-    position: relative;
-    height: 160px;
-    background: linear-gradient(135deg, #000000 0%, #333333 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.action-visual::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.05) 70%, transparent 70%),
-        linear-gradient(-45deg, transparent 30%, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.05) 70%, transparent 70%);
-    background-size: 40px 40px;
-    animation: pattern-move 20s linear infinite;
-    opacity: 0.3;
-}
-
-@keyframes pattern-move {
-    0% { background-position: 0 0; }
-    100% { background-position: 40px 40px; }
-}
-
-.action-icon-wrapper {
-    width: 80px;
-    height: 80px;
-    background: #ffffff;
+    height: 220px;
+    background: #000000;
     border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    color: #000000;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 4px solid #000000;
+}
+
+.hero-purpose-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+    border-color: #ffeb3b;
+}
+
+/* ヒーローカード背景（写真風グラデーション） */
+.hero-card-background {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
     z-index: 1;
 }
 
-.action-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: #ffeb3b;
-    color: #000000;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    z-index: 2;
-}
-
-/* ビデオプレイボタン */
-.action-visual-video {
+/* 各カードごとに異なるグラデーション */
+.hero-purpose-1 .hero-card-background {
     background: 
-        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23111" width="400" height="300"/><circle cx="200" cy="150" r="100" fill="%23222"/><circle cx="200" cy="150" r="80" fill="%23333"/></svg>');
-    background-size: cover;
-    background-position: center;
+        radial-gradient(circle at 20% 80%, rgba(255, 235, 59, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
 }
 
-.video-play-button {
-    width: 80px;
-    height: 80px;
-    background: #ffffff;
-    border-radius: 50%;
+.hero-purpose-2 .hero-card-background {
+    background: 
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+        linear-gradient(45deg, #0a0a0a 0%, #1f1f1f 50%, #0a0a0a 100%);
+}
+
+.hero-purpose-3 .hero-card-background {
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(255, 235, 59, 0.1) 0%, transparent 60%),
+        linear-gradient(225deg, #000000 0%, #262626 50%, #000000 100%);
+}
+
+/* 動的パターンオーバーレイ */
+.hero-card-background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, 0.02) 10px,
+            rgba(255, 255, 255, 0.02) 20px
+        );
+    animation: pattern-slide 20s linear infinite;
+}
+
+@keyframes pattern-slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(28.28px); }
+}
+
+/* ヒーローカードコンテンツ */
+.hero-card-content {
+    position: relative;
+    z-index: 2;
+    padding: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #ffffff;
+}
+
+.hero-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 32px;
-    color: #000000;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    padding-left: 6px;
-    transition: all 0.3s ease;
-}
-
-.action-card:hover .video-play-button {
-    transform: scale(1.1);
-    background: #ffeb3b;
-}
-
-/* AIアニメーション */
-.action-visual-ai {
-    background: 
-        radial-gradient(circle at 30% 50%, rgba(255, 235, 59, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 70% 50%, rgba(255, 235, 59, 0.15) 0%, transparent 50%),
-        linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-}
-
-.ai-animation {
-    position: relative;
-    width: 100px;
-    height: 100px;
-}
-
-.ai-icon {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-    color: #000000;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-}
-
-.ai-particles {
-    position: absolute;
-    inset: 0;
-    animation: rotate 10s linear infinite;
-}
-
-.ai-particles span {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: #ffeb3b;
-    border-radius: 50%;
-    box-shadow: 0 0 12px rgba(255, 235, 59, 0.8);
-}
-
-.ai-particles span:nth-child(1) {
-    top: 10%;
-    left: 50%;
-    animation: float 3s ease-in-out infinite;
-}
-
-.ai-particles span:nth-child(2) {
-    top: 50%;
-    right: 10%;
-    animation: float 3s ease-in-out infinite 1s;
-}
-
-.ai-particles span:nth-child(3) {
-    bottom: 10%;
-    left: 30%;
-    animation: float 3s ease-in-out infinite 2s;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-/* アクションコンテンツ */
-.action-content {
-    padding: 20px;
-}
-
-.action-title {
-    font-size: 18px;
-    font-weight: 800;
-    color: #000000;
-    margin: 0 0 8px 0;
-    line-height: 1.3;
-}
-
-.action-description {
-    font-size: 13px;
-    color: #666666;
-    line-height: 1.6;
-    margin: 0 0 12px 0;
-}
-
-.action-features {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-}
-
-.feature-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: #f5f5f5;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #000000;
-}
-
-.feature-badge i {
-    font-size: 10px;
-}
-
-/* アクションボタン */
-.action-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 14px 20px;
-    background: #000000;
     color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.action-button:hover {
-    background: #333333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.action-button i {
-    font-size: 14px;
-}
-
-.action-button-secondary {
-    background: #ffffff;
-    color: #000000;
-    border: 2px solid #000000;
-}
-
-.action-button-secondary:hover {
-    background: #000000;
-    color: #ffffff;
-}
-
-.action-button-ai {
-    background: linear-gradient(135deg, #000000 0%, #333333 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-.action-button-ai::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 235, 59, 0.3), transparent);
-    animation: shine 3s ease-in-out infinite;
-}
-
-@keyframes shine {
-    to { left: 100%; }
-}
-
-/* ============================================
-   右カラム：用途グリッド
-   ============================================ */
-
-.browse-purposes-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.purposes-header {
     margin-bottom: 20px;
-}
-
-.purposes-title {
-    font-size: 24px;
-    font-weight: 900;
-    color: #000000;
-    margin: 0 0 6px 0;
-    line-height: 1.2;
-}
-
-.purposes-subtitle {
-    font-size: 14px;
-    color: #666666;
-    margin: 0;
-    line-height: 1.5;
-}
-
-/* やりたいことから探す - 3x4 グリッドレイアウト */
-.purpose-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.purpose-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 16px 14px;
-    background: #ffffff;
-    border: 2px solid #000000;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    min-height: 120px;
-}
-
-.purpose-card-number {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 26px;
-    height: 26px;
-    background: #ffeb3b;
-    color: #000000;
-    border: 2px solid #000000;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    z-index: 2;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
 }
 
-.purpose-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
+.hero-purpose-card:hover .hero-icon-wrapper {
     background: #ffeb3b;
-    transform: scaleY(0);
-    transform-origin: bottom;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.purpose-card:hover {
-    transform: translateX(4px);
-    border-color: #333333;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.purpose-card:hover::before {
-    transform: scaleY(1);
-    transform-origin: top;
-}
-
-.purpose-card:hover .purpose-card-number {
-    transform: scale(1.1) rotate(8deg);
-    background: #000000;
-    color: #ffeb3b;
-}
-
-.purpose-icon {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    background: #000000;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    color: #ffffff;
-    transition: all 0.3s ease;
-}
-
-.purpose-card:hover .purpose-icon {
-    background: #ffeb3b;
-    color: #000000;
-    transform: scale(1.1) rotate(-5deg);
-}
-    width: 44px;
-    height: 44px;
-    background: #000000;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-size: 20px;
-    transition: all 0.3s ease;
-}
-
-.purpose-card:hover .purpose-icon {
-    background: #ffeb3b;
+    border-color: #ffeb3b;
     color: #000000;
     transform: scale(1.05);
 }
 
-.purpose-content {
-    flex: 1;
-    min-width: 0;
+.hero-purpose-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-.purpose-title {
+.hero-purpose-description {
     font-size: 14px;
-    font-weight: 700;
-    color: #000000;
-    margin: 0 0 6px 0;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-}
-
-.purpose-description {
-    font-size: 11px;
-    color: #666666;
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.5;
     margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
-.purpose-arrow {
+.hero-card-arrow {
     position: absolute;
-    bottom: 12px;
-    right: 12px;
-    width: 28px;
-    height: 28px;
-    background: #f5f5f5;
-    border-radius: 8px;
+    bottom: 30px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000000;
-    font-size: 12px;
+    color: #ffffff;
+    font-size: 16px;
     transition: all 0.3s ease;
 }
 
-.purpose-card:hover .purpose-arrow {
+.hero-purpose-card:hover .hero-card-arrow {
     background: #ffeb3b;
+    border-color: #ffeb3b;
+    color: #000000;
     transform: translateX(4px);
 }
 
-/* その他の用途セクション */
-.purpose-more-section {
-    margin-top: 32px;
+/* ホバー時のオーバーレイエフェクト */
+.hero-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 235, 59, 0.15) 0%, rgba(0, 0, 0, 0.3) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
 }
 
-.purpose-more-button {
-    width: 100%;
-    padding: 16px 24px;
-    background: #f8f8f8;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    color: #333333;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.hero-purpose-card:hover .hero-card-overlay {
+    opacity: 1;
+}
+
+/* ============================================
+   右カラム：用途グリッド（小カード）
+   ============================================ */
+
+.browse-grid-column {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+}
+
+.grid-column-header {
+    margin-bottom: 24px;
+}
+
+.grid-column-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: #000000;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+}
+
+.grid-column-subtitle {
+    font-size: 14px;
+    color: #666666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* コンパクトグリッド（3x4レイアウト） */
+.purpose-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
 }
 
-.purpose-more-button:hover {
-    background: #000000;
-    border-color: #000000;
-    color: #ffffff;
-}
-
-.purpose-more-button i {
-    transition: transform 0.3s ease;
-}
-
-.purpose-more-button.active i {
-    transform: rotate(180deg);
-}
-
-.purpose-more-categories {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top: 16px;
-}
-
-.purpose-more-categories.show {
-    max-height: 1000px;
-}
-
-.purpose-more-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 8px;
-}
-
-.purpose-mini-card {
+.purpose-compact-card {
+    position: relative;
+    background: #ffffff;
+    border: 3px solid #000000;
+    border-radius: 12px;
+    padding: 16px 12px;
+    text-decoration: none;
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 10px;
-    padding: 12px 14px;
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-height: 100px;
+}
+
+.purpose-compact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: #ffeb3b;
+    background: #fffef5;
+}
+
+.compact-card-icon {
+    width: 44px;
+    height: 44px;
+    background: #000000;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #ffffff;
     transition: all 0.3s ease;
 }
 
-.purpose-mini-card:hover {
-    border-color: #000000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transform: translateX(2px);
-}
-
-.purpose-mini-card i:first-child {
+.purpose-compact-card:hover .compact-card-icon {
+    background: #ffeb3b;
     color: #000000;
-    font-size: 16px;
+    transform: scale(1.1);
 }
 
-.purpose-mini-title {
+.compact-card-content {
     flex: 1;
+    text-align: center;
+}
+
+.compact-card-title {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: #000000;
+    margin: 0;
+    line-height: 1.3;
 }
 
-.purpose-mini-arrow {
-    color: #999999;
+.compact-card-arrow {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 10px;
-    transition: all 0.3s ease;
-}
-
-.purpose-mini-card:hover .purpose-mini-arrow {
-    color: #000000;
-    transform: translateX(3px);
-}
-
-/* 診断して探す */
-.diagnosis-card {
-    text-align: center;
-    padding: 60px 40px;
-    background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
-    border: 2px solid #000000;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.diagnosis-icon {
-    width: 80px;
-    height: 80px;
-    background: #000000;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-size: 36px;
-    margin: 0 auto 24px;
-    animation: browse-pulse-icon 2s ease-in-out infinite;
-}
-
-@keyframes browse-pulse-icon {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.diagnosis-title {
-    font-size: 28px;
-    font-weight: 900;
-    color: #000000;
-    margin: 0 0 16px 0;
-}
-
-.diagnosis-description {
-    font-size: 15px;
     color: #666666;
-    line-height: 1.8;
-    max-width: 600px;
-    margin: 0 auto 32px;
-}
-
-.diagnosis-features {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-}
-
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: #333333;
-    font-weight: 600;
-}
-
-.feature-item i {
-    color: #000000;
-    font-size: 18px;
-}
-
-.diagnosis-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 36px;
-    background: #000000;
-    color: #ffffff;
-    border: 2px solid #000000;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-    text-decoration: none;
+    opacity: 0;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.diagnosis-button:hover {
-    background: #ffffff;
+.purpose-compact-card:hover .compact-card-arrow {
+    opacity: 1;
+    background: #ffeb3b;
     color: #000000;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.diagnosis-button i {
-    transition: transform 0.3s ease;
-}
-
-.diagnosis-button:hover i {
-    transform: translateX(4px);
-}
-
-.diagnosis-note {
-    margin-top: 20px;
-    font-size: 12px;
-    color: #999999;
-    font-style: italic;
-}
-
-/* 一覧から探す */
-.all-browse-card {
-    text-align: center;
-    padding: 60px 40px;
-    background: #f8f8f8;
-    border: 2px solid #000000;
-    border-radius: 16px;
-}
-
-.all-browse-icon {
-    width: 80px;
-    height: 80px;
-    background: #000000;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-size: 36px;
-    margin: 0 auto 24px;
-}
-
-.all-browse-title {
-    font-size: 28px;
-    font-weight: 900;
-    color: #000000;
-    margin: 0 0 16px 0;
-}
-
-.all-browse-description {
-    font-size: 15px;
-    color: #666666;
-    line-height: 1.7;
-    max-width: 600px;
-    margin: 0 auto 32px;
-}
-
-.all-browse-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 32px;
-    background: #000000;
-    color: #ffffff;
-    border: 2px solid #000000;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.all-browse-button:hover {
-    background: #ffffff;
-    color: #000000;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
-}
-
-.all-browse-button i {
-    transition: transform 0.3s ease;
-}
-
-.all-browse-button:hover i {
-    transform: translateX(4px);
-}
-
-/* レスポンシブ - カテゴリーセクションと統一 */
-@media (min-width: 1024px) {
-    .purpose-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-/* ==========================
+/* ============================================
    レスポンシブデザイン
-   ========================== */
+   ============================================ */
 
-/* タブレット (768px - 1023px) */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .browse-split-layout {
-        grid-template-columns: 1fr;
-        gap: 30px;
+/* タブレット（1024px以下） */
+@media (max-width: 1024px) {
+    .browse-photo-style-layout {
+        grid-template-columns: 1fr 360px;
+        gap: 24px;
     }
     
-    .browse-actions-column {
-        grid-template-columns: repeat(3, 1fr);
-        display: grid;
-        gap: 16px;
+    .hero-purpose-card {
+        height: 200px;
     }
     
-    .action-visual {
-        height: 120px;
+    .hero-purpose-title {
+        font-size: 22px;
     }
     
-    .action-icon-wrapper {
-        width: 60px;
-        height: 60px;
-        font-size: 30px;
-    }
-    
-    .video-play-button {
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
-    }
-    
-    .action-content {
-        padding: 16px;
-    }
-    
-    .action-title {
-        font-size: 16px;
-    }
-    
-    .action-description {
-        font-size: 12px;
-    }
-    
-    .purpose-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-bottom: 32px;
-    }
-    
-    .purpose-card {
-        padding: 14px;
-    }
-    
-    .purpose-card-number {
-        width: 24px;
-        height: 24px;
-        font-size: 10px;
-        top: 0px;
-        right: 0px;
-    }
-    
-    .purpose-more-grid {
+    .purpose-compact-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 }
 
-/* モバイル (< 768px) */
-@media (max-width: 767px) {
+/* タブレット（768px以下） */
+@media (max-width: 768px) {
+    .browse-photo-style-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .hero-purpose-card {
+        height: 180px;
+    }
+    
+    .hero-card-content {
+        padding: 24px;
+    }
+    
+    .hero-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        font-size: 28px;
+    }
+    
+    .hero-purpose-title {
+        font-size: 20px;
+    }
+    
+    .hero-purpose-description {
+        font-size: 13px;
+    }
+    
+    .grid-column-title {
+        font-size: 22px;
+    }
+    
+    .purpose-compact-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* モバイル（640px以下） */
+@media (max-width: 640px) {
     .browse-section-integrated {
-        padding: 50px 0 60px;
+        padding: 60px 0 80px;
+    }
+    
+    .browse-header {
+        margin-bottom: 40px;
     }
     
     .title-main {
@@ -5291,144 +4782,92 @@ $other_purposes = array(
         font-size: 15px;
     }
     
-    .browse-split-layout {
-        grid-template-columns: 1fr;
-        gap: 30px;
+    .hero-purpose-card {
+        height: 160px;
     }
     
-    .browse-actions-column {
-        gap: 16px;
+    .hero-card-content {
+        padding: 20px;
     }
     
-    .action-card {
-        border-width: 2px;
-    }
-    
-    .action-visual {
-        height: 140px;
-    }
-    
-    .action-icon-wrapper {
-        width: 60px;
-        height: 60px;
-        font-size: 28px;
-    }
-    
-    .video-play-button {
-        width: 60px;
-        height: 60px;
+    .hero-icon-wrapper {
+        width: 48px;
+        height: 48px;
         font-size: 24px;
+        margin-bottom: 16px;
     }
     
-    .ai-animation {
-        width: 80px;
-        height: 80px;
+    .hero-purpose-title {
+        font-size: 18px;
     }
     
-    .ai-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 28px;
-    }
-    
-    .action-content {
-        padding: 16px;
-    }
-    
-    .action-title {
-        font-size: 16px;
-    }
-    
-    .action-description {
+    .hero-purpose-description {
         font-size: 12px;
     }
     
-    .action-button {
-        padding: 12px 18px;
-        font-size: 13px;
+    .hero-card-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+        bottom: 20px;
+        right: 20px;
     }
     
-    .purposes-title {
+    .purpose-compact-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .purpose-compact-card {
+        padding: 14px 10px;
+        min-height: 90px;
+    }
+    
+    .compact-card-icon {
+        width: 40px;
+        height: 40px;
         font-size: 20px;
     }
     
-    .purposes-subtitle {
-        font-size: 13px;
-    }
-    
-    .purpose-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-    
-    .purpose-card {
-        padding: 14px 12px;
-        gap: 8px;
-        min-height: 100px;
-    }
-    
-    .purpose-card-number {
-        width: 22px;
-        height: 22px;
-        font-size: 9px;
-        top: -4px;
-        right: -4px;
-    }
-    
-    .purpose-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 18px;
-        border-radius: 8px;
-    }
-    
-    .purpose-title {
+    .compact-card-title {
         font-size: 12px;
-        margin-bottom: 4px;
+    }
+}
+
+/* 小型モバイル（480px以下） */
+@media (max-width: 480px) {
+    .title-main {
+        font-size: 28px;
     }
     
-    .purpose-description {
-        font-size: 10px;
-        -webkit-line-clamp: 2;
+    .hero-purpose-card {
+        height: 140px;
+        gap: 16px;
     }
     
-    .purpose-arrow {
-        width: 24px;
-        height: 24px;
-        font-size: 10px;
-        bottom: 10px;
-        right: 10px;
+    .browse-hero-column {
+        gap: 16px;
     }
     
-    .purpose-more-grid {
+    .purpose-compact-grid {
         grid-template-columns: 1fr;
     }
     
-    .purpose-mini-card {
-        padding: 10px 12px;
+    .purpose-compact-card {
+        flex-direction: row;
+        padding: 12px;
+        min-height: auto;
     }
     
-    .diagnosis-card {
-        padding: 40px 24px;
-    }
-    
-    .diagnosis-title {
-        font-size: 24px;
-    }
-    
-    .diagnosis-features {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .all-browse-card {
-        padding: 40px 24px;
-    }
-    
-    .all-browse-title {
-        font-size: 24px;
+    .compact-card-content {
+        text-align: left;
     }
 }
+
+
+
+.purpose-more-categories {
+
 </style>
 
 <script>
@@ -5521,36 +4960,7 @@ $other_purposes = array(
         console.error('[✗] Browse Section Integrated DOM element NOT FOUND!');
     }
     
-    // 用途「もっと見る」ボタン機能
-    const purposeToggleBtn = document.getElementById('purpose-toggle-more');
-    const purposeMoreCategories = document.getElementById('purpose-more-categories');
-    
-    if (purposeToggleBtn && purposeMoreCategories) {
-        purposeToggleBtn.addEventListener('click', function() {
-            const isExpanded = purposeMoreCategories.classList.contains('show');
-            
-            if (isExpanded) {
-                purposeMoreCategories.classList.remove('show');
-                purposeToggleBtn.classList.remove('active');
-                purposeToggleBtn.querySelector('span').textContent = 'その他の用途';
-            } else {
-                purposeMoreCategories.classList.add('show');
-                purposeToggleBtn.classList.add('active');
-                purposeToggleBtn.querySelector('span').textContent = '閉じる';
-            }
-            
-            console.log('[Purpose Toggle] More categories:', isExpanded ? 'hidden' : 'shown');
-            
-            // トラッキング
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'purpose_more_toggle', {
-                    event_category: 'interaction',
-                    event_label: isExpanded ? 'collapse' : 'expand'
-                });
-            }
-        });
-        
-        console.log('[✓] Purpose "More" button functionality initialized');
-    }
+    // 写真風レイアウトでは全ての用途を表示（トグル不要）
+    console.log('[✓] Photo-style purpose layout initialized (no toggle needed)');
 })();
 </script>
