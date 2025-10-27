@@ -31,6 +31,14 @@ $all_categories = get_terms(array(
 // 都道府県を取得
 $prefectures = gi_get_all_prefectures();
 
+// 市町村を取得（全件）
+$all_municipalities = get_terms(array(
+    'taxonomy' => 'grant_municipality',
+    'hide_empty' => false,
+    'orderby' => 'name',
+    'order' => 'ASC'
+));
+
 // レコメンド補助金を取得（注目度の高い4件）
 $recommended_grants = get_posts(array(
     'post_type' => 'grant',
@@ -309,6 +317,85 @@ $regions_data = array(
                 </div>
             </div>
             <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<!-- 市町村から探すセクション -->
+<section class="municipality-section">
+    <div class="municipality-wrapper">
+        <h2 class="section-title">
+            <i class="fas fa-building"></i>
+            市町村から探す
+        </h2>
+
+        <div class="municipality-search-container">
+            <!-- 都道府県選択 -->
+            <div class="municipality-filter">
+                <label for="municipality-prefecture-filter" class="filter-label">
+                    <i class="fas fa-map-marker-alt"></i>
+                    都道府県で絞り込み
+                </label>
+                <select id="municipality-prefecture-filter" class="filter-select">
+                    <option value="">すべての都道府県</option>
+                    <?php foreach ($prefectures as $pref) : ?>
+                        <option value="<?php echo esc_attr($pref['slug']); ?>">
+                            <?php echo esc_html($pref['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- 市町村リスト -->
+            <div class="municipality-grid" id="municipality-list">
+                <?php if (!empty($all_municipalities) && !is_wp_error($all_municipalities)) : ?>
+                    <?php 
+                    // 市町村と都道府県の関連付けマップを作成
+                    foreach ($all_municipalities as $municipality) : 
+                        $muni_url = get_term_link($municipality, 'grant_municipality');
+                        if (is_wp_error($muni_url)) continue;
+                        
+                        // 市町村に関連する都道府県を特定
+                        $related_pref_slug = '';
+                        
+                        // まずカスタムフィールドをチェック
+                        $stored_pref = get_term_meta($municipality->term_id, 'prefecture_slug', true);
+                        if (!empty($stored_pref)) {
+                            $related_pref_slug = $stored_pref;
+                        } else {
+                            // 市町村に紐づいた投稿から都道府県を推測
+                            $posts_with_muni = get_posts(array(
+                                'post_type' => 'grant',
+                                'posts_per_page' => 1,
+                                'tax_query' => array(
+                                    array(
+                                        'taxonomy' => 'grant_municipality',
+                                        'field' => 'term_id',
+                                        'terms' => $municipality->term_id,
+                                    ),
+                                ),
+                            ));
+                            
+                            if (!empty($posts_with_muni)) {
+                                $post = $posts_with_muni[0];
+                                $prefs = wp_get_post_terms($post->ID, 'grant_prefecture');
+                                if (!empty($prefs) && !is_wp_error($prefs)) {
+                                    $related_pref_slug = $prefs[0]->slug;
+                                }
+                            }
+                        }
+                    ?>
+                        <a href="<?php echo esc_url($muni_url); ?>" 
+                           class="municipality-link" 
+                           data-prefecture="<?php echo esc_attr($related_pref_slug); ?>">
+                            <?php echo esc_html($municipality->name); ?>
+                            <span class="municipality-count">(<?php echo $municipality->count; ?>)</span>
+                        </a>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <p class="no-municipalities">市町村データがありません</p>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </section>
@@ -1084,6 +1171,124 @@ $regions_data = array(
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+/* ===============================================
+   市町村から探すセクション
+   =============================================== */
+
+.municipality-section {
+    padding: 40px 0;
+    background: #ffffff;
+}
+
+.municipality-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.municipality-search-container {
+    margin-top: 24px;
+}
+
+.municipality-filter {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.filter-label i {
+    color: #666;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-select:hover {
+    border-color: #999;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.municipality-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.municipality-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.municipality-link:hover {
+    background: #f8f9fa;
+    border-color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.municipality-count {
+    font-size: 12px;
+    color: #666;
+    font-weight: 400;
+}
+
+.no-municipalities {
+    text-align: center;
+    padding: 32px;
+    color: #999;
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .municipality-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .municipality-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    
+    .municipality-wrapper {
+        max-width: 960px;
+    }
+}
 </style>
 
 <script>
@@ -1209,5 +1414,32 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    // 市町村フィルター
+    const municipalityPrefFilter = document.getElementById('municipality-prefecture-filter');
+    const municipalityLinks = document.querySelectorAll('.municipality-link');
+    
+    if (municipalityPrefFilter && municipalityLinks.length > 0) {
+        municipalityPrefFilter.addEventListener('change', function() {
+            const selectedPref = this.value;
+            
+            municipalityLinks.forEach(link => {
+                const linkPref = link.getAttribute('data-prefecture');
+                
+                if (!selectedPref || linkPref === selectedPref) {
+                    link.style.display = 'flex';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+            
+            // 表示されている市町村の数をカウント
+            const visibleCount = Array.from(municipalityLinks).filter(link => 
+                link.style.display !== 'none'
+            ).length;
+            
+            console.log('[Municipality Filter] Showing', visibleCount, 'municipalities');
+        });
+    }
 });
 </script>
