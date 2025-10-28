@@ -357,7 +357,7 @@ $grants_count_formatted = number_format($total_grants_count);
 
 .gih-content-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.9fr 1.1fr;
     gap: 40px;
     align-items: center;
 }
@@ -402,13 +402,15 @@ $grants_count_formatted = number_format($total_grants_count);
 /* メインタイトル */
 .gih-title {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
     margin: 0;
+    align-items: center;
 }
 
 .gih-title-line-1 {
-    font-size: 28px;
+    font-size: 18px;
     font-weight: 300;
     color: #666666;
     line-height: 1.2;
@@ -416,7 +418,7 @@ $grants_count_formatted = number_format($total_grants_count);
 }
 
 .gih-title-line-2 {
-    font-size: 42px;
+    font-size: 26px;
     font-weight: 900;
     line-height: 1.1;
     letter-spacing: -0.03em;
@@ -439,7 +441,7 @@ $grants_count_formatted = number_format($total_grants_count);
 }
 
 .gih-title-line-3 {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 300;
     color: #000000;
     line-height: 1.3;
@@ -545,7 +547,7 @@ $grants_count_formatted = number_format($total_grants_count);
 }
 
 .gih-hero-image {
-    width: 100%;
+    width: 120%;
     height: auto;
     display: block;
     object-fit: contain;
