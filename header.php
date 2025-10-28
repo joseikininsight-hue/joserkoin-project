@@ -363,13 +363,13 @@
         
         .stylish-nav-link {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 2px;
             padding: var(--space-2) var(--space-4);
             color: var(--text-secondary);
             text-decoration: none;
-            font-weight: var(--font-weight-medium);
+            font-weight: var(--font-weight-semibold);
             font-size: 0.875rem;
             border-radius: var(--radius-lg);
             position: relative;
@@ -385,18 +385,24 @@
         }
         
         .stylish-nav-link-main {
-            display: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            font-weight: var(--font-weight-semibold);
         }
         
         .stylish-nav-link-sub {
-            font-size: 0.875rem;
-            color: inherit;
+            font-size: 0.625rem;
+            color: var(--text-tertiary);
             font-weight: var(--font-weight-medium);
+            letter-spacing: 0.02em;
+            opacity: 0.8;
         }
         
         .stylish-nav-link i {
-            font-size: 0.875rem;
-            opacity: 0.8;
+            font-size: 0.8125rem;
+            opacity: 0.7;
             flex-shrink: 0;
         }
         
