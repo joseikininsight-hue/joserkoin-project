@@ -47,22 +47,23 @@ class Grant_Content_SEO_Optimizer {
         add_action('wp_head', array($this, 'add_schema_org_data'), 5);
         
         // SEO最適化用のCSSを読み込み
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_seo_styles'));
+        // CSS読み込みは削除（unified-frontend.css に統合済み）
+        // add_action('wp_enqueue_scripts', array($this, 'enqueue_seo_styles'));
     }
     
     /**
-     * SEO最適化用CSSを読み込み
+     * SEO最適化用CSSを読み込み - 削除済み（unified-frontend.css に統合）
      */
-    public function enqueue_seo_styles() {
-        if (is_singular('grant')) {
-            wp_enqueue_style(
-                'grant-seo-styles',
-                get_template_directory_uri() . '/assets/css/grant-seo.css',
-                array(),
-                '1.0.0'
-            );
-        }
-    }
+    // public function enqueue_seo_styles() {
+    //     if (is_singular('grant')) {
+    //         wp_enqueue_style(
+    //             'grant-seo-styles',
+    //             get_template_directory_uri() . '/assets/css/grant-seo.css',
+    //             array(),
+    //             '1.0.0'
+    //         );
+    //     }
+    // }
     
     /**
      * 助成金コンテンツを完璧なSEO構造に最適化
