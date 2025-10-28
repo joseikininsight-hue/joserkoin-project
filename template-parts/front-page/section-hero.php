@@ -64,7 +64,7 @@ $schema_data = array(
     'aggregateRating' => array(
         '@type' => 'AggregateRating',
         'ratingValue' => '4.8',
-        'ratingCount' => '3809',
+        'ratingCount' => strval(wp_count_posts('grant')->publish),
         'bestRating' => '5',
         'worstRating' => '1'
     ),
@@ -103,15 +103,21 @@ $organization_schema = array(
 );
 ?>
 
+<?php
+// 掲載件数を取得
+$total_grants_count = wp_count_posts('grant')->publish;
+$grants_count_formatted = number_format($total_grants_count);
+?>
+
 <!-- SEO メタタグ - 拡張版 -->
-<meta name="description" content="補助金・助成金をAIが効率的に検索｜全国3,809件のデータベースから最適な制度を発見。業種別・地域別対応、専門家による申請サポート。完全無料で今すぐ検索開始。">
+<meta name="description" content="補助金・助成金をAIが効率的に検索｜全国<?php echo $grants_count_formatted; ?>件のデータベースから最適な制度を発見。業種別・地域別対応、専門家による申請サポート。完全無料で今すぐ検索開始。">
 <meta name="keywords" content="補助金,助成金,AI検索,事業支援,申請サポート,無料検索,ビジネス支援">
 <link rel="canonical" href="<?php echo esc_url($hero_config['site_url']); ?>">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="補助金・助成金をAIが効率的に検索 | <?php echo esc_attr($hero_config['site_name']); ?>">
-<meta property="og:description" content="全国3,809件のデータベースから最適な補助金・助成金を発見。専門家による充実したサポートで成功まで導きます。">
+<meta property="og:description" content="全国<?php echo $grants_count_formatted; ?>件のデータベースから最適な補助金・助成金を発見。専門家による充実したサポートで成功まで導きます。">
 <meta property="og:url" content="<?php echo esc_url($hero_config['site_url']); ?>">
 <meta property="og:image" content="<?php echo esc_url($hero_config['hero_image']); ?>">
 <meta property="og:site_name" content="<?php echo esc_attr($hero_config['site_name']); ?>">
@@ -120,7 +126,7 @@ $organization_schema = array(
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="補助金・助成金をAIが効率的に検索">
-<meta name="twitter:description" content="全国3,809件のデータベースから最適な制度を発見。完全無料。">
+<meta name="twitter:description" content="全国<?php echo $grants_count_formatted; ?>件のデータベースから最適な制度を発見。完全無料。">
 <meta name="twitter:image" content="<?php echo esc_url($hero_config['hero_image']); ?>">
 
 <!-- 構造化データ - WebApplication -->
@@ -148,12 +154,6 @@ $organization_schema = array(
                 <!-- 左側：テキストコンテンツ -->
                 <article class="gih-content-left" role="article">
                     
-                    <!-- ステータスバッジ -->
-                    <div class="gih-badge" role="status" aria-label="AIパワードプラットフォーム">
-                        <div class="gih-badge-dot" aria-hidden="true"></div>
-                        <span>AI POWERED PLATFORM</span>
-                    </div>
-                    
                     <!-- メインタイトル -->
                     <h1 class="gih-title" id="main-heading">
                         <span class="gih-title-line-1"><?php echo gih_safe_output($hero_config['main_title']); ?></span>
@@ -174,7 +174,7 @@ $organization_schema = array(
                             <svg class="gih-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                                 <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
                             </svg>
-                            <span>全国3,809件の補助金・助成金データベース</span>
+                            <span>全国<?php echo $grants_count_formatted; ?>件の補助金・助成金データベース</span>
                         </li>
                         <li class="gih-feature-item">
                             <svg class="gih-feature-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -225,12 +225,6 @@ $organization_schema = array(
         <!-- モバイルレイアウト -->
         <div class="gih-mobile-layout">
             
-            <!-- バッジ -->
-            <div class="gih-mobile-badge" role="status" aria-label="AIパワードプラットフォーム">
-                <div class="gih-mobile-badge-dot" aria-hidden="true"></div>
-                <span>AI POWERED PLATFORM</span>
-            </div>
-            
             <!-- タイトル -->
             <h1 class="gih-mobile-title" id="mobile-main-heading">
                 <span class="gih-mobile-line-1"><?php echo gih_safe_output($hero_config['main_title']); ?></span>
@@ -251,7 +245,7 @@ $organization_schema = array(
                     <svg class="gih-mobile-feature-icon" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                         <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
                     </svg>
-                    <span>3,809件のデータベース</span>
+                    <span><?php echo $grants_count_formatted; ?>件のデータベース</span>
                 </li>
                 <li class="gih-mobile-feature-item">
                     <svg class="gih-mobile-feature-icon" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -301,27 +295,42 @@ $organization_schema = array(
    ヒーローセクション - SEO完全最適化版（シンプル版）
    ============================================ */
 
-/* ベース設定 */
+/* ベース設定 - グラデーション背景 */
 .gih-hero-section {
     position: relative;
-    min-height: 100vh;
+    min-height: auto;
     height: auto;
-    display: flex;
-    align-items: center;
-    padding: 120px 0 80px;
-    background: #ffffff;
+    display: block;
+    padding: 80px 0 60px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 50%, #f0f2f5 100%);
     font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
     overflow: visible;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: auto;
 }
 
-/* コンテナ */
+/* 網目パターンオーバーレイ */
+.gih-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(0deg, rgba(0,0,0,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* コンテナ - 他のセクションと統一 */
 .gih-container {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 1400px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -337,16 +346,19 @@ $organization_schema = array(
     }
     
     .gih-hero-section {
-        min-height: 100vh;
+        min-height: auto;
         height: auto;
+        display: flex;
+        align-items: center;
+        padding: 100px 0 60px;
         overflow: visible;
     }
 }
 
 .gih-content-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 40px;
     align-items: center;
 }
 
@@ -390,13 +402,15 @@ $organization_schema = array(
 /* メインタイトル */
 .gih-title {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
     margin: 0;
+    align-items: center;
 }
 
 .gih-title-line-1 {
-    font-size: 40px;
+    font-size: 18px;
     font-weight: 300;
     color: #666666;
     line-height: 1.2;
@@ -404,7 +418,7 @@ $organization_schema = array(
 }
 
 .gih-title-line-2 {
-    font-size: 56px;
+    font-size: 26px;
     font-weight: 900;
     line-height: 1.1;
     letter-spacing: -0.03em;
@@ -421,13 +435,13 @@ $organization_schema = array(
     bottom: 0;
     left: 0;
     right: 0;
-    height: 12px;
+    height: 8px;
     background: #ffeb3b;
     z-index: -1;
 }
 
 .gih-title-line-3 {
-    font-size: 32px;
+    font-size: 18px;
     font-weight: 300;
     color: #000000;
     line-height: 1.3;
@@ -435,8 +449,8 @@ $organization_schema = array(
 
 /* 説明文 */
 .gih-description {
-    font-size: 16px; /* 統一: 17px → 16px */
-    line-height: 1.5; /* 縮小感重視: 1.7 → 1.5 */
+    font-size: 14px;
+    line-height: 1.5;
     color: var(--color-text-secondary, #666666);
     font-weight: 400;
     margin: 0;
@@ -446,7 +460,7 @@ $organization_schema = array(
 .gih-features {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -455,8 +469,8 @@ $organization_schema = array(
 .gih-feature-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 15px;
+    gap: 10px;
+    font-size: 13px;
     color: #333333;
     font-weight: 500;
 }
@@ -480,12 +494,12 @@ $organization_schema = array(
 .gih-btn-primary {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 18px 32px;
+    gap: 10px;
+    padding: 14px 24px;
     background: var(--color-accent, #ffeb3b);
     color: var(--color-secondary, #000000);
-    border-radius: 12px;
-    font-size: 16px; /* 統一: 17px → 16px */
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -533,15 +547,17 @@ $organization_schema = array(
 }
 
 .gih-hero-image {
-    width: 100%;
+    width: 120%;
     height: auto;
     display: block;
     object-fit: contain;
-    transition: transform 0.3s ease;
 }
 
-.gih-hero-image:hover {
-    transform: scale(1.02);
+/* モバイルでは背景なし、PCでも背景なし */
+@media (min-width: 1024px) {
+    .gih-hero-image {
+        /* PC表示時も背景なし、シンプルに */
+    }
 }
 
 /* モバイルレイアウト */
@@ -664,8 +680,6 @@ $organization_schema = array(
 .gih-mobile-image {
     width: 100%;
     margin: 24px 0;
-    transform: translateZ(0);
-    will-change: transform;
 }
 
 .gih-mobile-image img {
@@ -673,6 +687,7 @@ $organization_schema = array(
     height: auto;
     display: block;
     object-fit: contain;
+    max-width: 100%;
 }
 
 /* モバイルCTA */

@@ -381,11 +381,19 @@ class GoogleSheetsSync {
             return false;
         }
         
+        // データサンプルをログに出力（最初の行のC列のみ）
+        $first_row_content = '';
+        if (!empty($values) && isset($values[0]) && isset($values[0][2])) {
+            $first_row_content = substr($values[0][2], 0, 300);
+        }
+        
         gi_log_error('Writing to sheets', array(
             'range' => $range,
             'values_count' => count($values),
             'spreadsheet_id' => $this->spreadsheet_id,
-            'sheet_name' => $this->sheet_name
+            'sheet_name' => $this->sheet_name,
+            'first_row_column_C_sample' => $first_row_content,
+            'input_option' => $input_option
         ));
         
         $url = self::SHEETS_API_URL . $this->spreadsheet_id . '/values/' . urlencode($range) . '?valueInputOption=' . $input_option;
@@ -405,9 +413,9 @@ class GoogleSheetsSync {
             'method' => 'PUT',
             'headers' => array(
                 'Authorization' => 'Bearer ' . $access_token,
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json; charset=utf-8'
             ),
-            'body' => json_encode($request_body),
+            'body' => json_encode($request_body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'timeout' => 30
         ));
         
@@ -486,17 +494,79 @@ class GoogleSheetsSync {
         try {
             gi_log_error('Converting post to sheet row', array('post_id' => $post_id));
             
-            $post = get_post($post_id);
+            // フィルターなしで生データを取得
+            $post = get_post($post_id, OBJECT, 'raw');
             if (!$post || $post->post_type !== 'grant') {
                 gi_log_error('Invalid post for conversion', array('post_id' => $post_id, 'post_type' => $post ? $post->post_type : 'null'));
                 return false;
             }
             
+            // 完全なコンテンツを構築（post_content + 主要ACFフィールド）
+            $content_parts = array();
+            
+            // 1. post_contentを処理（Gutenbergブロックの場合はレンダリング）
+            $post_content = $post->post_content;
+            if (!empty($post_content)) {
+                // Gutenbergブロックの場合、HTMLにレンダリング
+                if (has_blocks($post_content)) {
+                    // ブロックをHTMLに変換（フィルターなし）
+                    $post_content = do_blocks($post_content);
+                }
+                $content_parts[] = '<div class="post-content">' . $post_content . '</div>';
+            }
+            
+            // 2. ACFフィールドを追加（常に含める）
+            // 対象者・対象事業（主要コンテンツ）
+            $grant_target = get_field('grant_target', $post_id, false);
+            if (!empty($grant_target)) {
+                $content_parts[] = '<div class="grant-target"><h3>対象者・対象事業</h3>' . $grant_target . '</div>';
+            }
+            
+            // 対象経費
+            $eligible_expenses = get_field('eligible_expenses', $post_id, false);
+            if (!empty($eligible_expenses)) {
+                $content_parts[] = '<div class="eligible-expenses"><h3>対象経費</h3>' . $eligible_expenses . '</div>';
+            }
+            
+            // 必要書類
+            $required_documents = get_field('required_documents', $post_id, false);
+            if (!empty($required_documents)) {
+                $content_parts[] = '<div class="required-documents"><h3>必要書類</h3>' . $required_documents . '</div>';
+            }
+            
+            // 詳細フィールド
+            $required_documents_detailed = get_field('required_documents_detailed', $post_id, false);
+            if (!empty($required_documents_detailed)) {
+                $content_parts[] = '<div class="required-documents-detailed"><h3>必要書類（詳細）</h3>' . $required_documents_detailed . '</div>';
+            }
+            
+            $eligible_expenses_detailed = get_field('eligible_expenses_detailed', $post_id, false);
+            if (!empty($eligible_expenses_detailed)) {
+                $content_parts[] = '<div class="eligible-expenses-detailed"><h3>対象経費（詳細）</h3>' . $eligible_expenses_detailed . '</div>';
+            }
+            
+            // すべてのコンテンツを結合
+            $full_content = !empty($content_parts) ? implode("\n\n", $content_parts) : '';
+            
+            // コンテンツのデバッグログ（詳細版）
+            gi_log_error('Post content debug', array(
+                'post_id' => $post_id,
+                'title' => $post->post_title,
+                'original_post_content_length' => strlen($post->post_content),
+                'has_gutenberg_blocks' => has_blocks($post->post_content),
+                'content_parts_count' => count($content_parts),
+                'full_content_length' => strlen($full_content),
+                'content_sample' => substr($full_content, 0, 500),
+                'grant_target_length' => strlen($grant_target ?? ''),
+                'has_html_tags' => (preg_match('/<[^>]+>/', $full_content) ? 'yes' : 'no'),
+                'has_style_tags' => (strpos($full_content, '<style') !== false ? 'yes' : 'no')
+            ));
+            
             // 基本データ (A-G列)
             $row = array(
                 $post_id, // A: ID
                 $post->post_title, // B: タイトル
-                wp_strip_all_tags($post->post_content), // C: 内容（HTMLタグを除去）
+                $full_content, // C: 内容（HTML/CSS含む完全版・ACFフィールド含む）
                 $post->post_excerpt, // D: 抜粋
                 $post->post_status, // E: ステータス
                 $post->post_date, // F: 作成日
@@ -518,16 +588,17 @@ class GoogleSheetsSync {
             );
             
             foreach ($acf_fields as $field) {
-                $value = get_field($field, $post_id);
+                // フォーマットなしで生データを取得（HTML/CSS保持）
+                $value = get_field($field, $post_id, false);
                 $row[] = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : (string)$value;
             }
             
             // R列: 地域制限 (ACFフィールド)
-            $regional_limitation = get_field('regional_limitation', $post_id);
+            $regional_limitation = get_field('regional_limitation', $post_id, false);
             $row[] = (string)$regional_limitation;
             
             // S列: 申請ステータス (ACFフィールド)
-            $application_status = get_field('application_status', $post_id);
+            $application_status = get_field('application_status', $post_id, false);
             $row[] = (string)$application_status;
             
             // T列: 都道府県 (タクソノミー) ★完全連携
@@ -558,7 +629,8 @@ class GoogleSheetsSync {
             );
             
             foreach ($new_acf_fields as $field) {
-                $value = get_field($field, $post_id);
+                // フォーマットなしで生データを取得（HTML/CSS保持）
+                $value = get_field($field, $post_id, false);
                 $row[] = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : (string)$value;
             }
             
@@ -589,7 +661,7 @@ class GoogleSheetsSync {
             $headers = array(
                 'ID (自動入力)',                          // A列 - WordPress投稿ID
                 'タイトル',                               // B列 - 助成金名
-                '内容・詳細',                            // C列 - 助成金の詳細説明
+                '内容・詳細 (HTML/CSS完全版)',           // C列 - 助成金の詳細説明（HTML/CSS含む）
                 '抜粋・概要',                            // D列 - 簡単な概要
                 'ステータス (draft/publish/private)',     // E列 - 投稿ステータス
                 '作成日 (自動入力)',                      // F列 - WordPress作成日
@@ -688,7 +760,8 @@ class GoogleSheetsSync {
             $original_post_id = intval($row[0]); // 元のpost_id（空の場合は0）
             $post_id = $original_post_id;
             $title = isset($row[1]) ? sanitize_text_field($row[1]) : '';
-            $content = isset($row[2]) ? wp_kses_post($row[2]) : '';
+            // HTML/CSS完全版を保持（管理者権限でのインポートなのでフィルタリングなし）
+            $content = isset($row[2]) ? $row[2] : '';
             $excerpt = isset($row[3]) ? sanitize_textarea_field($row[3]) : '';
             $status = isset($row[4]) ? sanitize_text_field($row[4]) : 'draft';
             
@@ -1019,16 +1092,16 @@ class GoogleSheetsSync {
     public function sync_all_posts_to_sheets() {
         gi_log_error('Starting sync_all_posts_to_sheets');
         
-        // 全件取得（バッチ処理で分割して同期）
-        $posts = get_posts(array(
-            'post_type' => 'grant',
-            'post_status' => array('publish', 'draft', 'private'),
-            'numberposts' => -1
-        ));
+        // メモリ制限を一時的に増やす
+        @ini_set('memory_limit', '512M');
         
-        gi_log_error('Found posts to sync', array('count' => count($posts)));
+        // まず件数だけカウント
+        $total_count = wp_count_posts('grant');
+        $post_count = $total_count->publish + $total_count->draft + $total_count->private;
         
-        if (empty($posts)) {
+        gi_log_error('Total posts to sync', array('count' => $post_count));
+        
+        if ($post_count == 0) {
             gi_log_error('No posts found to sync');
             return 0;
         }
@@ -1047,44 +1120,59 @@ class GoogleSheetsSync {
             throw new Exception('ヘッダーの設定に失敗しました');
         }
         
-        // バッチサイズを設定（Google Sheets APIの制限を考慮）
-        $batch_size = 100; // 一度に100件まで
+        // バッチサイズを設定（メモリ効率を考慮して小さく）
+        $batch_size = 50; // 一度に50件まで（メモリ節約）
         $total_synced = 0;
-        $all_data = array();
+        $sheet_name = $this->get_sheet_name();
+        $current_row = 2; // ヘッダー行の次から
         
-        // 全データを準備
-        foreach ($posts as $post) {
-            try {
-                gi_log_error('Preparing post data', array('post_id' => $post->ID, 'title' => $post->post_title));
-                $row_data = $this->convert_post_to_sheet_row($post->ID);
-                if ($row_data) {
-                    $all_data[] = $row_data;
-                }
-            } catch (Exception $e) {
-                gi_log_error('Failed to prepare individual post', array(
-                    'post_id' => $post->ID,
-                    'error' => $e->getMessage()
-                ));
-                // 個別の投稿の失敗では全体を停止させない
-                continue;
-            }
-        }
+        // ページごとに処理（メモリ効率的）
+        $page = 1;
+        $has_more = true;
         
-        gi_log_error('Prepared all data', array('total_posts' => count($all_data)));
-        
-        // バッチごとに分割して書き込み
-        if (!empty($all_data)) {
-            $batches = array_chunk($all_data, $batch_size);
-            $sheet_name = $this->get_sheet_name();
-            $current_row = 2; // ヘッダー行の次から
+        while ($has_more) {
+            // バッチごとに投稿を取得（メモリに全件読み込まない）
+            $posts = get_posts(array(
+                'post_type' => 'grant',
+                'post_status' => array('publish', 'draft', 'private'),
+                'posts_per_page' => $batch_size,
+                'paged' => $page,
+                'orderby' => 'ID',
+                'order' => 'ASC'
+            ));
             
-            foreach ($batches as $batch_index => $batch_data) {
-                gi_log_error('Processing batch', array(
-                    'batch_index' => $batch_index + 1,
-                    'batch_size' => count($batch_data),
-                    'start_row' => $current_row
-                ));
-                
+            if (empty($posts)) {
+                $has_more = false;
+                break;
+            }
+            
+            gi_log_error('Processing page', array(
+                'page' => $page,
+                'batch_size' => count($posts)
+            ));
+            
+            // バッチデータを準備
+            $batch_data = array();
+            foreach ($posts as $post) {
+                try {
+                    $row_data = $this->convert_post_to_sheet_row($post->ID);
+                    if ($row_data) {
+                        $batch_data[] = $row_data;
+                    }
+                } catch (Exception $e) {
+                    gi_log_error('Failed to prepare individual post', array(
+                        'post_id' => $post->ID,
+                        'error' => $e->getMessage()
+                    ));
+                    continue;
+                }
+            }
+            
+            // 取得した投稿数を記録（メモリクリア前に）
+            $posts_count = count($posts);
+            
+            // バッチをスプレッドシートに書き込み
+            if (!empty($batch_data)) {
                 $end_row = $current_row + count($batch_data) - 1;
                 $range = $sheet_name . "!A{$current_row}:AE{$end_row}"; // 31列対応
                 
@@ -1094,26 +1182,39 @@ class GoogleSheetsSync {
                     $total_synced += count($batch_data);
                     $current_row = $end_row + 1;
                     gi_log_error('Batch write successful', array(
+                        'page' => $page,
                         'batch_synced' => count($batch_data),
                         'total_synced' => $total_synced
                     ));
                 } else {
-                    gi_log_error('Batch write failed', array('batch_index' => $batch_index + 1));
-                    throw new Exception("バッチ " . ($batch_index + 1) . " の書き込みに失敗しました");
-                }
-                
-                // API制限を考慮して少し待機
-                if (count($batches) > 1 && $batch_index < count($batches) - 1) {
-                    sleep(1);
+                    gi_log_error('Batch write failed', array('page' => $page));
+                    throw new Exception("ページ {$page} の書き込みに失敗しました");
                 }
             }
             
-            gi_log_error('All batches completed', array('total_synced' => $total_synced));
-            return $total_synced;
+            // 取得した投稿数がバッチサイズ未満なら最後のページ
+            if ($posts_count < $batch_size) {
+                gi_log_error('Last page reached', array(
+                    'page' => $page, 
+                    'posts_in_last_batch' => $posts_count,
+                    'total_synced' => $total_synced
+                ));
+                $has_more = false;
+            }
+            
+            // 次のページへ
+            $page++;
+            
+            // メモリをクリア
+            unset($posts);
+            unset($batch_data);
+            
+            // API制限を考慮して少し待機
+            sleep(1);
         }
         
-        gi_log_error('No data to sync');
-        return 0;
+        gi_log_error('All batches completed', array('total_synced' => $total_synced));
+        return $total_synced;
     }
     
     /**
@@ -1123,6 +1224,9 @@ class GoogleSheetsSync {
         // タイムアウトとメモリ制限の拡張
         set_time_limit(300); // 5分
         ini_set('memory_limit', '256M');
+        
+        // シャットダウンハンドラーを登録（致命的エラーをキャッチ）
+        register_shutdown_function(array($this, 'ajax_shutdown_handler'));
         
         // 全体をtry-catchでラップして500エラーを防ぐ
         try {
@@ -1216,6 +1320,31 @@ class GoogleSheetsSync {
                 'trace' => method_exists($e, 'getTraceAsString') ? $e->getTraceAsString() : 'no trace'
             ));
             wp_send_json_error('予期しないエラーが発生しました: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * シャットダウンハンドラー - 致命的エラーをキャッチ
+     */
+    public function ajax_shutdown_handler() {
+        $error = error_get_last();
+        if ($error && in_array($error['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR))) {
+            gi_log_error('Fatal error during AJAX sync', array(
+                'error_type' => $error['type'],
+                'error_message' => $error['message'],
+                'error_file' => $error['file'],
+                'error_line' => $error['line']
+            ));
+            
+            // AJAXレスポンスとしてエラーを返す
+            if (!headers_sent()) {
+                header('Content-Type: application/json');
+                echo json_encode(array(
+                    'success' => false,
+                    'data' => 'PHPの致命的エラーが発生しました: ' . $error['message'] . ' in ' . $error['file'] . ' on line ' . $error['line']
+                ));
+            }
+            exit;
         }
     }
     

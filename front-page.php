@@ -30,38 +30,31 @@ html {
     scroll-behavior: smooth;
 }
 
-/* セクションアニメーション */
+/* セクションアニメーション - モバイル対応改善 */
 .section-animate {
-    opacity: 0;
-    transform: translateY(30px);
+    opacity: 1;
+    transform: translateY(0);
     transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.section-animate.visible {
-    opacity: 1;
-    transform: translateY(0);
+/* デスクトップのみアニメーション適用 */
+@media (min-width: 1024px) {
+    .section-animate {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    .section-animate.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* モバイル最適化 - スクロール問題完全解決 */
-@media (max-width: 768px) {
-    .site-main {
-        overflow-x: hidden;
-        overflow-y: auto;
-        /* タッチスクロール最適化 */
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-y: contain;
-    }
-    
-    /* フロントページ専用のスクロール修正 */
-    .front-page-section {
-        min-height: auto !important;
-        height: auto !important;
-        overflow: visible !important;
-    }
-    
-    /* iOS Safari対応 */
+@media (max-width: 1023px) {
     html {
         height: 100%;
+        overflow-y: auto !important;
         -webkit-text-size-adjust: 100%;
     }
     
@@ -69,6 +62,35 @@ html {
         height: auto;
         min-height: 100vh;
         overflow-y: auto !important;
+        overflow-x: hidden;
+    }
+    
+    .site-main {
+        display: block !important;
+        width: 100% !important;
+        overflow: visible !important;
+        height: auto !important;
+        min-height: auto !important;
+    }
+    
+    /* フロントページ専用のスクロール修正 */
+    .front-page-section {
+        display: block !important;
+        width: 100% !important;
+        min-height: auto !important;
+        height: auto !important;
+        overflow: visible !important;
+        position: relative !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    
+    /* すべてのセクション要素を強制表示 */
+    section {
+        display: block !important;
+        width: 100% !important;
+        overflow: visible !important;
+        opacity: 1 !important;
     }
 }
 
@@ -114,13 +136,14 @@ html {
 
     <?php
     /**
-     * 3. Categories Section
-     * カテゴリーセクション
+     * 3. Column Section
+     * コラムセクション - 補助金活用のノウハウ
      */
     ?>
-    <section class="front-page-section section-animate" id="categories-section">
-        <?php get_template_part('template-parts/front-page/section', 'categories'); ?>
+    <section class="front-page-section section-animate" id="column-section">
+        <?php get_template_part('template-parts/front-page/section', 'columns'); ?>
     </section>
+
 
 </main>
 
@@ -130,24 +153,33 @@ html {
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
     
-    // セクションアニメーション
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                sectionObserver.unobserve(entry.target);
-            }
+    // セクションアニメーション（デスクトップのみ）
+    if (window.innerWidth >= 1024) {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    sectionObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.section-animate').forEach(section => {
+            sectionObserver.observe(section);
         });
-    }, observerOptions);
-    
-    document.querySelectorAll('.section-animate').forEach(section => {
-        sectionObserver.observe(section);
-    });
+    } else {
+        // モバイルではすべてのセクションを即座に表示
+        document.querySelectorAll('.section-animate').forEach(section => {
+            section.classList.add('visible');
+            section.style.opacity = '1';
+            section.style.transform = 'none';
+        });
+    }
 
     /* ===== 変更点2: スクロール処理をrequestAnimationFrameで最適化 ===== */
     const progressBar = document.getElementById('scroll-progress');
@@ -212,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // セクションの読み込み確認
     console.log('[Debug] Hero section exists:', !!document.getElementById('hero-section'));
     console.log('[Debug] Search section exists:', !!document.getElementById('search-section'));
+    console.log('[Debug] Column section exists:', !!document.getElementById('column-section'));
     console.log('[Debug] Categories section exists:', !!document.getElementById('categories-section'));
     console.log('[Debug] Browse section integrated exists:', !!document.querySelector('.browse-section-integrated'));
 });

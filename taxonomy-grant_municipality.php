@@ -993,7 +993,7 @@ $popular_categories = array_slice($all_categories, 0, 6);
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -2062,9 +2062,49 @@ $popular_categories = array_slice($all_categories, 0, 6);
         console.log('🚀 Municipality archive page initialized');
         console.log('📍 Municipality:', MUNICIPALITY_SLUG);
         
+        // URLパラメータから検索条件を取得
+        initializeFromUrlParams();
+        
         setupCustomSelects();
         setupEventListeners();
         loadGrants();
+    }
+    
+    // ===== URLパラメータから初期化 =====
+    function initializeFromUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // キーワード検索
+        const searchParam = urlParams.get('search');
+        if (searchParam) {
+            state.filters.search = searchParam;
+            if (elements.keywordSearch) {
+                elements.keywordSearch.value = searchParam;
+                elements.searchClearBtn.style.display = 'flex';
+            }
+            console.log('🔍 Search keyword from URL:', searchParam);
+        }
+        
+        // カテゴリ
+        const categoryParam = urlParams.get('category');
+        if (categoryParam) {
+            state.filters.category = [categoryParam];
+            console.log('📁 Category from URL:', categoryParam);
+        }
+        
+        // 都道府県
+        const prefectureParam = urlParams.get('prefecture');
+        if (prefectureParam) {
+            state.filters.prefecture = [prefectureParam];
+            console.log('📍 Prefecture from URL:', prefectureParam);
+        }
+        
+        // 市町村（自分自身以外の場合のみ）
+        const municipalityParam = urlParams.get('municipality');
+        if (municipalityParam) {
+            state.filters.municipality = municipalityParam;
+            console.log('🏘️ Municipality from URL:', municipalityParam);
+        }
     }
     
     function setupCustomSelects() {

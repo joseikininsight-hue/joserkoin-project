@@ -68,9 +68,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            max-width: 1400px;
+            max-width: 960px;
             margin: 0 auto;
-            padding: 12px 20px;
+            padding: 8px 16px;
         }
         
         .stylish-logo {
@@ -87,7 +87,7 @@
         }
         
         .stylish-logo-text h1 {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #000000;
             line-height: 1.2;
@@ -101,7 +101,7 @@
         }
         
         .gih-container {
-            max-width: 1400px;
+            max-width: 960px;
             margin: 0 auto;
         }
         
@@ -204,8 +204,8 @@
             --font-weight-extrabold: 800;
             
             /* Layout */
-            --header-height: 4.5rem;
-            --max-width: 1400px;
+            --header-height: 4rem;
+            --max-width: 960px;
         }
         
         * {
@@ -294,12 +294,12 @@
         .stylish-container {
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 0 var(--space-6);
+            padding: 0 var(--space-5);
         }
         
         @media (min-width: 768px) {
             .stylish-container {
-                padding: 0 var(--space-8);
+                padding: 0 var(--space-6);
             }
         }
         
@@ -309,6 +309,7 @@
             justify-content: space-between;
             height: var(--header-height);
             position: relative;
+            gap: var(--space-6);
         }
         
         /* ===============================================
@@ -317,10 +318,10 @@
         .stylish-logo {
             display: flex;
             align-items: center;
-            gap: var(--space-4);
             text-decoration: none;
             transition: opacity var(--transition-fast);
             flex-shrink: 0;
+            line-height: 0;
         }
         
         .stylish-logo:hover {
@@ -328,9 +329,8 @@
         }
         
         .stylish-logo-image {
-            height: 2.25rem;
+            height: 2.5rem;
             width: auto;
-            aspect-ratio: 200 / 60;
             object-fit: contain;
             transition: transform var(--transition-fast);
         }
@@ -341,41 +341,7 @@
             }
         }
         
-        .stylish-logo-text {
-            display: none;
-        }
-        
-        @media (min-width: 640px) {
-            .stylish-logo-text {
-                display: block;
-            }
-        }
-        
-        .stylish-logo-text h1,
-        .stylish-logo-text .site-name {
-            margin: 0;
-            font-size: 1.375rem;
-            font-weight: var(--font-weight-bold);
-            color: var(--text-primary);
-            line-height: 1.2;
-            letter-spacing: -0.03em;
-            font-family: var(--font-primary);
-        }
-        
-        @media (min-width: 768px) {
-            .stylish-logo-text h1 {
-                font-size: 1.5rem;
-            }
-        }
-        
-        .stylish-logo-text p {
-            margin: 0;
-            font-size: 0.6875rem;
-            color: var(--text-tertiary);
-            font-weight: var(--font-weight-medium);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
+        /* Logo text removed for cleaner design */
         
         /* ===============================================
            NAVIGATION - ENHANCED WITH ENGLISH + JAPANESE
@@ -385,8 +351,8 @@
             align-items: center;
             gap: var(--space-2);
             flex: 1;
-            justify-content: center;
-            margin: 0 var(--space-8);
+            justify-content: flex-end;
+            margin: 0;
         }
         
         @media (min-width: 1024px) {
@@ -400,16 +366,15 @@
             flex-direction: column;
             align-items: center;
             gap: 2px;
-            padding: var(--space-3) var(--space-5);
+            padding: var(--space-2) var(--space-4);
             color: var(--text-secondary);
             text-decoration: none;
             font-weight: var(--font-weight-semibold);
-            font-size: 0.9375rem;
+            font-size: 0.875rem;
             border-radius: var(--radius-lg);
             position: relative;
             transition: all var(--transition-fast);
             white-space: nowrap;
-            letter-spacing: 0.02em;
             font-family: var(--font-primary);
         }
         
@@ -422,8 +387,8 @@
         .stylish-nav-link-main {
             display: flex;
             align-items: center;
-            gap: var(--space-2);
-            font-size: 0.9375rem;
+            gap: 6px;
+            font-size: 0.875rem;
             font-weight: var(--font-weight-semibold);
         }
         
@@ -431,13 +396,14 @@
             font-size: 0.625rem;
             color: var(--text-tertiary);
             font-weight: var(--font-weight-medium);
-            letter-spacing: 0.03em;
+            letter-spacing: 0.02em;
             opacity: 0.8;
         }
         
         .stylish-nav-link i {
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             opacity: 0.7;
+            flex-shrink: 0;
         }
         
         .stylish-nav-link.current {
@@ -461,16 +427,10 @@
            HEADER ACTIONS
            =============================================== */
         .stylish-actions {
-            display: none;
+            display: flex;
             align-items: center;
             gap: var(--space-2);
             flex-shrink: 0;
-        }
-        
-        @media (min-width: 768px) {
-            .stylish-actions {
-                display: flex;
-            }
         }
         
         .stylish-btn {
@@ -492,13 +452,20 @@
         }
         
         .stylish-btn-icon {
-            width: 2.75rem;
-            height: 2.75rem;
+            width: 2.5rem;
+            height: 2.5rem;
             padding: 0;
             color: var(--text-secondary);
             background: transparent;
             border: 1px solid var(--border-medium);
             border-radius: var(--radius-lg);
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .stylish-btn-icon {
+                display: flex;
+            }
         }
         
         .stylish-btn-icon:hover {
@@ -512,6 +479,13 @@
             background: var(--bg-dark);
             color: var(--text-inverse);
             border: 1px solid var(--bg-dark);
+            display: none;
+        }
+        
+        @media (min-width: 1024px) {
+            .stylish-btn-primary {
+                display: inline-flex;
+            }
         }
         
         .stylish-btn-primary:hover {
@@ -526,14 +500,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.75rem;
-            height: 2.75rem;
+            width: 2.5rem;
+            height: 2.5rem;
             color: var(--text-primary);
             background: transparent;
             border: 1px solid var(--border-medium);
             border-radius: var(--radius-lg);
             cursor: pointer;
             transition: all var(--transition-fast);
+            padding: 0;
         }
         
         @media (min-width: 1024px) {
@@ -888,23 +863,7 @@
            STATS DISPLAY
            =============================================== */
         .stylish-stats {
-            display: none;
-            align-items: center;
-            gap: var(--space-5);
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            margin-left: var(--space-6);
-            padding: var(--space-2) var(--space-5);
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-full);
-            letter-spacing: 0.02em;
-        }
-        
-        @media (min-width: 1280px) {
-            .stylish-stats {
-                display: flex;
-            }
+            display: none !important;
         }
         
         .stylish-stat-item {
@@ -1038,17 +997,6 @@
                      loading="eager"
                      fetchpriority="high"
                      decoding="async">
-                
-                <div class="stylish-logo-text">
-                    <?php if (is_front_page() || is_home()) : ?>
-                        <h1><?php bloginfo('name'); ?></h1>
-                    <?php else : ?>
-                        <p class="site-name"><?php bloginfo('name'); ?></p>
-                    <?php endif; ?>
-                    <?php if ($tagline = get_bloginfo('description')): ?>
-                        <p><?php echo esc_html($tagline); ?></p>
-                    <?php endif; ?>
-                </div>
             </a>
             
             <!-- Navigation -->
@@ -1061,6 +1009,7 @@
                 $contact_url = home_url('/contact/');
                 
                 $how_to_use_url = home_url('/how-to-use/');
+                $column_url = get_post_type_archive_link('column');
                 
                 $menu_items = array(
                     array(
@@ -1071,18 +1020,18 @@
                         'current' => ($current_url === $home_url)
                     ),
                     array(
-                        'url' => $how_to_use_url, 
-                        'title_en' => 'How To Use',
-                        'title_ja' => '使い方',
-                        'icon' => 'fas fa-book-open',
-                        'current' => (strpos($current_url, '/how-to-use/') !== false)
-                    ),
-                    array(
                         'url' => $grants_url, 
                         'title_en' => 'Grants',
                         'title_ja' => '助成金一覧',
                         'icon' => 'fas fa-list-ul',
                         'current' => (strpos($current_url, 'grants') !== false || is_post_type_archive('grant') || is_singular('grant'))
+                    ),
+                    array(
+                        'url' => $column_url, 
+                        'title_en' => 'Column',
+                        'title_ja' => 'コラム',
+                        'icon' => 'fas fa-book-open',
+                        'current' => (strpos($current_url, 'column') !== false || is_post_type_archive('column') || is_singular('column'))
                     ),
                     array(
                         'url' => $diagnosis_url, 
@@ -1459,7 +1408,13 @@
         }
     }
     
-    elements.mobileMenuBtn?.addEventListener('click', openMobileMenu);
+    elements.mobileMenuBtn?.addEventListener('click', function() {
+        if (state.isMobileMenuOpen) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    });
     elements.mobileClose?.addEventListener('click', closeMobileMenu);
     
     elements.mobileOverlay?.addEventListener('click', function(e) {

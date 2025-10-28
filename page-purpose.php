@@ -14,111 +14,115 @@ get_header();
 // Get purpose slug from URL
 $purpose_slug = get_query_var('gi_purpose');
 
-// Purpose categories data
+// Purpose categories data - v2.1: Updated to 8 main + 5 additional structure
+// Matches the updated front-page section-search.php design
 $purpose_categories = array(
+    // ===== 8 Main Purposes =====
     array(
         'title' => '設備を導入したい',
         'icon' => 'fas fa-industry',
         'slug' => 'equipment',
         'url' => home_url('/purpose/equipment/'),
-        'description' => '製造設備・機械・IT機器などの導入支援',
-        'keywords' => 'ものづくり補助金, IT導入補助金, 設備投資'
+        'description' => '製造設備・機械・IT機器など、事業に必要な設備投資を支援する助成金',
+        'keywords' => '設備投資, ものづくり補助金, IT導入補助金, 生産性向上, DX'
     ),
     array(
         'title' => '人材育成したい',
         'icon' => 'fas fa-user-graduate',
         'slug' => 'training',
         'url' => home_url('/purpose/training/'),
-        'description' => '従業員研修・資格取得・スキルアップ支援',
-        'keywords' => '人材開発, 教育訓練, キャリアアップ'
+        'description' => '従業員の研修・資格取得・スキルアップなど、人材育成と雇用を支援',
+        'keywords' => '人材育成, 人材確保, 雇用維持, 働き方改革, キャリアアップ'
     ),
     array(
         'title' => '営業強化したい',
         'icon' => 'fas fa-chart-line',
         'slug' => 'sales',
         'url' => home_url('/purpose/sales/'),
-        'description' => '販路開拓・マーケティング・広告宣伝の支援',
-        'keywords' => '販路拡大, 展示会出展, EC構築'
+        'description' => '販路開拓・マーケティング・広告宣伝など、営業活動を支援する助成金',
+        'keywords' => '販路拡大, 事業拡大, 新規事業, EC, 海外展開'
     ),
     array(
         'title' => '事業を始めたい',
         'icon' => 'fas fa-rocket',
         'slug' => 'startup',
         'url' => home_url('/purpose/startup/'),
-        'description' => '創業・起業・新規事業立ち上げの支援',
-        'keywords' => '創業支援, スタートアップ, 新規開業'
+        'description' => '創業・起業・新規事業の立ち上げを支援する助成金',
+        'keywords' => '創業, スタートアップ, 起業, 新規事業, 第二創業'
     ),
     array(
         'title' => 'IT化を進めたい',
         'icon' => 'fas fa-laptop-code',
         'slug' => 'digital',
         'url' => home_url('/purpose/digital/'),
-        'description' => 'デジタル化・DX推進・システム導入の支援',
-        'keywords' => 'DX, IT導入, デジタル化'
+        'description' => 'デジタル化・DX推進・IT システム導入など、デジタル化を支援',
+        'keywords' => 'DX, IT導入, デジタル化, 生産性向上, クラウド'
     ),
     array(
         'title' => '資金調達したい',
         'icon' => 'fas fa-yen-sign',
         'slug' => 'funding',
         'url' => home_url('/purpose/funding/'),
-        'description' => '運転資金・設備資金・開発資金の調達支援',
-        'keywords' => '融資, 補助金, 助成金'
+        'description' => '運転資金・設備資金など、事業資金の調達を支援する助成金',
+        'keywords' => '資金調達, 運転資金, 設備投資, 事業拡大, 創業'
     ),
     array(
         'title' => '環境対策したい',
         'icon' => 'fas fa-leaf',
         'slug' => 'environment',
         'url' => home_url('/purpose/environment/'),
-        'description' => '省エネ・脱炭素・環境配慮型事業への支援',
-        'keywords' => 'カーボンニュートラル, 省エネ, 再生可能エネルギー'
-    ),
-    array(
-        'title' => '事業を引き継ぎたい',
-        'icon' => 'fas fa-handshake',
-        'slug' => 'succession',
-        'url' => home_url('/purpose/succession/'),
-        'description' => '事業承継・M&A・後継者育成の支援',
-        'keywords' => '事業承継, 世代交代, M&A'
+        'description' => '省エネ・脱炭素・環境配慮型事業など、環境対策を支援',
+        'keywords' => '省エネ, 再エネ, 脱炭素, SDGs, 環境保護'
     ),
     array(
         'title' => '海外展開したい',
         'icon' => 'fas fa-globe-asia',
         'slug' => 'global',
         'url' => home_url('/purpose/global/'),
-        'description' => '輸出・海外進出・インバウンド対応の支援',
-        'keywords' => '海外進出, 輸出, グローバル展開'
+        'description' => '輸出・海外進出・インバウンド対応など、グローバル展開を支援',
+        'keywords' => '海外展開, 輸出, インバウンド, 販路拡大, 国際交流'
+    ),
+    
+    // ===== 5 Additional Purposes =====
+    array(
+        'title' => '事業を引き継ぎたい',
+        'icon' => 'fas fa-handshake',
+        'slug' => 'succession',
+        'url' => home_url('/purpose/succession/'),
+        'description' => '事業承継・M&A・後継者育成など、事業の引き継ぎを支援',
+        'keywords' => '事業承継, M&A, 後継者育成, 経営改善, 事業再構築'
     ),
     array(
         'title' => '研究開発したい',
         'icon' => 'fas fa-flask',
         'slug' => 'rnd',
         'url' => home_url('/purpose/rnd/'),
-        'description' => '新技術開発・製品開発・研究活動の支援',
-        'keywords' => 'R&D, イノベーション, 新技術開発'
+        'description' => '新技術・新製品の研究開発やイノベーション創出を支援',
+        'keywords' => '研究開発, R&D, イノベーション, AI, IoT, 先端技術'
     ),
     array(
-        'title' => '働き方改善したい',
-        'icon' => 'fas fa-briefcase',
-        'slug' => 'workstyle',
-        'url' => home_url('/purpose/workstyle/'),
-        'description' => 'テレワーク・労務管理・福利厚生の充実支援',
-        'keywords' => '働き方改革, テレワーク, 労働環境改善'
+        'title' => '住宅関連の支援',
+        'icon' => 'fas fa-home',
+        'slug' => 'housing',
+        'url' => home_url('/purpose/housing/'),
+        'description' => '住宅購入・リフォーム・省エネ改修など、住宅関連の支援',
+        'keywords' => '住宅支援, リフォーム, 省エネ, 空き家対策, 子育て支援'
     ),
     array(
-        'title' => '地域活性化したい',
-        'icon' => 'fas fa-city',
-        'slug' => 'regional',
-        'url' => home_url('/purpose/regional/'),
-        'description' => '地域資源活用・観光振興・まちづくりの支援',
-        'keywords' => '地域振興, 観光, まちづくり'
+        'title' => '農林水産業を支援',
+        'icon' => 'fas fa-tractor',
+        'slug' => 'agriculture',
+        'url' => home_url('/purpose/agriculture/'),
+        'description' => '農業・林業・漁業の経営改善や6次産業化を支援',
+        'keywords' => '農業, 林業, 漁業, 6次産業化, 設備投資, 販路拡大'
     ),
     array(
         'title' => '個人で使いたい',
         'icon' => 'fas fa-user',
         'slug' => 'individual',
         'url' => home_url('/purpose/individual/'),
-        'description' => '個人事業主・フリーランス・資格取得など個人向け支援',
-        'keywords' => '個人事業主, フリーランス, 資格取得, 個人起業'
+        'description' => '個人事業主・フリーランス・資格取得など、個人向けの支援',
+        'keywords' => '起業, 独立, フリーランス, 資格取得, テレワーク'
     ),
 );
 

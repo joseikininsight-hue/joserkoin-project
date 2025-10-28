@@ -98,22 +98,87 @@ function gi_get_purpose_category_mapping() {
         return $mapping;
     }
     
-    // Define mapping between purpose slugs and category term slugs
-    // These category slugs should match actual terms in the grant_category taxonomy
+    // Define mapping between purpose slugs and category term names (Japanese)
+    // v2.1: Updated to match new 8 main + 5 additional purpose structure
+    // Categories are stored as Japanese names to match the actual WordPress taxonomy terms
     $mapping = array(
-        'equipment' => array('monozukuri', 'it-subsidy', 'equipment-investment'),
-        'training' => array('human-resources', 'training', 'career-up'),
-        'sales' => array('sales-expansion', 'small-business', 'ec-it'),
-        'startup' => array('startup', 'new-business', 'business-restructuring'),
-        'digital' => array('it-subsidy', 'dx', 'digitalization'),
-        'funding' => array('financing', 'funding', 'subsidy-grant'),
-        'environment' => array('environment-energy', 'energy-saving', 'carbon-neutral'),
-        'succession' => array('business-succession', 'successor-support', 'business-transfer'),
-        'global' => array('global-expansion', 'export-support', 'inbound'),
-        'rnd' => array('research-development', 'innovation', 'technology-development'),
-        'workstyle' => array('work-style-reform', 'telework', 'workplace-improvement'),
-        'regional' => array('regional-revitalization', 'tourism', 'community-development'),
-        'individual' => array('individual-business', 'freelance', 'personal-subsidy')
+        // ===== 8 Main Purposes =====
+        'equipment' => array(
+            '設備投資', 'ものづくり・新商品開発', 'IT導入・DX', 
+            '生産性向上・業務効率化', '防犯・防災・BCP', 
+            '省エネ・再エネ', '医療・福祉', '観光・インバウンド', 
+            '農業・林業・漁業'
+        ),
+        'training' => array(
+            '人材育成・人材確保', '雇用維持・促進', 
+            '働き方改革・待遇改善', '女性活躍・多様性', 
+            '若者・学生支援', 'シニア・障害者支援', 
+            'IT導入・DX', '生産性向上・業務効率化'
+        ),
+        'sales' => array(
+            '販路拡大', '事業拡大', '新規事業・第二創業', 
+            'ものづくり・新商品開発', '広告・マーケティング', 
+            'EC・オンライン販売', '展示会・商談会', 
+            '海外展開', '観光・インバウンド'
+        ),
+        'startup' => array(
+            '創業・スタートアップ', '新規事業・第二創業', 
+            '事業拡大', '販路拡大', '資金調達', 
+            'IT導入・DX', '人材育成・人材確保', 
+            '起業・独立'
+        ),
+        'digital' => array(
+            'IT導入・DX', '生産性向上・業務効率化', 
+            'EC・オンライン販売', '働き方改革・待遇改善', 
+            'クラウド・SaaS', 'セキュリティ', 
+            'AI・IoT・先端技術', '設備投資'
+        ),
+        'funding' => array(
+            '資金調達', '運転資金', '設備投資', 
+            '事業拡大', '創業・スタートアップ', 
+            '事業再構築・転換', '新規事業・第二創業'
+        ),
+        'environment' => array(
+            '省エネ・再エネ', '環境保護・脱炭素', 
+            '設備投資', '生産性向上・業務効率化', 
+            'SDGs', '循環型経済', '農業・林業・漁業'
+        ),
+        'global' => array(
+            '海外展開', '輸出促進', '観光・インバウンド', 
+            '販路拡大', 'クールジャパン・コンテンツ', 
+            '国際交流', '展示会・商談会'
+        ),
+        
+        // ===== 5 Additional Purposes =====
+        'succession' => array(
+            '事業承継', 'M&A', '経営改善', 
+            '事業再構築・転換', '後継者育成', 
+            '人材育成・人材確保'
+        ),
+        'rnd' => array(
+            '研究開発', 'AI・IoT・先端技術', 
+            'ものづくり・新商品開発', '設備投資', 
+            '産学連携', 'イノベーション', 
+            '特許・知的財産'
+        ),
+        'housing' => array(
+            '住宅支援', 'リフォーム・改修', 
+            '省エネ・再エネ', '防犯・防災・BCP', 
+            '空き家対策', '子育て支援', 
+            '移住・定住'
+        ),
+        'agriculture' => array(
+            '農業・林業・漁業', '6次産業化', 
+            '設備投資', '販路拡大', 
+            '省エネ・再エネ', '人材育成・人材確保', 
+            '地域活性化'
+        ),
+        'individual' => array(
+            '起業・独立', 'フリーランス', 
+            '資格取得・スキルアップ', '若者・学生支援', 
+            '創業・スタートアップ', 'テレワーク・在宅ワーク', 
+            '副業・兼業'
+        )
     );
     
     return $mapping;
@@ -129,21 +194,25 @@ function gi_get_categories_for_purpose($purpose_slug) {
     $mapping = gi_get_purpose_category_mapping();
     
     if (!isset($mapping[$purpose_slug])) {
+        error_log('[Purpose Debug] No mapping found for purpose: ' . $purpose_slug);
         return array();
     }
     
-    $category_slugs = $mapping[$purpose_slug];
+    $category_names = $mapping[$purpose_slug];
     
-    // Query actual terms from database
+    // Query actual terms from database using Japanese names
     $terms = get_terms(array(
         'taxonomy' => 'grant_category',
-        'slug' => $category_slugs,
+        'name' => $category_names,
         'hide_empty' => false
     ));
     
     if (is_wp_error($terms)) {
+        error_log('[Purpose Debug] Error querying categories: ' . $terms->get_error_message());
         return array();
     }
+    
+    error_log('[Purpose Debug] Found ' . count($terms) . ' category terms for purpose: ' . $purpose_slug);
     
     return $terms;
 }
@@ -192,11 +261,23 @@ $required_files = array(
     
     // Performance optimization
     'performance-optimization.php', // パフォーマンス最適化（v9.2.0+）
-    'seo-optimization.php',         // SEO最適化（v9.2.1+）
     
     // Google Sheets integration (consolidated into one file)
     'google-sheets-integration.php', // Google Sheets統合（全機能統合版）
-    'safe-sync-manager.php'          // 安全同期管理システム
+    'safe-sync-manager.php',         // 安全同期管理システム
+    
+    // Grant Content SEO Optimizer (v9.3.0+)
+    'grant-content-seo-optimizer.php',  // 助成金コンテンツSEO最適化
+    
+    // Dynamic CSS Generator - 削除済み (CSSは unified-frontend.css に統合)
+    // 'grant-dynamic-css-generator.php',
+    
+    // Advanced SEO Enhancer (v9.3.2+)
+    'grant-advanced-seo-enhancer.php',  // SEO大幅強化（OGP、Schema.org拡張、内部リンク）
+    
+    // Column Post Type (v9.4.0+)
+    'column-post-type.php',             // コラム機能（カスタム投稿タイプ、タクソノミー）
+    'column-functions.php'              // コラムヘルパー関数
 );
 
 // ファイルを安全に読み込み

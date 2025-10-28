@@ -544,8 +544,25 @@ const GrantInsightAdmin = {
                 }
             })
             .catch(error => {
-                console.error('Sync error:', error);
-                const message = 'ネットワークエラー: ' + error.message;
+                console.error('Sync error details:', {
+                    message: error.message,
+                    stack: error.stack,
+                    error: error
+                });
+                
+                // より詳細なエラーメッセージ
+                let message = 'ネットワークエラー: ' + error.message;
+                
+                // HTTP 500エラーの場合
+                if (error.message.includes('HTTP 500')) {
+                    message = 'サーバーエラー (HTTP 500): PHPエラーが発生しました。WordPressのエラーログを確認してください。';
+                    console.error('HTTP 500 エラー詳細: admin-ajax.phpでPHPの致命的エラーが発生している可能性があります。');
+                    console.error('考えられる原因:');
+                    console.error('1. Google Sheets APIの認証エラー');
+                    console.error('2. メモリ不足またはタイムアウト');
+                    console.error('3. 未定義の関数または変数へのアクセス');
+                }
+                
                 this.showSyncResult('error', message);
                 this.showNotice('error', message);
             })
@@ -1046,8 +1063,12 @@ const GrantInsightAdmin = {
             },
             body: new URLSearchParams(requestData).toString(),
             signal: AbortSignal.timeout(timeout)
-        }).then(response => {
+        }).then(async response => {
             if (!response.ok) {
+                // エラーレスポンスのボディも取得
+                const errorBody = await response.text().catch(() => 'No response body');
+                console.error('HTTP Error Response Body:', errorBody);
+                
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             return response.json();
@@ -1133,6 +1154,17 @@ const GrantInsightAdmin = {
                 document.body.removeChild(textarea);
             }
         }
+    },
+
+    /**
+     * ==========================================================================
+     * ユーティリティ機能
+     * ==========================================================================
+     */
+    setupUtils() {
+        // ユーティリティ機能の初期化
+        // 現時点では特に初期化する内容はないが、将来の拡張のために残しておく
+        console.log('[Grant Insight Admin] Utils setup completed');
     }
 };
 
