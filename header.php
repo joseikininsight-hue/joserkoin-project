@@ -1009,6 +1009,7 @@
                 $contact_url = home_url('/contact/');
                 
                 $how_to_use_url = home_url('/how-to-use/');
+                $column_url = get_post_type_archive_link('column');
                 
                 $menu_items = array(
                     array(
@@ -1019,18 +1020,18 @@
                         'current' => ($current_url === $home_url)
                     ),
                     array(
-                        'url' => $how_to_use_url, 
-                        'title_en' => 'How To Use',
-                        'title_ja' => '使い方',
-                        'icon' => 'fas fa-book-open',
-                        'current' => (strpos($current_url, '/how-to-use/') !== false)
-                    ),
-                    array(
                         'url' => $grants_url, 
                         'title_en' => 'Grants',
                         'title_ja' => '助成金一覧',
                         'icon' => 'fas fa-list-ul',
                         'current' => (strpos($current_url, 'grants') !== false || is_post_type_archive('grant') || is_singular('grant'))
+                    ),
+                    array(
+                        'url' => $column_url, 
+                        'title_en' => 'Column',
+                        'title_ja' => 'コラム',
+                        'icon' => 'fas fa-book-open',
+                        'current' => (strpos($current_url, 'column') !== false || is_post_type_archive('column') || is_singular('column'))
                     ),
                     array(
                         'url' => $diagnosis_url, 
