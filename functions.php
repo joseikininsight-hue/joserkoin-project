@@ -273,7 +273,11 @@ $required_files = array(
     'grant-dynamic-css-generator.php',  // 投稿内容に応じた動的CSS生成
     
     // Advanced SEO Enhancer (v9.3.2+)
-    'grant-advanced-seo-enhancer.php'   // SEO大幅強化（OGP、Schema.org拡張、内部リンク）
+    'grant-advanced-seo-enhancer.php',  // SEO大幅強化（OGP、Schema.org拡張、内部リンク）
+    
+    // Column Post Type (v9.4.0+)
+    'column-post-type.php',             // コラム機能（カスタム投稿タイプ、タクソノミー）
+    'column-functions.php'              // コラムヘルパー関数
 );
 
 // ファイルを安全に読み込み
