@@ -204,7 +204,7 @@
             --font-weight-extrabold: 800;
             
             /* Layout */
-            --header-height: 4.5rem;
+            --header-height: 4rem;
             --max-width: 960px;
         }
         
@@ -306,16 +306,10 @@
         .stylish-header-inner {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             height: var(--header-height);
             position: relative;
-            gap: var(--space-8);
-        }
-        
-        @media (min-width: 1024px) {
-            .stylish-header-inner {
-                justify-content: space-between;
-            }
+            gap: var(--space-6);
         }
         
         /* ===============================================
@@ -324,10 +318,10 @@
         .stylish-logo {
             display: flex;
             align-items: center;
-            gap: var(--space-4);
             text-decoration: none;
             transition: opacity var(--transition-fast);
             flex-shrink: 0;
+            line-height: 0;
         }
         
         .stylish-logo:hover {
@@ -335,54 +329,19 @@
         }
         
         .stylish-logo-image {
-            height: 1.75rem;
+            height: 2.5rem;
             width: auto;
-            aspect-ratio: 200 / 60;
             object-fit: contain;
             transition: transform var(--transition-fast);
         }
         
         @media (min-width: 768px) {
             .stylish-logo-image {
-                height: 2rem;
+                height: 2.75rem;
             }
         }
         
-        .stylish-logo-text {
-            display: none;
-        }
-        
-        @media (min-width: 640px) {
-            .stylish-logo-text {
-                display: block;
-            }
-        }
-        
-        .stylish-logo-text h1,
-        .stylish-logo-text .site-name {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: var(--font-weight-bold);
-            color: var(--text-primary);
-            line-height: 1.2;
-            letter-spacing: -0.03em;
-            font-family: var(--font-primary);
-        }
-        
-        @media (min-width: 768px) {
-            .stylish-logo-text h1 {
-                font-size: 1.125rem;
-            }
-        }
-        
-        .stylish-logo-text p {
-            margin: 0;
-            font-size: 0.6875rem;
-            color: var(--text-tertiary);
-            font-weight: var(--font-weight-medium);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
+        /* Logo text removed for cleaner design */
         
         /* ===============================================
            NAVIGATION - ENHANCED WITH ENGLISH + JAPANESE
@@ -392,8 +351,8 @@
             align-items: center;
             gap: var(--space-2);
             flex: 1;
-            justify-content: center;
-            margin: 0 var(--space-8);
+            justify-content: flex-end;
+            margin: 0;
         }
         
         @media (min-width: 1024px) {
@@ -404,19 +363,18 @@
         
         .stylish-nav-link {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 2px;
-            padding: var(--space-3) var(--space-5);
+            gap: 6px;
+            padding: var(--space-2) var(--space-4);
             color: var(--text-secondary);
             text-decoration: none;
-            font-weight: var(--font-weight-semibold);
-            font-size: 0.9375rem;
+            font-weight: var(--font-weight-medium);
+            font-size: 0.875rem;
             border-radius: var(--radius-lg);
             position: relative;
             transition: all var(--transition-fast);
             white-space: nowrap;
-            letter-spacing: 0.02em;
             font-family: var(--font-primary);
         }
         
@@ -427,24 +385,19 @@
         }
         
         .stylish-nav-link-main {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            font-size: 0.9375rem;
-            font-weight: var(--font-weight-semibold);
+            display: none;
         }
         
         .stylish-nav-link-sub {
-            font-size: 0.625rem;
-            color: var(--text-tertiary);
+            font-size: 0.875rem;
+            color: inherit;
             font-weight: var(--font-weight-medium);
-            letter-spacing: 0.03em;
-            opacity: 0.8;
         }
         
         .stylish-nav-link i {
             font-size: 0.875rem;
-            opacity: 0.7;
+            opacity: 0.8;
+            flex-shrink: 0;
         }
         
         .stylish-nav-link.current {
@@ -468,16 +421,10 @@
            HEADER ACTIONS
            =============================================== */
         .stylish-actions {
-            display: none;
+            display: flex;
             align-items: center;
             gap: var(--space-2);
             flex-shrink: 0;
-        }
-        
-        @media (min-width: 768px) {
-            .stylish-actions {
-                display: flex;
-            }
         }
         
         .stylish-btn {
@@ -499,13 +446,20 @@
         }
         
         .stylish-btn-icon {
-            width: 2.75rem;
-            height: 2.75rem;
+            width: 2.5rem;
+            height: 2.5rem;
             padding: 0;
             color: var(--text-secondary);
             background: transparent;
             border: 1px solid var(--border-medium);
             border-radius: var(--radius-lg);
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .stylish-btn-icon {
+                display: flex;
+            }
         }
         
         .stylish-btn-icon:hover {
@@ -519,6 +473,13 @@
             background: var(--bg-dark);
             color: var(--text-inverse);
             border: 1px solid var(--bg-dark);
+            display: none;
+        }
+        
+        @media (min-width: 1024px) {
+            .stylish-btn-primary {
+                display: inline-flex;
+            }
         }
         
         .stylish-btn-primary:hover {
@@ -533,14 +494,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.75rem;
-            height: 2.75rem;
+            width: 2.5rem;
+            height: 2.5rem;
             color: var(--text-primary);
             background: transparent;
             border: 1px solid var(--border-medium);
             border-radius: var(--radius-lg);
             cursor: pointer;
             transition: all var(--transition-fast);
+            padding: 0;
         }
         
         @media (min-width: 1024px) {
@@ -895,23 +857,7 @@
            STATS DISPLAY
            =============================================== */
         .stylish-stats {
-            display: none;
-            align-items: center;
-            gap: var(--space-5);
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            margin-left: var(--space-6);
-            padding: var(--space-2) var(--space-5);
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-full);
-            letter-spacing: 0.02em;
-        }
-        
-        @media (min-width: 1280px) {
-            .stylish-stats {
-                display: flex;
-            }
+            display: none !important;
         }
         
         .stylish-stat-item {
@@ -1045,17 +991,6 @@
                      loading="eager"
                      fetchpriority="high"
                      decoding="async">
-                
-                <div class="stylish-logo-text">
-                    <?php if (is_front_page() || is_home()) : ?>
-                        <h1><?php bloginfo('name'); ?></h1>
-                    <?php else : ?>
-                        <p class="site-name"><?php bloginfo('name'); ?></p>
-                    <?php endif; ?>
-                    <?php if ($tagline = get_bloginfo('description')): ?>
-                        <p><?php echo esc_html($tagline); ?></p>
-                    <?php endif; ?>
-                </div>
             </a>
             
             <!-- Navigation -->
