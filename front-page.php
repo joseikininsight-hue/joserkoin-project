@@ -134,6 +134,16 @@ html {
         ?>
     </section>
 
+    <?php
+    /**
+     * 3. Column Section
+     * コラムセクション - 補助金活用のノウハウ
+     */
+    ?>
+    <section class="front-page-section section-animate" id="column-section">
+        <?php get_template_part('template-parts/front-page/section', 'columns'); ?>
+    </section>
+
 
 </main>
 
@@ -234,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // セクションの読み込み確認
     console.log('[Debug] Hero section exists:', !!document.getElementById('hero-section'));
     console.log('[Debug] Search section exists:', !!document.getElementById('search-section'));
+    console.log('[Debug] Column section exists:', !!document.getElementById('column-section'));
     console.log('[Debug] Categories section exists:', !!document.getElementById('categories-section'));
     console.log('[Debug] Browse section integrated exists:', !!document.querySelector('.browse-section-integrated'));
 });
