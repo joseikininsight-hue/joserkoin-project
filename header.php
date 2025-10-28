@@ -306,9 +306,16 @@
         .stylish-header-inner {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             height: var(--header-height);
             position: relative;
+            gap: var(--space-8);
+        }
+        
+        @media (min-width: 1024px) {
+            .stylish-header-inner {
+                justify-content: space-between;
+            }
         }
         
         /* ===============================================

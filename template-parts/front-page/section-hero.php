@@ -549,14 +549,13 @@ $grants_count_formatted = number_format($total_grants_count);
     height: auto;
     display: block;
     object-fit: contain;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.gih-hero-image:hover {
-    transform: scale(1.03);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+/* モバイルでは背景なし、PCでも背景なし */
+@media (min-width: 1024px) {
+    .gih-hero-image {
+        /* PC表示時も背景なし、シンプルに */
+    }
 }
 
 /* モバイルレイアウト */
