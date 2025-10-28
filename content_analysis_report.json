@@ -1,0 +1,806 @@
+{
+  "summary": {
+    "total_posts": 51,
+    "has_html_tags": 51,
+    "has_semantic_tags": 0,
+    "has_schema": 0,
+    "has_headings": 51,
+    "has_inline_styles": 0
+  },
+  "heading_usage": {
+    "H3": 51
+  },
+  "common_classes": {
+    "required-documents-detailed": 51,
+    "eligible-expenses-detailed": 51,
+    "post-content": 51,
+    "grant-target": 51
+  },
+  "common_issues": {
+    "H2タグが存在しない（セクション構造が不明確）": 51,
+    "セマンティックHTML5タグが使用されていない": 51,
+    "Schema.org構造化データが存在しない": 51
+  },
+  "detailed_analyses": [
+    {
+      "has_content": true,
+      "length": 2144,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8052.0,
+      "title": "【最大4億円】愛知県東郷町の企業再投資促進補助金(令和7年度)｜工場新増設を強力支援"
+    },
+    {
+      "has_content": true,
+      "length": 2413,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8053.0,
+      "title": "【最大500万円】春日井市都市緑化推進事業補助金を徹底解説！屋上緑化や生垣設置が対象（令和8年度向け"
+    },
+    {
+      "has_content": true,
+      "length": 2510,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8054.0,
+      "title": "【三鷹市】新規出店で最大60万円！小売・飲食業向け支援金を徹底解説"
+    },
+    {
+      "has_content": true,
+      "length": 2418,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8055.0,
+      "title": "【2025年度】三鷹市新規出店者支援金｜小売・飲食業に最大60万円！"
+    },
+    {
+      "has_content": true,
+      "length": 2645,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8056.0,
+      "title": "【最大50万円】岐阜県富加町の定住促進奨励金を解説！新築・購入者が対象（R7.9.30契約まで）"
+    },
+    {
+      "has_content": true,
+      "length": 2418,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8057.0,
+      "title": "【2025年】立川市既存住宅断熱改修費補助金｜上限5万円！申請方法と条件を解説"
+    },
+    {
+      "has_content": true,
+      "length": 1877,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8058.0,
+      "title": "【2025年度】北海道津別町「地域特産品販路拡大支援事業」を解説"
+    },
+    {
+      "has_content": true,
+      "length": 2186,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8059.0,
+      "title": "【令和7年度】石川県能登町の創業・継承支援事業補助金｜最大250万円！"
+    },
+    {
+      "has_content": true,
+      "length": 2685,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8060.0,
+      "title": "【2025年度】福岡市空き家活用補助金を徹底解説！最大250万円で地域貢献・定住促進"
+    },
+    {
+      "has_content": true,
+      "length": 2133,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8061.0,
+      "title": "【2025年度】群馬県富岡市の介護休業支援事業補助金｜最大15万円で職場環境改善"
+    },
+    {
+      "has_content": true,
+      "length": 2423,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8062.0,
+      "title": "【2025年度版】南魚沼市中小企業海外進出トライアル事業補助金｜上限100万円"
+    },
+    {
+      "has_content": true,
+      "length": 2108,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8063.0,
+      "title": "【令和7年度】島田市 海外展示会出展補助金｜最大40万円で世界へ！"
+    },
+    {
+      "has_content": true,
+      "length": 2070,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8064.0,
+      "title": "【2025年/令和7年度】兵庫県の太陽光発電・蓄電池補助金を徹底解説！市町別の情報も網羅"
+    },
+    {
+      "has_content": true,
+      "length": 2070,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8065.0,
+      "title": "【2025年】中津市女性創業・起業支援補助金｜最大100万円を助成！"
+    },
+    {
+      "has_content": true,
+      "length": 2796,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8066.0,
+      "title": "【岩手県大船渡市】令和7年林野火災 被災者支援制度完全ガイド"
+    },
+    {
+      "has_content": true,
+      "length": 1985,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8067.0,
+      "title": "【令和7年度】東京都 観光バスバリアフリー化支援補助金｜最大800万円！リフト付車両導入を支援"
+    },
+    {
+      "has_content": true,
+      "length": 1703,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8068.0,
+      "title": "【2025年度】太田市鳥獣害対策設備設置支援補助金｜電気柵等の費用を1/2補助！"
+    },
+    {
+      "has_content": true,
+      "length": 2235,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8069.0,
+      "title": "【2025年度】東京都の飲食店向けベジタリアン・ヴィーガン認証取得支援補助金｜上限20万円"
+    },
+    {
+      "has_content": true,
+      "length": 2027,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8070.0,
+      "title": "【令和7年度】陸別町人材確保対策支援事業補助金｜採用経費を最大30万円補助"
+    },
+    {
+      "has_content": true,
+      "length": 2219,
+      "has_html_tags": true,
+      "has_semantic_tags": false,
+      "heading_structure": [
+        {
+          "level": 3,
+          "count": 3,
+          "texts": [
+            "対象者・対象事業",
+            "必要書類（詳細）",
+            "対象経費（詳細）"
+          ]
+        }
+      ],
+      "css_classes": [
+        "required-documents-detailed",
+        "eligible-expenses-detailed",
+        "post-content",
+        "grant-target"
+      ],
+      "inline_styles": [],
+      "semantic_tags": [],
+      "links_count": 0,
+      "images_count": 0,
+      "tables_count": 0,
+      "lists_count": 0,
+      "divs_count": 4,
+      "sections_count": 0,
+      "has_schema": false,
+      "seo_issues": [
+        "H2タグが存在しない（セクション構造が不明確）",
+        "セマンティックHTML5タグが使用されていない",
+        "Schema.org構造化データが存在しない"
+      ],
+      "post_id": 8071.0,
+      "title": "【令和7年度】岡山県里庄町 販路開拓支援事業補助金｜展示会出展費用を最大10万円補助！"
+    }
+  ]
+}

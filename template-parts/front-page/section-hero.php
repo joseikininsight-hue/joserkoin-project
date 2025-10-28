@@ -154,12 +154,6 @@ $grants_count_formatted = number_format($total_grants_count);
                 <!-- 左側：テキストコンテンツ -->
                 <article class="gih-content-left" role="article">
                     
-                    <!-- ステータスバッジ -->
-                    <div class="gih-badge" role="status" aria-label="AIパワードプラットフォーム">
-                        <div class="gih-badge-dot" aria-hidden="true"></div>
-                        <span>AI POWERED PLATFORM</span>
-                    </div>
-                    
                     <!-- メインタイトル -->
                     <h1 class="gih-title" id="main-heading">
                         <span class="gih-title-line-1"><?php echo gih_safe_output($hero_config['main_title']); ?></span>
@@ -231,12 +225,6 @@ $grants_count_formatted = number_format($total_grants_count);
         <!-- モバイルレイアウト -->
         <div class="gih-mobile-layout">
             
-            <!-- バッジ -->
-            <div class="gih-mobile-badge" role="status" aria-label="AIパワードプラットフォーム">
-                <div class="gih-mobile-badge-dot" aria-hidden="true"></div>
-                <span>AI POWERED PLATFORM</span>
-            </div>
-            
             <!-- タイトル -->
             <h1 class="gih-mobile-title" id="mobile-main-heading">
                 <span class="gih-mobile-line-1"><?php echo gih_safe_output($hero_config['main_title']); ?></span>
@@ -307,27 +295,42 @@ $grants_count_formatted = number_format($total_grants_count);
    ヒーローセクション - SEO完全最適化版（シンプル版）
    ============================================ */
 
-/* ベース設定 */
+/* ベース設定 - グラデーション背景 */
 .gih-hero-section {
     position: relative;
-    min-height: 100vh;
+    min-height: auto;
     height: auto;
-    display: flex;
-    align-items: center;
-    padding: 120px 0 80px;
-    background: #ffffff;
+    display: block;
+    padding: 80px 0 60px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 50%, #f0f2f5 100%);
     font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
     overflow: visible;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: auto;
 }
 
-/* コンテナ */
+/* 網目パターンオーバーレイ */
+.gih-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(0deg, rgba(0,0,0,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* コンテナ - 他のセクションと統一 */
 .gih-container {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 1400px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -343,8 +346,11 @@ $grants_count_formatted = number_format($total_grants_count);
     }
     
     .gih-hero-section {
-        min-height: 100vh;
+        min-height: auto;
         height: auto;
+        display: flex;
+        align-items: center;
+        padding: 100px 0 60px;
         overflow: visible;
     }
 }
@@ -352,7 +358,7 @@ $grants_count_formatted = number_format($total_grants_count);
 .gih-content-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    gap: 40px;
     align-items: center;
 }
 
@@ -402,7 +408,7 @@ $grants_count_formatted = number_format($total_grants_count);
 }
 
 .gih-title-line-1 {
-    font-size: 40px;
+    font-size: 28px;
     font-weight: 300;
     color: #666666;
     line-height: 1.2;
@@ -410,7 +416,7 @@ $grants_count_formatted = number_format($total_grants_count);
 }
 
 .gih-title-line-2 {
-    font-size: 56px;
+    font-size: 42px;
     font-weight: 900;
     line-height: 1.1;
     letter-spacing: -0.03em;
@@ -427,13 +433,13 @@ $grants_count_formatted = number_format($total_grants_count);
     bottom: 0;
     left: 0;
     right: 0;
-    height: 12px;
+    height: 8px;
     background: #ffeb3b;
     z-index: -1;
 }
 
 .gih-title-line-3 {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 300;
     color: #000000;
     line-height: 1.3;
@@ -441,8 +447,8 @@ $grants_count_formatted = number_format($total_grants_count);
 
 /* 説明文 */
 .gih-description {
-    font-size: 16px; /* 統一: 17px → 16px */
-    line-height: 1.5; /* 縮小感重視: 1.7 → 1.5 */
+    font-size: 14px;
+    line-height: 1.5;
     color: var(--color-text-secondary, #666666);
     font-weight: 400;
     margin: 0;
@@ -452,7 +458,7 @@ $grants_count_formatted = number_format($total_grants_count);
 .gih-features {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -461,8 +467,8 @@ $grants_count_formatted = number_format($total_grants_count);
 .gih-feature-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 15px;
+    gap: 10px;
+    font-size: 13px;
     color: #333333;
     font-weight: 500;
 }
@@ -486,12 +492,12 @@ $grants_count_formatted = number_format($total_grants_count);
 .gih-btn-primary {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 18px 32px;
+    gap: 10px;
+    padding: 14px 24px;
     background: var(--color-accent, #ffeb3b);
     color: var(--color-secondary, #000000);
-    border-radius: 12px;
-    font-size: 16px; /* 統一: 17px → 16px */
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -543,11 +549,14 @@ $grants_count_formatted = number_format($total_grants_count);
     height: auto;
     display: block;
     object-fit: contain;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .gih-hero-image:hover {
-    transform: scale(1.02);
+    transform: scale(1.03);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 /* モバイルレイアウト */
@@ -670,8 +679,6 @@ $grants_count_formatted = number_format($total_grants_count);
 .gih-mobile-image {
     width: 100%;
     margin: 24px 0;
-    transform: translateZ(0);
-    will-change: transform;
 }
 
 .gih-mobile-image img {
@@ -679,6 +686,7 @@ $grants_count_formatted = number_format($total_grants_count);
     height: auto;
     display: block;
     object-fit: contain;
+    max-width: 100%;
 }
 
 /* モバイルCTA */

@@ -100,6 +100,10 @@ add_action('wp_ajax_gi_initialize_municipalities', 'gi_ajax_initialize_municipal
 // 市町村データ構造最適化機能
 add_action('wp_ajax_gi_optimize_municipality_structure', 'gi_ajax_optimize_municipality_structure');
 
+// Load More機能（無限スクロール用）
+add_action('wp_ajax_gi_load_more_grants', 'gi_ajax_load_more_grants');
+add_action('wp_ajax_nopriv_gi_load_more_grants', 'gi_ajax_load_more_grants');
+
 /**
  * =============================================================================
  * 主要なAJAXハンドラー関数 - 完全版
@@ -5258,4 +5262,116 @@ function gi_get_prefecture_grant_count($prefecture_term_id) {
     $query = new WP_Query($args);
     return $query->found_posts;
 }
+}
+
+/**
+ * Load More Grants (無限スクロール用)
+ * 
+ * @return void
+ */
+function gi_ajax_load_more_grants() {
+    // Nonce verification
+    if (!gi_verify_ajax_nonce()) {
+        wp_send_json_error(['message' => 'セキュリティチェックに失敗しました'], 403);
+        return;
+    }
+    
+    // Get parameters
+    $page = intval($_POST['page'] ?? 1);
+    $per_page = min(intval($_POST['per_page'] ?? 12), 50);
+    $category = sanitize_text_field($_POST['category'] ?? '');
+    $prefecture = sanitize_text_field($_POST['prefecture'] ?? '');
+    $municipality = sanitize_text_field($_POST['municipality'] ?? '');
+    $search = sanitize_text_field($_POST['search'] ?? '');
+    
+    // Build query args
+    $args = [
+        'post_type' => 'grant',
+        'post_status' => 'publish',
+        'posts_per_page' => $per_page,
+        'paged' => $page,
+        'orderby' => 'date',
+        'order' => 'DESC'
+    ];
+    
+    // Add tax query if filters are set
+    $tax_query = [];
+    
+    if (!empty($category)) {
+        $tax_query[] = [
+            'taxonomy' => 'grant_category',
+            'field' => 'slug',
+            'terms' => $category
+        ];
+    }
+    
+    if (!empty($prefecture)) {
+        $tax_query[] = [
+            'taxonomy' => 'grant_prefecture',
+            'field' => 'slug',
+            'terms' => $prefecture
+        ];
+    }
+    
+    if (!empty($municipality)) {
+        $tax_query[] = [
+            'taxonomy' => 'grant_municipality',
+            'field' => 'slug',
+            'terms' => $municipality
+        ];
+    }
+    
+    if (count($tax_query) > 1) {
+        $tax_query['relation'] = 'AND';
+    }
+    
+    if (!empty($tax_query)) {
+        $args['tax_query'] = $tax_query;
+    }
+    
+    // Add search if provided
+    if (!empty($search)) {
+        $args['s'] = $search;
+    }
+    
+    // Execute query
+    $query = new WP_Query($args);
+    
+    $grants = [];
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            
+            $post_id = get_the_ID();
+            
+            // Get taxonomies
+            $categories = get_the_terms($post_id, 'grant_category');
+            $prefectures = get_the_terms($post_id, 'grant_prefecture');
+            
+            $grants[] = [
+                'id' => $post_id,
+                'title' => get_the_title(),
+                'url' => get_permalink(),
+                'excerpt' => get_the_excerpt(),
+                'date' => get_the_date('Y-m-d'),
+                'organization' => get_post_meta($post_id, 'organization', true) ?: '公的機関',
+                'max_amount' => get_post_meta($post_id, 'max_amount', true),
+                'deadline' => get_post_meta($post_id, 'deadline', true),
+                'is_featured' => get_post_meta($post_id, 'is_featured', true),
+                'categories' => $categories && !is_wp_error($categories) ? array_map(function($cat) {
+                    return ['name' => $cat->name, 'slug' => $cat->slug];
+                }, array_slice($categories, 0, 2)) : [],
+                'prefecture' => $prefectures && !is_wp_error($prefectures) ? $prefectures[0]->name : ''
+            ];
+        }
+        wp_reset_postdata();
+    }
+    
+    wp_send_json_success([
+        'grants' => $grants,
+        'has_more' => $page < $query->max_num_pages,
+        'current_page' => $page,
+        'total_pages' => $query->max_num_pages,
+        'total_count' => $query->found_posts
+    ]);
 }
